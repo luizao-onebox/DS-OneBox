@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.Python
+
+# Environment — NUNCA commitar keys
+.env
+.env.*
+
+# Moondream model cache (1.5GB)
+*.mf.gz
+*.mf
+~/.cache/moondream/
+
+# Chat sessions — pessoal e verboso
+Workflow/Agent-Memory/chat_sessions/
+
+# Obsidian — configurações pessoais
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Node
+node_modules/

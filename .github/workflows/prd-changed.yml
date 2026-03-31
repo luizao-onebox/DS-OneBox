@@ -1,0 +1,64 @@
+name: PRD Alterado — Abrir Issue de Rebuild
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Workflow/Recursos/PRDs/**.md'
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detectar PRDs alterados
+        id: changed
+        run: |
+          FILES=$(git diff --name-only HEAD~1 HEAD -- 'Workflow/Recursos/PRDs/*.md' | tr '\n' ',')
+          echo "files=$FILES" >> $GITHUB_OUTPUT
+
+      - name: Criar issue para cada PRD alterado
+        if: steps.changed.outputs.files != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const files = '${{ steps.changed.outputs.files }}'.split(',').filter(Boolean);
+            for (const file of files) {
+              const match = file.match(/(\d+)_(.+)\.md$/);
+              if (!match) continue;
+              const num = parseInt(match[1]);
+              const screenName = match[2].replace(/_/g, ' ');
+
+              // Verificar se já existe issue aberta para essa tela
+              const existing = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                labels: 'rebuild-needed'
+              });
+              if (existing.data.some(i => i.title.includes(`Screen ${num}`))) continue;
+
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `🔄 Screen ${num} — ${screenName} precisa de rebuild`,
+                body: [
+                  `O PRD \`${file}\` foi modificado e a tela pode estar desatualizada.`,
+                  '',
+                  '### Para reconstruir:',
+                  '```',
+                  `python agent.py --screen ${num}`,
+                  '```',
+                  '',
+                  `*Gerado automaticamente pelo workflow \`prd-changed.yml\`*`
+                ].join('\n'),
+                labels: ['rebuild-needed', `screen-${String(num).padStart(2,'0')}`]
+              });
+            }

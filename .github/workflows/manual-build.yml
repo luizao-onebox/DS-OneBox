@@ -1,0 +1,29 @@
+name: Build Manual de Tela
+
+on:
+  workflow_dispatch:
+    inputs:
+      screen_number:
+        description: 'Número da tela (1–18)'
+        required: true
+        type: number
+
+# Requer self-hosted runner na máquina com Figma Desktop
+# Setup: https://docs.github.com/en/actions/hosting-your-own-runners
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar dependências
+        run: pip install -r Workflow/Agent/requirements.txt
+
+      - name: Construir tela ${{ inputs.screen_number }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd Workflow/Agent
+          python agent.py --screen ${{ inputs.screen_number }}
