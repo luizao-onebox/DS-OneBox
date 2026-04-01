@@ -110,7 +110,7 @@ def _screenshot_b64(node_id: str, mcp: MCPClient) -> str | None:
 
     # Normalize node id: "3134:3842" → "3134-3842" for URL
     url_id = node_id.replace(":", "-")
-    api_url = f"https://api.figma.com/v1/images/{file_key}?ids={url_id}&format=jpg&scale=1"
+    api_url = f"https://api.figma.com/v1/images/{file_key}?ids={url_id}&format=jpg&scale=1&t={int(time.time())}"
     req = urllib.request.Request(api_url, headers={"X-Figma-Token": token})
     try:
         with urllib.request.urlopen(req, timeout=30) as resp:
