@@ -14,6 +14,7 @@ import json
 import os
 import re as _re
 import sys
+import time
 from datetime import datetime
 from pathlib import Path
 
@@ -25,6 +26,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import anthropic
+
+def _get_anthropic_client():
+    """Instancia o cliente Anthropic usando a API key diretamente."""
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+    if not api_key:
+        sys.exit("ANTHROPIC_API_KEY não configurada. Verifique o arquivo .env")
+    return anthropic.Anthropic(api_key=api_key)
 
 from mcp_client import MCPClient
 from memory_store import MemoryStore
@@ -160,11 +168,62 @@ def _save_session(name: str, messages: list):
                    indent=2, ensure_ascii=False), encoding="utf-8")
 
 
+def _sanitize_messages(messages: list) -> list:
+    """
+    Scan all messages and fix orphaned tool_use blocks.
+    An assistant message with tool_use blocks must be immediately followed by
+    a user message containing tool_result blocks for each tool_use id.
+    If not, drop the assistant message (and any following non-tool-result user message).
+    """
+    if not messages:
+        return messages
+
+    result = []
+    i = 0
+    dropped = 0
+    while i < len(messages):
+        msg = messages[i]
+        if msg.get("role") == "assistant":
+            content = msg.get("content", [])
+            tool_use_ids = [
+                b["id"] for b in content
+                if isinstance(b, dict) and b.get("type") == "tool_use"
+            ]
+            if tool_use_ids:
+                # Check if next message has tool_results for all ids
+                next_msg = messages[i + 1] if i + 1 < len(messages) else None
+                if next_msg and next_msg.get("role") == "user":
+                    next_content = next_msg.get("content", [])
+                    result_ids = {
+                        b.get("tool_use_id") for b in next_content
+                        if isinstance(b, dict) and b.get("type") == "tool_result"
+                    }
+                    if tool_use_ids and result_ids.issuperset(tool_use_ids):
+                        # Valid pair — keep both
+                        result.append(msg)
+                        result.append(next_msg)
+                        i += 2
+                        continue
+                # Orphaned tool_use — drop this assistant message (and skip next if it's the result)
+                dropped += 1
+                i += 1
+                if next_msg and _is_tool_result_msg(next_msg):
+                    i += 1  # skip the orphaned tool_result too
+                continue
+        result.append(msg)
+        i += 1
+
+    if dropped:
+        print(f"  [Session] Removed {dropped} orphaned tool_use block(s).", flush=True)
+    return result
+
+
 def _load_session(name: str) -> list:
     p = SESSIONS_DIR / f"{name}.json"
     if not p.exists(): return []
     try:
-        return json.loads(p.read_text(encoding="utf-8")).get("messages", [])
+        messages = json.loads(p.read_text(encoding="utf-8")).get("messages", [])
+        return _sanitize_messages(messages)
     except Exception:
         return []
 
@@ -284,7 +343,6 @@ def _start_mcp() -> MCPClient:
     print(f"  It will connect to ws://localhost:{port}")
     input("\n  Press Enter when connected... ")
     print("Checking connection...")
-    import time
     for attempt in range(1, 8):
         test = mcp.call_tool("figma_execute",
             {"code": "return { ok: true, page: figma.currentPage.name }", "timeout": 5000},
@@ -455,12 +513,12 @@ def _workflow_analyze_screen(frame_id: str, screen_number: int | None,
     """Take screenshot, run Moondream, Claude analysis vs PRD, save report."""
     b64 = _screenshot_b64(frame_id, mcp)
     if not b64:
-        return f"Could not capture screenshot for node {frame_id}."
+        print("  [Analyze] Screenshot failed, retrying in 5s...")
+        time.sleep(5)
+        b64 = _screenshot_b64(frame_id, mcp)
+    if not b64:
+        print("  [Analyze] Screenshot unavailable — proceeding with text-only analysis.")
 
-    try:
-        moondream = _validator.describe_base64(b64, "full")
-    except Exception as e:
-        moondream = f"(Moondream unavailable: {e})"
 
     prd_content = ""
     screen_name = frame_id
@@ -474,15 +532,16 @@ def _workflow_analyze_screen(frame_id: str, screen_number: int | None,
         "You are a senior UI/UX reviewer for OneDocs Admin. "
         "Compare PRD specifications against Figma screenshots and produce actionable reports in Portuguese."
     )
-    analysis_user: list = [
-        {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": b64}},
-        {"type": "text", "text": f"""Analise a tela Figma mostrada na imagem.
+
+    image_block = (
+        [{"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": b64}}]
+        if b64 else []
+    )
+    analysis_user: list = image_block + [
+        {"type": "text", "text": f"""Analise a tela Figma{' mostrada na imagem' if b64 else ' (screenshot indisponível — análise baseada apenas no PRD)'}.
 
 ## PRD de referência
 {prd_content if prd_content else "(nenhum PRD disponível — faça análise visual livre)"}
-
-## Descrição Moondream (o que a IA vê)
-{moondream}
 
 ---
 
@@ -544,12 +603,10 @@ def _workflow_fix_screen(screen_number: int | None, frame_id: str | None,
         return "Erro: informe screen_number ou frame_id para o fix."
 
     if not analysis_path.exists():
-        # Try any analysis file
-        files = sorted(AGENT_MEMORY_DIR.glob("analysis_*.md"))
-        if not files:
-            return "Nenhum arquivo de análise encontrado. Rode a análise primeiro."
-        analysis_path = files[-1]
-        print(f"  [Fix] Usando análise mais recente: {analysis_path.name}")
+        return (
+            f"❌ Arquivo de análise não encontrado: {analysis_path.name}\n"
+            f"Execute analyze_screen primeiro para gerar o relatório antes de aplicar correções."
+        )
 
     analysis_content = analysis_path.read_text(encoding="utf-8")
 
@@ -827,7 +884,7 @@ def run_chat():
 
     session_name, messages = _pick_session()
     mcp = _start_mcp()
-    client = anthropic.Anthropic()
+    client = _get_anthropic_client()
     system = _chat_prompt(support, _memory.full_context())
 
     print("\n💬 Figma Agent — fale em português, cole links do Figma.")
@@ -866,10 +923,18 @@ def run_chat():
                 if turn_iter > MAX_ITERATIONS:
                     print(f"⚠️  Limite atingido.")
                     break
-                response = client.messages.create(
-                    model=MODEL, max_tokens=MAX_TOKENS,
-                    system=system, tools=_ORCHESTRATOR_TOOLS,
-                    messages=trim_messages(messages))
+                for attempt in range(1, 4):
+                    try:
+                        response = client.messages.create(
+                            model=MODEL, max_tokens=MAX_TOKENS,
+                            system=system, tools=_ORCHESTRATOR_TOOLS,
+                            messages=trim_messages(messages))
+                        break
+                    except Exception as e:
+                        if attempt == 3:
+                            raise
+                        print(f"  ⚠️  API error (attempt {attempt}/3): {e}. Retrying in 5s...", flush=True)
+                        time.sleep(5)
                 messages.append({"role": "assistant", "content": response.content})
                 for block in response.content:
                     if hasattr(block, "text") and block.text:
@@ -880,7 +945,15 @@ def run_chat():
                 for block in response.content:
                     if block.type != "tool_use": continue
                     print(f"  → {block.name}({list(block.input.keys())})", flush=True)
-                    content = _dispatch(block.name, block.input, mcp, client)
+                    try:
+                        content = _dispatch(block.name, block.input, mcp, client)
+                    except RuntimeError as e:
+                        if "MCP" in str(e):
+                            print(f"\n⚠️  Conexão com Figma perdida: {e}", flush=True)
+                            _save_session(session_name, messages)
+                            print(f"  💾 Sessão salva: {session_name}")
+                            return
+                        content = f"Erro: {e}"
                     tool_results.append({"type": "tool_result", "tool_use_id": block.id, "content": content})
                 messages.append({"role": "user", "content": tool_results})
 
@@ -898,7 +971,7 @@ def run_direct_screen(screen_number: int):
     support = _load_support()
     _build_rag(support)
     mcp = _start_mcp()
-    client = anthropic.Anthropic()
+    client = _get_anthropic_client()
     try:
         _workflow_build_screen(screen_number, mcp, client)
     finally:
@@ -908,7 +981,7 @@ def run_direct_screen(screen_number: int):
 def run_direct_fix(screen_number: int):
     support = _load_support()
     mcp = _start_mcp()
-    client = anthropic.Anthropic()
+    client = _get_anthropic_client()
     try:
         _workflow_fix_screen(screen_number, None, mcp, client)
     finally:

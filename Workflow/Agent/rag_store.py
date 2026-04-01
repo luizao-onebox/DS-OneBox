@@ -69,6 +69,7 @@ class RAGStore:
         Args:
             support_files: {filename: content} — HELPERS, DS-TOKENS, etc.
             prd_dir: optional directory with PRD .md files
+                     Also indexes <prd_dir.parent>/Components/*.md if it exists.
         """
         self._chunks = []
 
@@ -76,11 +77,19 @@ class RAGStore:
             if content:
                 self._chunks.extend(_chunk_markdown(content, source))
 
+        md_dirs = []
         if prd_dir and prd_dir.exists():
-            for prd_file in sorted(prd_dir.glob("*.md")):
+            md_dirs.append(("PRDs", prd_dir))
+        if prd_dir:
+            components_dir = prd_dir.parent / "Components"
+            if components_dir.exists():
+                md_dirs.append(("Components", components_dir))
+
+        for label, md_dir in md_dirs:
+            for md_file in sorted(md_dir.glob("*.md")):
                 try:
-                    content = prd_file.read_text(encoding="utf-8")
-                    self._chunks.extend(_chunk_markdown(content, prd_file.name))
+                    content = md_file.read_text(encoding="utf-8")
+                    self._chunks.extend(_chunk_markdown(content, md_file.name))
                 except Exception:
                     pass
 
@@ -94,8 +103,9 @@ class RAGStore:
 
         tokenized = [_tokenize(c["text"]) for c in self._chunks]
         self._bm25 = BM25Okapi(tokenized)
+        extra = " + ".join(f"{label}" for label, _ in md_dirs)
         print(f"  [RAG] Indexed {len(self._chunks)} chunks from {len(support_files)} files"
-              + (f" + PRDs in {prd_dir.name}" if prd_dir else ""), flush=True)
+              + (f" + {extra}" if extra else ""), flush=True)
 
     def retrieve(self, query: str, k: int = 6) -> str:
         """

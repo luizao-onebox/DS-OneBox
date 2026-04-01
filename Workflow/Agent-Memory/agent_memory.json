@@ -1,0 +1,168 @@
+{
+  "screens": {},
+  "components": {
+    "Sidebar Right/Conference": {
+      "node_id": "3587:803226",
+      "description": "Sidebar direita do fluxo de Conferência Individual. Contém: Gamification (Badge Pending + Completed), Sugestões de reprovação da IA (Special Checkboxes reasons), botão \"11 Motivos de reprovação\", e botões de ação Aprovar/Reprovar. Baseada nos frames de referência 3582:801251–3582:801609 (seção sidebar na página 23). Usada na tela 03 — Admin/Operações/Conferências/Individual.",
+      "variants": [
+        "Reasons=None, Actions=Approve + Disapprove",
+        "Reasons=None, Actions=Approve + Disabled",
+        "Reasons=None, Actions=Disabled + Disapprove",
+        "Reasons=1 selected, Actions=Approve + Disabled",
+        "Reasons=1 selected, Actions=Disabled + Disapprove",
+        "Reasons=3 selected, Actions=Approve + Disabled",
+        "Reasons=3 selected, Actions=Disabled + Disapprove",
+        "Reasons=2 selected, Actions=Approve + Disabled",
+        "Reasons=2 selected, Actions=Disabled + Disapprove"
+      ],
+      "created_at": "2026-03-31T14:02:02.765378"
+    },
+    "Sidebar Right (Conference)": {
+      "node_id": "3588:804090",
+      "description": "Painel lateral direito para tela de Conferências Individual. Contém: Gamification badges (fila + conferidos), lista de motivos de reprovação da IA com checkboxes, botão \"X Motivos de reprovação\", e 2 action buttons (Aprovar + Reprovar). 9 variantes por combinação de Tipo (Biometria/Documental/Validade) × Seleção (None/Partial/All). Tamanho: 320×824px. Sub-componentes: Badge gamification (3134:2866), Special checkbox (3134:2877), Action (3134:2894). Aparece na tela 3 (Conferências Individual).",
+      "variants": [
+        "Tipo=Biometria, Seleção=None (3588:803712)",
+        "Tipo=Biometria, Seleção=Partial (3588:803759)",
+        "Tipo=Biometria, Seleção=All (3588:803806)",
+        "Tipo=Documental, Seleção=None (3588:803853)",
+        "Tipo=Documental, Seleção=Partial (3588:803894)",
+        "Tipo=Documental, Seleção=All (3588:803935)",
+        "Tipo=Validade, Seleção=None (3588:803976)",
+        "Tipo=Validade, Seleção=Partial (3588:804014)",
+        "Tipo=Validade, Seleção=All (3588:804052)"
+      ],
+      "created_at": "2026-03-31T14:30:23.893078"
+    },
+    "Sidebar Right / Conference": {
+      "node_id": "3588:804543",
+      "description": "Painel lateral direito da tela de Conferência Individual (Tela 3). Exibe gamification badges (fila pendente + conferidos), lista de sugestões de reprovação da IA com checkboxes, e botões de ação Aprovar/Reprovar. Largura fixa 320px, altura variável por número de motivos.",
+      "variants": [
+        "Actions=Approve+Disapprove, Reasons=5, Selecting=None",
+        "Actions=Approve+Disapprove, Reasons=3, Selecting=None",
+        "Actions=Approve+Disapprove, Reasons=2, Selecting=None",
+        "Actions=Approve+Disabled, Reasons=5, Selecting=None",
+        "Actions=Approve+Disabled, Reasons=3, Selecting=None",
+        "Actions=Approve+Disabled, Reasons=2, Selecting=None",
+        "Actions=Disabled+Disapprove, Reasons=5, Selecting=None",
+        "Actions=Disabled+Disapprove, Reasons=3, Selecting=Reason1",
+        "Actions=Disabled+Disapprove, Reasons=2, Selecting=None"
+      ],
+      "created_at": "2026-03-31T14:20:28.520630"
+    },
+    "Badge Gamification": {
+      "node_id": "3588:862122",
+      "description": "Badge de gamificação usado na Sidebar Right (Conference / Tela 3). Exibe o status de progresso do operador na fila de conferências. Tamanho: 142×104px. Container da seção: 3588:862121.",
+      "variants": [
+        "Type=Completed (3588:862123)",
+        "Type=Pending (3588:862126)"
+      ],
+      "created_at": "2026-03-31T14:40:53.943511"
+    },
+    "Special Checkbox (Reason - Selecting)": {
+      "node_id": "3588:862137",
+      "description": "Checkbox especial para seleção de motivos de reprovação da IA na Sidebar Right (Conference / Tela 3). Variante de estado Selecting vs Default. Tamanho: 328×124px. Seção: 3588:862136.",
+      "variants": [
+        "State=Selecting (3588:862138)",
+        "State=Default (3588:862144)"
+      ],
+      "created_at": "2026-03-31T14:40:53.945196"
+    },
+    "Special Checkbox (Reason - Default)": {
+      "node_id": "3588:862149",
+      "description": "Segunda variante do Special Checkbox para motivos de reprovação da IA. Mesmo padrão de estados Selecting/Default. Tamanho: 328×124px. Seção: 3588:862136.",
+      "variants": [
+        "State=Selecting (3588:862150)",
+        "State=Default (3588:862156)"
+      ],
+      "created_at": "2026-03-31T14:40:53.946815"
+    },
+    "Action Button (Conference)": {
+      "node_id": "3588:862164",
+      "description": "Botão de ação principal da Sidebar Right de Conferência (Tela 3). Usado para Aprovar, Reprovar ou estado Disabled. Tamanho: 328×230px. Seção: 3588:862163.",
+      "variants": [
+        "State=Approve (3588:862165)",
+        "State=Disapprove (3588:862172)",
+        "State=Disabled (3588:862179)"
+      ],
+      "created_at": "2026-03-31T14:40:53.948828"
+    },
+    "Tool (Dark)": {
+      "node_id": "3588:862201",
+      "description": "Botão de ferramenta individual (toolbar) da tela de conferência/análise de documentos. Versão dark. 80px de largura. Estados: Default, Disabled, Selected. Seção Tools: 3588:862186.",
+      "variants": [
+        "State=Default (3588:862202)",
+        "State=Disabled (3588:862204)",
+        "State=Selected (3588:862206)"
+      ],
+      "created_at": "2026-03-31T14:40:53.950010"
+    },
+    "Tool (Light)": {
+      "node_id": "3588:862208",
+      "description": "Botão de ferramenta individual (toolbar) da tela de conferência/análise de documentos. Versão light. 80px de largura. Estados: Default, Disabled, Selected. Seção Tools: 3588:862186.",
+      "variants": [
+        "State=Default (3588:862209)",
+        "State=Disabled (3588:862211)",
+        "State=Selected (3588:862213)"
+      ],
+      "created_at": "2026-03-31T14:40:53.952523"
+    },
+    "Link Nav (master)": {
+      "node_id": "3588:862224",
+      "description": "Item de link de navegação da Left Sidebar. Suporta dropdown expandível. Usado na Sidebar Left (master). Tamanho: 272×424px. Seção Left Sidebar: 3588:862217.",
+      "variants": [
+        "State=Default, Dropdown=True (3588:862225)",
+        "State=Select, Dropdown=True (3588:862238)",
+        "State=Default, Dropdown=False (3588:862251)"
+      ],
+      "created_at": "2026-03-31T14:40:53.954222"
+    },
+    "Sidebar Left (master)": {
+      "node_id": "3588:862260",
+      "description": "Sidebar de navegação esquerda principal do sistema OneDocs Admin. Versão master com suporte a collapsed/expanded. Tamanho: 376×864px (expanded). Usa Link Nav como sub-item. Seção: 3588:862217. Substitui/complementa 305:3092 (expanded) e 305:3970 (collapsed).",
+      "variants": [
+        "Colapsed=False (3588:862261)",
+        "Colapsed=True (3588:862291)"
+      ],
+      "created_at": "2026-03-31T14:40:53.956752"
+    },
+    "Top Navbar (master)": {
+      "node_id": "3588:862341",
+      "description": "Navbar superior do sistema OneDocs Admin. Disponível em dark e light. Seção: 3588:862332. Modelos de referência dark (3588:862333) e light (3588:862337). Complementa/substitui Topbar 301:1056.",
+      "variants": [
+        "Dark (models: 3588:862333)",
+        "Light (models: 3588:862337)"
+      ],
+      "created_at": "2026-03-31T14:40:53.958101"
+    },
+    "Sidebar Right (Conference - master)": {
+      "node_id": "3588:862343",
+      "description": "Sidebar direita master da tela de Conferência Individual (Tela 3). Componente único (não é component set). Contém: Content (3588:862344) com Gamification + Failed AI reasons, e Actions (3588:862352) com botões Aprovar/Reprovar. Tamanho: 320×824px. Seção: 3588:862342. É a versão master/base — usar para criar instâncias na tela 3.",
+      "variants": [
+        "Single component (3588:862343)"
+      ],
+      "created_at": "2026-03-31T14:40:53.959647"
+    },
+    "Temperature Maximum": {
+      "node_id": "3588:862357",
+      "description": "Indicador de temperatura máxima — usado provavelmente em telas de análise de risco ou conferência para indicar nível de alerta/risco do documento. 3 variantes de step/intensidade. Tamanho: 328×226px. Seção Temperature: 3588:862356.",
+      "variants": [
+        "Property 1=Variant3 (3588:862358)",
+        "Property 1=step 2 (3588:862366)",
+        "Property 1=step 1 (3588:862374)"
+      ],
+      "created_at": "2026-03-31T14:40:53.962494"
+    },
+    "Temperature Middle": {
+      "node_id": "3588:862382",
+      "description": "Indicador de temperatura intermediária — complementa o Temperature Maximum para níveis médios de alerta/risco. 3 variantes de step/intensidade. Tamanho: 328×226px. Seção Temperature: 3588:862356.",
+      "variants": [
+        "Property 1=Variant3 (3588:862383)",
+        "Property 1=step 2 (3588:862391)",
+        "Property 1=step 1 (3588:862399)"
+      ],
+      "created_at": "2026-03-31T14:40:53.964185"
+    }
+  },
+  "error_fixes": [],
+  "notes": []
+}

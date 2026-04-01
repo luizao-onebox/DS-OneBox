@@ -13,8 +13,12 @@ import time
 _win = sys.platform == "win32"
 
 # Use node directly to avoid npx signal propagation issues on Windows
-_MCP_SCRIPT = r"C:\Users\LuizBaptistella\AppData\Local\npm-cache\_npx\b547afed9fcf6dcb\node_modules\figma-console-mcp\dist\local.js"
-MCP_CMD = ["node", _MCP_SCRIPT] if (_win and os.path.exists(_MCP_SCRIPT)) else (
+_CANDIDATES = [
+    r"C:\Users\LuizBaptistella\AppData\Local\npm-cache\_npx\f022f36756ccd7d4\node_modules\figma-console-mcp\dist\local.js",
+    r"C:\Users\LuizBaptistella\AppData\Local\npm-cache\_npx\b547afed9fcf6dcb\node_modules\figma-console-mcp\dist\local.js",
+]
+_MCP_SCRIPT = next((p for p in _CANDIDATES if os.path.exists(p)), None)
+MCP_CMD = ["node", _MCP_SCRIPT] if (_win and _MCP_SCRIPT) else (
     ["npx.cmd" if _win else "npx", "--yes", "figma-console-mcp"]
 )
 
@@ -153,11 +157,24 @@ class MCPClient:
                     if q:
                         q.put(msg)
 
+    def _is_alive(self) -> bool:
+        return bool(self.proc and self.proc.poll() is None)
+
     def _write(self, msg: dict):
+        if not self._is_alive():
+            raise RuntimeError(
+                "MCP process died. Restart the agent and reconnect the Figma plugin."
+            )
         assert self.proc and self.proc.stdin
         line = (json.dumps(msg) + "\n").encode("utf-8")
-        self.proc.stdin.write(line)
-        self.proc.stdin.flush()
+        try:
+            self.proc.stdin.write(line)
+            self.proc.stdin.flush()
+        except OSError as e:
+            raise RuntimeError(
+                f"MCP write failed (process likely died): {e}\n"
+                "Restart the agent and reconnect the Figma plugin."
+            ) from e
 
     # ── RPC ──────────────────────────────────────────────────────────────────
 
