@@ -101,48 +101,39 @@ def _build_rag(support):
 # ── Screenshot helper ─────────────────────────────────────────────────────────
 
 def _screenshot_b64(node_id: str, mcp: MCPClient) -> str | None:
-    code = f"""
-let node = await figma.getNodeByIdAsync("{node_id}");
-if (!node) {{
-  for (const page of figma.root.children) {{
-    if (page.id === figma.currentPage.id) continue;
-    figma.currentPage = page;
-    await figma.currentPage.loadAsync();
-    node = await figma.getNodeByIdAsync("{node_id}");
-    if (node) break;
-  }}
-}}
-if (!node) return {{ error: "node not found: {node_id}" }};
-
-// Walk up to find an exportable node (FRAME, COMPONENT, INSTANCE, GROUP, etc.)
-const EXPORTABLE = new Set(['FRAME','COMPONENT','INSTANCE','GROUP',
-                             'RECTANGLE','ELLIPSE','VECTOR','TEXT','STAR','POLYGON']);
-let target = node;
-while (target && !EXPORTABLE.has(target.type)) {{
-  target = target.parent;
-}}
-if (!target || typeof target.exportAsync !== 'function') {{
-  return {{ error: "no exportable node found near {node_id}, type=" + node.type }};
-}}
-
-figma.viewport.scrollAndZoomIntoView([target]);
-let bytes;
-try {{
-  bytes = await target.exportAsync({{format:"JPG",constraint:{{type:"SCALE",value:1}}}});
-}} catch(e) {{
-  return {{ error: "exportAsync failed: " + e.message }};
-}}
-let bin=''; const chunk=8192;
-for(let i=0;i<bytes.length;i+=chunk) bin+=String.fromCharCode.apply(null,bytes.subarray(i,i+chunk));
-return {{base64:btoa(bin),size:bytes.length,exportedId:target.id,exportedType:target.type}};
-"""
-    raw = mcp.call_tool("figma_execute", {"code": code, "timeout": 45000}, timeout=55)
-    result = raw.get("result", raw) if raw.get("success") else raw
-    if "error" in result or not result.get("base64"):
-        print(f"  Screenshot failed: {result}", flush=True)
+    """Get screenshot via Figma REST API — reliable, no plugin dependency."""
+    import urllib.request, urllib.error, base64 as _b64
+    file_key = os.environ.get("FIGMA_FILE_KEY", "q3mFYxgvpAK1KxeLVvRVKX")
+    token = os.environ.get("FIGMA_ACCESS_TOKEN", "")
+    if not token:
         return None
-    print(f"  Screenshot: {result.get('size','?')} bytes (node {result.get('exportedType','?')} {result.get('exportedId','?')})", flush=True)
-    return result["base64"]
+
+    # Normalize node id: "3134:3842" → "3134-3842" for URL
+    url_id = node_id.replace(":", "-")
+    api_url = f"https://api.figma.com/v1/images/{file_key}?ids={url_id}&format=jpg&scale=1"
+    req = urllib.request.Request(api_url, headers={"X-Figma-Token": token})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            data = json.loads(resp.read())
+    except Exception as e:
+        print(f"  Screenshot API error: {e}", flush=True)
+        return None
+
+    img_url = (data.get("images") or {}).get(node_id) or (data.get("images") or {}).get(url_id)
+    if not img_url:
+        print(f"  Screenshot: no image URL returned for {node_id}", flush=True)
+        return None
+
+    try:
+        with urllib.request.urlopen(img_url, timeout=30) as img_resp:
+            img_bytes = img_resp.read()
+    except Exception as e:
+        print(f"  Screenshot download error: {e}", flush=True)
+        return None
+
+    b64 = _b64.b64encode(img_bytes).decode("ascii")
+    print(f"  Screenshot: {len(img_bytes)} bytes via REST API", flush=True)
+    return b64
 
 
 # ── Session persistence ───────────────────────────────────────────────────────
