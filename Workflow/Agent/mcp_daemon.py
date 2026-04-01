@@ -76,13 +76,14 @@ class Handler(BaseHTTPRequestHandler):
                 self._send_json(400, {"error": "missing 'code'"})
                 return
 
-            timeout = float(body.get("timeout", 30000)) / 1000 + 5
+            timeout_ms = int(body.get("timeout", 30000))
+            timeout = timeout_ms / 1000 + 15  # extra buffer for large exports
             with _lock:
                 _ensure_alive()
                 try:
                     result = _mcp.call_tool(
                         "figma_execute",
-                        {"code": code, "timeout": int(body.get("timeout", 30000))},
+                        {"code": code, "timeout": timeout_ms},
                         timeout=timeout,
                     )
                     self._send_json(200, {"ok": True, "result": result})

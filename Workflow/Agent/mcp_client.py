@@ -1,6 +1,10 @@
 """
 MCP stdio client — newline-delimited JSON protocol.
 Each message is a single JSON object terminated by \n.
+
+If mcp_daemon.py is running on localhost:7888, MCPClient automatically
+delegates all call_tool() calls to the daemon via HTTP — no process
+kill, no plugin reconnect needed.
 """
 import json
 import os
@@ -9,8 +13,12 @@ import subprocess
 import sys
 import threading
 import time
+import urllib.request
+import urllib.error
 
 _win = sys.platform == "win32"
+
+DAEMON_URL = "http://127.0.0.1:7888"
 
 # Use node directly to avoid npx signal propagation issues on Windows
 _CANDIDATES = [
@@ -23,6 +31,30 @@ MCP_CMD = ["node", _MCP_SCRIPT] if (_win and _MCP_SCRIPT) else (
 )
 
 
+def _daemon_alive() -> bool:
+    """Return True if mcp_daemon.py is reachable."""
+    try:
+        with urllib.request.urlopen(DAEMON_URL + "/status", timeout=2) as r:
+            data = json.loads(r.read())
+            return data.get("alive", False)
+    except Exception:
+        return False
+
+
+def _daemon_execute(code: str, timeout_ms: int = 30000) -> dict:
+    """Send JS code to the daemon and return the result."""
+    payload = json.dumps({"code": code, "timeout": timeout_ms}).encode()
+    req = urllib.request.Request(
+        DAEMON_URL + "/execute",
+        data=payload,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    with urllib.request.urlopen(req, timeout=timeout_ms / 1000 + 20) as r:
+        resp = json.loads(r.read())
+        return resp.get("result", resp)
+
+
 class MCPClient:
     def __init__(self):
         self.proc: subprocess.Popen | None = None
@@ -31,6 +63,7 @@ class MCPClient:
         self._lock = threading.Lock()
         self._reader: threading.Thread | None = None
         self._port: int = 9223  # cached after start()
+        self._using_daemon: bool = False
 
     # ── lifecycle ────────────────────────────────────────────────────────────
 
@@ -46,7 +79,6 @@ class MCPClient:
             key=os.path.getmtime,
             reverse=True,
         )
-        # Try by PID first
         for fpath in files:
             try:
                 data = _json.loads(open(fpath, encoding="utf-8").read())
@@ -54,7 +86,6 @@ class MCPClient:
                     return data.get("port")
             except Exception:
                 pass
-        # Fallback: most recent file whose process is alive
         for fpath in files:
             try:
                 data = _json.loads(open(fpath, encoding="utf-8").read())
@@ -62,7 +93,7 @@ class MCPClient:
                 port = data.get("port")
                 if p and port:
                     try:
-                        os.kill(p, 0)  # 0 = just check if alive
+                        os.kill(p, 0)
                         return port
                     except OSError:
                         pass
@@ -101,12 +132,26 @@ class MCPClient:
             print(f"  Killed: {', '.join(killed)}", flush=True)
 
     def start(self):
+        # If daemon is running, use it — skip kill_orphans and subprocess entirely
+        if _daemon_alive():
+            self._using_daemon = True
+            try:
+                with urllib.request.urlopen(DAEMON_URL + "/status", timeout=3) as r:
+                    data = json.loads(r.read())
+                    self._port = data.get("mcp_port", 9223)
+            except Exception:
+                pass
+            print(f"MCP daemon detected on {DAEMON_URL} — skipping local start.", flush=True)
+            print(f"Plugin stays connected (port {self._port}). No reconnect needed.", flush=True)
+            return
+
+        # No daemon — start a local MCP process as before
+        self._using_daemon = False
         env = os.environ.copy()
         print("Cleaning up previous MCP instances...", flush=True)
         self.kill_orphans()
         time.sleep(1)
         print("Starting figma-console-mcp...", flush=True)
-        # CREATE_NEW_PROCESS_GROUP isolates child signals on Windows
         flags = subprocess.CREATE_NEW_PROCESS_GROUP if _win else 0
         self.proc = subprocess.Popen(
             MCP_CMD,
@@ -118,14 +163,14 @@ class MCPClient:
         )
         self._reader = threading.Thread(target=self._read_loop, daemon=True)
         self._reader.start()
-
-        # Give the server time to start and write its port file
         time.sleep(3)
         self._initialize()
         self._port = self._find_port() or 9223
         print(f"MCP ready on port {self._port}.", flush=True)
 
     def stop(self):
+        if self._using_daemon:
+            return  # daemon manages its own lifecycle
         if self.proc:
             self.proc.terminate()
             self.proc = None
@@ -139,7 +184,7 @@ class MCPClient:
         while True:
             chunk = self.proc.stdout.read(1)
             if not chunk:
-                break  # EOF / process died
+                break
             buf += chunk
             if chunk == b"\n":
                 line = buf.strip()
@@ -158,6 +203,8 @@ class MCPClient:
                         q.put(msg)
 
     def _is_alive(self) -> bool:
+        if self._using_daemon:
+            return _daemon_alive()
         return bool(self.proc and self.proc.poll() is None)
 
     def _write(self, msg: dict):
@@ -222,6 +269,12 @@ class MCPClient:
     # ── public API ───────────────────────────────────────────────────────────
 
     def call_tool(self, tool_name: str, arguments: dict, timeout: float = 60.0) -> dict:
+        # Route through daemon if available
+        if self._using_daemon and tool_name == "figma_execute":
+            code = arguments.get("code", "")
+            timeout_ms = arguments.get("timeout", int(timeout * 1000))
+            return _daemon_execute(code, timeout_ms)
+
         rpc_result = self._rpc(
             "tools/call",
             {"name": tool_name, "arguments": arguments},
@@ -231,8 +284,6 @@ class MCPClient:
         if content and content[0].get("type") == "text":
             try:
                 parsed = json.loads(content[0]["text"])
-                # figma_execute wraps result: {"success": true, "result": {...}}
-                # Return as-is so callers can inspect both success and result
                 return parsed
             except (json.JSONDecodeError, KeyError):
                 return {"raw": content[0].get("text", "")}

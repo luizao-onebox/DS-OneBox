@@ -102,29 +102,45 @@ def _build_rag(support):
 
 def _screenshot_b64(node_id: str, mcp: MCPClient) -> str | None:
     code = f"""
-let node = await figma.getNodeByIdAsync("{node_id}");
-if (!node) {{
-  for (const page of figma.root.children) {{
-    if (page.id === figma.currentPage.id) continue;
-    figma.currentPage = page;
-    await figma.currentPage.loadAsync();
-    node = await figma.getNodeByIdAsync("{node_id}");
-    if (node) break;
+(async () => {{
+  let node = await figma.getNodeByIdAsync("{node_id}");
+  if (!node) {{
+    for (const page of figma.root.children) {{
+      if (page.id === figma.currentPage.id) continue;
+      figma.currentPage = page;
+      await figma.currentPage.loadAsync();
+      node = await figma.getNodeByIdAsync("{node_id}");
+      if (node) break;
+    }}
   }}
-}}
-if (!node) return {{ error: "node not found: {node_id}" }};
-figma.viewport.scrollAndZoomIntoView([node]);
-const bytes = await node.exportAsync({{format:"JPG",constraint:{{type:"SCALE",value:1}}}});
-let bin=''; const chunk=8192;
-for(let i=0;i<bytes.length;i+=chunk) bin+=String.fromCharCode.apply(null,bytes.subarray(i,i+chunk));
-return {{base64:btoa(bin),size:bytes.length}};
+  if (!node) return {{ error: "node not found: {node_id}" }};
+
+  // Walk up to find an exportable node (FRAME, COMPONENT, INSTANCE, etc.)
+  const EXPORTABLE = new Set(['FRAME','COMPONENT','INSTANCE','GROUP','SECTION',
+                               'RECTANGLE','ELLIPSE','VECTOR','TEXT','STAR','POLYGON']);
+  let target = node;
+  while (target && !EXPORTABLE.has(target.type)) {{
+    target = target.parent;
+  }}
+  if (!target || !target.exportAsync) return {{ error: "no exportable node found near {node_id}" }};
+
+  figma.viewport.scrollAndZoomIntoView([target]);
+  try {{
+    const bytes = await target.exportAsync({{format:"JPG",constraint:{{type:"SCALE",value:1}}}});
+    let bin=''; const chunk=8192;
+    for(let i=0;i<bytes.length;i+=chunk) bin+=String.fromCharCode.apply(null,bytes.subarray(i,i+chunk));
+    return {{base64:btoa(bin),size:bytes.length,exportedId:target.id,exportedType:target.type}};
+  }} catch(e) {{
+    return {{ error: "exportAsync failed: " + e.message }};
+  }}
+}})();
 """
-    raw = mcp.call_tool("figma_execute", {"code": code, "timeout": 30000}, timeout=35)
+    raw = mcp.call_tool("figma_execute", {"code": code, "timeout": 45000}, timeout=55)
     result = raw.get("result", raw) if raw.get("success") else raw
     if "error" in result or not result.get("base64"):
         print(f"  Screenshot failed: {result}", flush=True)
         return None
-    print(f"  Screenshot: {result.get('size','?')} bytes", flush=True)
+    print(f"  Screenshot: {result.get('size','?')} bytes (node {result.get('exportedType','?')} {result.get('exportedId','?')})", flush=True)
     return result["base64"]
 
 
