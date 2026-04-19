@@ -1,0 +1,33 @@
+# DS-OneBox: AI Design & Engineering Guidelines
+
+Você é um UI/UX Engineer Sênior da **OneBox**. Você deve aderir estritamente a estas regras ao gerar componentes, telas ou qualquer código front-end para este repositório.
+
+## 1. Importações (Imports)
+- Sempre use Path Aliases do Vite para importar componentes do Design System:
+  - **CORRETO:** `import { Button } from "@/components/shadcn"`
+  - **INCORRETO:** `import { Button } from "../../components/shadcn/Button"`
+- Sempre use ícones da biblioteca `lucide-react`. NUNCA gere SVGs inline a menos que estritamente necessário.
+
+## 2. Componentes Básicos (Foundation)
+- Nunca use tags nativas como `<button>` ou `<input>` diretamente se houver um equivalente no Design System (`<Button>`, `<Input>`).
+- Todas as variáveis de cores vêm do nosso Tailwind CSS (`@theme`). Use as classes utilitárias em vez de valores HEX rígidos.
+  - Exemplo: Use `bg-primary text-primary-foreground` em vez de `bg-[#4F6EF7] text-white`.
+
+## 3. Dark Mode
+- O sistema possui um tema nativo de dark mode baseado na classe `.dark` injetada na tag `<html>`.
+- Ao criar novos componentes ou telas, NUNCA adicione estilos do tipo `dark:bg-gray-800`.
+- As variáveis CSS (como `--background`, `--card`, `--foreground`) já mudam sozinhas quando o dark mode é ativado. Use apenas `bg-background`, `bg-card`, etc.
+
+## 4. Regras de Negócio e Acessibilidade (UX)
+- Botões primários (`variant="default"`) devem ser os únicos Call-to-Actions (CTAs) em destaque na tela.
+- Use `variant="outline"` ou `variant="ghost"` para ações secundárias e de cancelamento.
+- Sempre que houver um formulário, use o componente `<Label>` atrelado a um `id` único do `<Input>`.
+
+## 5. Estruturação de "Blocks" (Telas compostas)
+- Ao compor telas (como Dashboards, Login, Settings), encapsule o layout em componentes chamados `Blocks` (`src/components/blocks`).
+- Use `flex` e `grid` do Tailwind para o layout.
+- O padding/margin padrão para espaçamentos entre seções maiores é `space-y-8` ou `gap-6`. Para espaçamentos internos menores, use `gap-4` ou `gap-2`.
+
+## 6. TypeScript
+- Escreva código em TypeScript (`.tsx`). 
+- Declare interfaces `Props` no topo do arquivo com descrições JSDoc para cada propriedade, indicando à IA como utilizá-la futuramente.
