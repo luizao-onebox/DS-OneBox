@@ -32,7 +32,7 @@ jobs:
         run: npm ci
 
       - name: Build Storybook
-        run: npm run build-storybook
+        run: npx storybook build -o storybook-static
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
