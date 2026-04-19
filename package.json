@@ -1,21 +1,37 @@
 {
-  "name": "storybook-app",
-  "private": true,
-  "version": "0.0.0",
+  "name": "ds-onebox",
+  "version": "1.0.0",
+  "private": false,
+  "main": "dist/index.umd.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js"
+    },
+    "./style.css": "./dist/index.css"
+  },
   "type": "module",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build:lib": "vite build",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.8.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
@@ -35,6 +51,7 @@
     "storybook": "^8.6.0",
     "tailwindcss": "^4.2.2",
     "typescript": "^6.0.3",
-    "vite": "^6.0.5"
+    "vite": "^6.0.5",
+    "vite-plugin-dts": "^4.5.4"
   }
 }
