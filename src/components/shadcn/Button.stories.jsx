@@ -1,11 +1,11 @@
 /**
- * Button component with support for multiple variants, sizes, and icons.
+ * Button component with support for multiple variants, sizes, icons, and loading states.
  * @see {@link https://ui.shadcn.com/docs/components/button}
  */
 import { Button } from "./Button"
 import { Badge } from "./Badge"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "./Card"
-import { Mail, Download, Plus, Trash2, Edit, Save, Settings, Bell, Heart, Search, User, PlusCircle, ArrowLeft, ArrowRight, Share2, Home, Star } from "lucide-react"
+import { Mail, Download, Plus, Trash2, Edit, Save, Settings, Bell, Heart, Search, User, PlusCircle, ArrowLeft, ArrowRight, Share2, Home, Star, Link as LinkIcon } from "lucide-react"
 
 const iconOptions = {
   None: null,
@@ -45,14 +45,23 @@ export default {
       control: "select",
       options: Object.keys(iconOptions),
       mapping: iconOptions,
+      description: "(Legacy) Usa um ícone pré-definido. Prefira compor no children.",
     },
     iconPosition: {
       control: "radio",
       options: ["left", "right"],
     },
+    isLoading: {
+      control: "boolean",
+      description: "Exibe o spinner de loading e desabilita o botão.",
+    },
     disabled: {
       control: "boolean",
     },
+    asChild: {
+      control: "boolean",
+      description: "Renderiza o componente filho mantendo os estilos do botão (Ex: <Link>)",
+    }
   },
 }
 
@@ -61,9 +70,10 @@ export const ButtonPlayground = {
     children: "Button",
     variant: "default",
     size: "default",
+    isLoading: false,
+    disabled: false,
     icon: "None",
     iconPosition: "left",
-    disabled: false,
   },
   render: (args) => {
     const { icon, ...rest } = args
@@ -88,7 +98,38 @@ export const ButtonGallery = {
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold mb-4">With Icons</h2>
+        <h2 className="text-lg font-semibold mb-4">Loading State (Novo)</h2>
+        <div className="flex flex-wrap gap-3">
+          <Button isLoading>Processando</Button>
+          <Button isLoading variant="secondary">Salvando</Button>
+          <Button isLoading variant="destructive">Excluindo</Button>
+          <Button isLoading variant="outline" size="icon" />
+          <Button isLoading variant="ghost" size="icon" />
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold mb-4">Composition (Novo padrão)</h2>
+        <div className="flex flex-wrap gap-3">
+          <Button>
+            <Mail className="mr-2 h-4 w-4" />
+            Entrar com Email
+          </Button>
+          <Button variant="secondary">
+            Filtrar
+            <Search className="ml-2 h-4 w-4" />
+          </Button>
+          <Button asChild variant="outline">
+            <a href="https://onebox.one" target="_blank" rel="noreferrer">
+              <LinkIcon className="mr-2 h-4 w-4" />
+              Slot (Link)
+            </a>
+          </Button>
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold mb-4">Legacy Icons</h2>
         <div className="flex flex-wrap gap-3">
           <Button icon={Mail} iconPosition="left">Email</Button>
           <Button icon={Download} iconPosition="right">Download</Button>
@@ -140,18 +181,6 @@ export const ButtonGallery = {
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold mb-4">Use Cases</h2>
-        <div className="flex flex-wrap gap-3">
-          <Button icon={Plus}>Create New</Button>
-          <Button icon={Save} variant="secondary">Save Changes</Button>
-          <Button icon={Trash2} variant="destructive">Delete</Button>
-          <Button icon={Share2} variant="ghost">Share</Button>
-          <Button icon={ArrowLeft} iconPosition="left">Back</Button>
-          <Button icon={ArrowRight} iconPosition="right">Next</Button>
-        </div>
-      </section>
-
-      <section>
         <h2 className="text-lg font-semibold mb-4">With Badge</h2>
         <div className="flex items-center gap-3">
           <Button icon={Bell}>
@@ -163,30 +192,6 @@ export const ButtonGallery = {
             <Badge variant="destructive" className="ml-2">99+</Badge>
           </Button>
         </div>
-      </section>
-
-      <section>
-        <h2 className="text-lg font-semibold mb-4">In Context</h2>
-        <Card className="w-[400px]">
-          <CardHeader>
-            <CardTitle>Project Settings</CardTitle>
-            <CardDescription>Manage your project preferences.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm">Email notifications</span>
-              <Button size="sm" icon={Settings}>Configure</Button>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm">Team members</span>
-              <Button size="sm" variant="secondary" icon={User}>Manage</Button>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-destructive">Danger zone</span>
-              <Button size="sm" variant="destructiveOutline" icon={Trash2}>Delete</Button>
-            </div>
-          </CardContent>
-        </Card>
       </section>
     </div>
   ),
