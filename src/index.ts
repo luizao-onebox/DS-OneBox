@@ -11,5 +11,7 @@ export * from "./components/shadcn";
 
 // Re-exporta os blocos complexos (patterns)
 export * from "./components/blocks/LoginForm";
+export * from "./components/blocks/DataTable";
+
 
 // (Adicione mais exports aqui conforme cria mais blocos)

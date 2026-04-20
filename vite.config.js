@@ -13,6 +13,11 @@ export default defineConfig({
     })
   ],
   base: '/DS-OneBox/',
+  server: {
+    headers: {
+      "Content-Security-Policy": "script-src * 'unsafe-inline' 'unsafe-eval' data: blob:;"
+    }
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
