@@ -3,6 +3,37 @@ import { Skeleton } from "./Skeleton"
 export default {
   title: "Components/Skeleton",
   component: Skeleton,
+  parameters: {
+    layout: "padded",
+    docs: {
+      description: {
+        component: `
+# Skeleton
+
+Um \`Skeleton\` (Esqueleto de Carregamento) serve como um estado de espaço reservado visual que imita o layout final da tela enquanto os dados da aplicação estão sendo carregados.
+
+## Anatomia e Composição
+
+O Skeleton é extremamente simples, consistindo de uma \`div\` básica com uma animação pulsante infinita.
+
+1. **\`<Skeleton>\`:** Deve receber dimensões explicitamente via as classes Tailwind na propriedade \`className\`.
+
+### Tokens e Animação
+
+- **Fundo:** \`bg-muted\` (Um cinza bem transparente).
+- **Animação:** \`animate-pulse\` (Aumenta e diminui a opacidade infinitamente via CSS puro).
+- **Raio:** Por padrão ele é ligeiramente arredondado (\`rounded-md\`), mas você pode sobrepor essa classe para criar círculos perfeitos (\`rounded-full\`) que imitam Avatares.
+
+### Exemplos Práticos
+
+Skeletons não devem ser retângulos genéricos enormes. Eles devem simular:
+- O lugar da foto (\`w-12 h-12 rounded-full\`).
+- Linhas de texto simuladas (\`h-4 w-[250px]\`).
+- Parágrafos inteiros combinando 3 a 4 linhas de Skeletons de larguras variadas (\`w-full\`, \`w-[90%]\`, \`w-[60%]\`).
+        `,
+      },
+    },
+  },
   tags: ["autodocs"],
 }
 

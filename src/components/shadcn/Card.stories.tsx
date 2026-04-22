@@ -11,6 +11,40 @@ import { Heart, MessageSquare, Share2, MoreHorizontal, UserPlus, Check, Bell, Se
 export default {
   title: "Components/Card",
   component: Card,
+  parameters: {
+    layout: "centered",
+    docs: {
+      description: {
+        component: `
+# Card
+
+O componente de \`Card\` atua como um contêiner agrupador de informações relacionadas, organizando títulos, descrições, conteúdo livre e rodapés de ações em uma única superfície visual.
+
+## Anatomia do Componente
+
+A estrutura completa de um cartão usa a seguinte composição de sub-componentes:
+1. **\`<Card>\`:** O contêiner delimitador que aplica fundo, bordas e sombras.
+2. **\`<CardHeader>\`:** Região de topo, normalmente usada para o título e descrição principal, com espaçamento maior.
+3. **\`<CardTitle>\`:** Cabeçalho do cartão com tipografia em destaque (Semibold).
+4. **\`<CardDescription>\`:** Texto complementar abaixo do título com tipografia menor.
+5. **\`<CardContent>\`:** Área reservada para os dados, formulários, listas ou gráficos.
+6. **\`<CardFooter>\`:** Parte inferior, tipicamente reservada para botões ou links de ação, centralizados horizontalmente ou alinhados à direita.
+
+## Tokens Visuais e Design System
+
+- \`bg-card\`: A cor de fundo padrão da superfície do cartão.
+- \`text-card-foreground\`: A cor padrão do texto dentro do cartão.
+- \`border-border\`: Linha delimitadora externa.
+- \`shadow-sm\`: Uma sombra suave (Small Shadow) para separar levemente o cartão do fundo geral.
+- \`text-muted-foreground\`: Usado para o \`<CardDescription>\`.
+
+## Dicas de Uso
+
+O \`<Card>\` é flexível e pode ser combinado com componentes como Tabelas, Formulários de Login ou Dashboards. Por padrão, ele não tem uma largura (width) fixa, então pode crescer para ocupar o espaço do contêiner pai ou receber uma largura fixa via a prop \`className\`.
+        `,
+      },
+    },
+  },
   tags: ["autodocs"],
 }
 

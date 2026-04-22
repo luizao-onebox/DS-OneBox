@@ -32,6 +32,39 @@ const iconOptions = {
 export default {
   title: "Components/Button",
   component: Button,
+  parameters: {
+    docs: {
+      description: {
+        component: `
+# Button
+
+O componente \`Button\` é o elemento de ação principal do sistema, utilizado para disparar eventos, enviar formulários ou navegar.
+
+## Anatomia
+
+Um botão é composto por:
+1. **Container:** O fundo do botão, que define a área clicável.
+2. **Ícone (Opcional):** Um elemento visual de suporte (esquerda ou direita).
+3. **Label:** O texto que descreve a ação do botão.
+4. **Spinner (Loading):** Substitui o ícone principal durante ações assíncronas.
+
+## Tokens (Design System)
+
+Os botões utilizam as seguintes variáveis CSS globais para manter a consistência de cores:
+
+- \`bg-primary\` / \`text-primary-foreground\`: Variantes padrão.
+- \`bg-destructive\` / \`text-destructive-foreground\`: Ações de perigo.
+- \`bg-secondary\` / \`text-secondary-foreground\`: Ações secundárias.
+- \`bg-muted\`: Usado em estados de \`hover\` para a variante \`ghost\`.
+- \`ring-ring\`: Cor do anel de foco (acessibilidade).
+
+## Composição Polimórfica (asChild)
+
+Usando a propriedade \`asChild={true}\`, o botão não renderiza a tag \`<button>\`, mas sim o elemento filho passado para ele (como um \`<a>\` ou \`<Link>\` do Next.js), injetando todas as classes CSS necessárias nele.
+        `,
+      },
+    },
+  },
   tags: ["autodocs"],
   argTypes: {
     variant: {

@@ -3,6 +3,31 @@ import { Alert, AlertDescription, AlertTitle } from "./Alert"
 export default {
   title: "Components/Alert",
   component: Alert,
+  parameters: {
+    layout: "padded",
+    docs: {
+      description: {
+        component: `
+# Alert
+
+O componente de Alerta exibe uma mensagem de atenção ou aviso proeminente que interrompe visualmente a tela (callout box). É ideal para mostrar confirmações, falhas em submissões ou informações úteis e não-dispensáveis no momento.
+
+## Anatomia do Componente
+
+A estrutura de uso é feita pela composição de:
+1. **\`<Alert>\`:** O contêiner de fundo colorido ou com borda contornada.
+2. **Ícone Decorativo:** Posicionado no topo à esquerda via filhos injetados no \`<Alert>\` (Normalmente usando os ícones do Lucide).
+3. **\`<AlertTitle>\`:** O título (em negrito \`font-medium\`) com tamanho maior e espaçamentos no fundo.
+4. **\`<AlertDescription>\`:** O texto principal, menor (\`text-sm\`), descrevendo a ação, erro ou contexto.
+
+## Variantes (Tokens)
+
+- **default**: Uma mensagem informativa, que tem fundo transparente, texto da cor primária (\`text-foreground\`) e bordas suaves (\`border-border\`).
+- **destructive**: O clássico alerta de erro ou perigo. As bordas, textos, e qualquer \`svg\` injetado, recebem a cor vermelha \`text-destructive\`.
+        `,
+      },
+    },
+  },
   tags: ["autodocs"],
 }
 

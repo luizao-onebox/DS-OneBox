@@ -4,6 +4,35 @@ import { Label } from "./Label"
 export default {
   title: "Components/Checkbox",
   component: Checkbox,
+  parameters: {
+    layout: "centered",
+    docs: {
+      description: {
+        component: `
+# Checkbox
+
+O \`Checkbox\` é um componente de controle utilizado para selecionar uma ou mais opções em um conjunto, podendo atuar independentemente.
+
+## Anatomia do Componente
+
+A estrutura de uso é baseada no primitive do Radix UI:
+1. **Container (Root):** A caixa visual do componente com as dimensões de \`h-4 w-4\`.
+2. **Indicador Visual (Indicator):** Um ícone (geralmente um \`Check\` do lucide-react) que aparece apenas quando o \`state\` é marcado.
+3. **Label:** Texto associado (Requer uso manual com \`<label htmlFor="...">\`).
+
+## Tokens e Design System
+
+- \`border-primary\`: Cor da borda que delimita o campo.
+- \`bg-primary\` e \`text-primary-foreground\`: Injetados automaticamente quando o item está no estado \`data-[state=checked]\`.
+- \`ring-ring\`: Borda interativa para foco e acessibilidade visual por teclado.
+
+## Estado Indeterminado (Indeterminate)
+
+Através da prop \`indeterminate\`, o checkbox exibe um traço horizontal no lugar do check tradicional, simbolizando opções "parcialmente selecionadas", comum em \`DataTables\` com cabeçalhos de "Selecionar Tudo".
+        `,
+      },
+    },
+  },
   tags: ["autodocs"],
   argTypes: {
     disabled: { control: "boolean" },
