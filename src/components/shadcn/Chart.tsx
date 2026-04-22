@@ -98,6 +98,8 @@ const ChartTooltipContent = React.forwardRef<
       indicator?: "line" | "dot" | "dashed"
       nameKey?: string
       labelKey?: string
+      payload?: any[]
+      label?: React.ReactNode
     }
 >(
   (
@@ -247,7 +249,9 @@ const ChartLegend = Legend
 const ChartLegendContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> &
-    Pick<React.ComponentProps<typeof Legend>, "payload" | "verticalAlign"> & {
+    Omit<React.ComponentProps<typeof Legend>, "payload"> & {
+      payload?: any[]
+      verticalAlign?: "top" | "middle" | "bottom"
       hideIcon?: boolean
       nameKey?: string
     }

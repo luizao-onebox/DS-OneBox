@@ -64,9 +64,9 @@ function Calendar({
           return <Icon className="h-4 w-4" />
         },
       }}
-      startYear={2000}
-      toYear={2030}
       captionLayout="dropdown"
+      fromYear={2000}
+      toYear={2030}
       {...props}
     />
   )

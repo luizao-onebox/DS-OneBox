@@ -76,7 +76,7 @@ export const BarChartExample: Story = {
             axisLine={false}
           />
           <ChartTooltip content={<ChartTooltipContent />} />
-          <ChartLegend content={<ChartLegendContent />} />
+          <ChartLegend content={<ChartLegendContent payload={[]} />} />
           <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
           <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
           <Bar dataKey="tablet" fill="var(--color-tablet)" radius={4} />
@@ -102,7 +102,7 @@ export const BarChartHorizontalExample: Story = {
             axisLine={false}
           />
           <ChartTooltip content={<ChartTooltipContent />} />
-          <ChartLegend content={<ChartLegendContent />} />
+          <ChartLegend content={<ChartLegendContent payload={[]} />} />
           <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
           <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
           <Bar dataKey="tablet" fill="var(--color-tablet)" radius={4} />
@@ -126,7 +126,7 @@ export const LineChartExample: Story = {
             tickMargin={8}
           />
           <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-          <ChartLegend content={<ChartLegendContent />} />
+          <ChartLegend content={<ChartLegendContent payload={[]} />} />
           <Line dataKey="desktop" type="monotone" stroke="var(--color-desktop)" strokeWidth={2} dot={false} />
           <Line dataKey="mobile" type="monotone" stroke="var(--color-mobile)" strokeWidth={2} dot={false} />
           <Line dataKey="tablet" type="monotone" stroke="var(--color-tablet)" strokeWidth={2} dot={false} />
@@ -150,7 +150,7 @@ export const AreaChartExample: Story = {
             tickMargin={8}
           />
           <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-          <ChartLegend content={<ChartLegendContent />} />
+          <ChartLegend content={<ChartLegendContent payload={[]} />} />
           <Area dataKey="mobile" type="natural" fill="var(--color-mobile)" fillOpacity={0.4} stroke="var(--color-mobile)" stackId="a" />
           <Area dataKey="tablet" type="natural" fill="var(--color-tablet)" fillOpacity={0.4} stroke="var(--color-tablet)" stackId="a" />
           <Area dataKey="desktop" type="natural" fill="var(--color-desktop)" fillOpacity={0.4} stroke="var(--color-desktop)" stackId="a" />
