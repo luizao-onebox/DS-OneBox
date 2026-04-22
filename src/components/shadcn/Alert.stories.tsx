@@ -24,6 +24,36 @@ A estrutura de uso é feita pela composição de:
 
 - **default**: Uma mensagem informativa, que tem fundo transparente, texto da cor primária (\`text-foreground\`) e bordas suaves (\`border-border\`).
 - **destructive**: O clássico alerta de erro ou perigo. As bordas, textos, e qualquer \`svg\` injetado, recebem a cor vermelha \`text-destructive\`.
+- **success**: Alerta de sucesso (ex: "Salvo com sucesso", "Operação concluída").
+- **warning**: Alerta de atenção (ex: "Atenção", "Verifique os dados").
+
+## Boas Práticas
+
+### ✅ Faça
+- Use Alertas para mensagens importantes que requerem atenção do usuário.
+- Mantenha o texto conciso e direto.
+- Forneça uma ação quando possível (ex: "Tentar novamente", "Ver detalhes").
+- Use títulos descritivos que resumam o problema ou informação.
+
+### ❌ Não Faça
+- Não use Alertas para mensagens de sucesso muito breves — um Toast pode ser mais adequado.
+- Não abuse de alertas na mesma tela — se many elementos precisam de alerta, use Cards ou mensagens inline.
+- Não use alertas destrutivos (\`destructive\`) para avisos informativos.
+
+## Acessibilidade
+
+- Alertas usam \`role="alert"\` automaticamente via Radix quando há \`children\`.
+- Se o alerta for estático (não crítico), considere \`role="status"\` para não interromper leitores de tela.
+- Forneça \`aria-label\` se o ícone decorativo não tiver contexto textual.
+
+## Variants
+
+| Variant | Uso | Exemplo |
+|---------|-----|---------|
+| \`default\` | Mensagem informativa | "Aqui está o que mudou" |
+| \`destructive\` | Erro/Falha | "Falha ao salvar dados" |
+| \`success\` | Sucesso da operação | "Documento salvo com sucesso" |
+| \`warning\` | Alerta/Atenção | "Verifique os campos obrigatórios" |
         `,
       },
     },

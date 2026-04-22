@@ -22,11 +22,45 @@ A estrutura é baseada inteiramente no \`react-day-picker\`, mas o Tailwind CSS 
 2. **Table / Head Row:** Os dias da semana no topo.
 3. **Cells / Days:** Os dias individuais que podem receber \`data-selected\`.
 
+## Seletor de Mês/Ano (Dropdown)
+
+O componente suporta \`captionLayout="dropdown"\` para transformar a navegação mês a mês em um dropdown interativo, permitindo seleção direta de qualquer mês e ano dentro do intervalo configurado (\`fromYear\` / \`toYear\`). Isso melhora significativamente a usabilidade em campos de Data.
+
 ## Tokens
 
 - \`bg-primary\`: Cor de fundo do dia selecionado.
 - \`bg-accent\`: Cor de fundo para dias que fazem parte de um intervalo (range) ou para destacar o dia atual (\`day_today\`).
 - \`text-muted-foreground\`: Dias fora do mês atual (\`day_outside\`) ou desabilitados.
+
+## Boas Práticas
+
+### ✅ Faça
+- Use \`locale={ptBR}\` para textos em português.
+- Configure \`fromYear\` e \`toYear\` para limitar o intervalo de anos disponíveis.
+- Use \`captionLayout="dropdown"\` para calendários de seleção de data onde navegação rápida é importante.
+- Sempre forneça \`onSelect\` para capturar a seleção.
+
+### ❌ Não Faça
+- Não use calendários para ranges muito longos — defina um intervalo razoável.
+- Não use \`mode="multiple"\` se o usuário só precisa selecionar uma data.
+- Evite desabilitar datas sem contexto — forneça tooltip explicativo.
+
+## Estados do Dia
+
+| Estado | Classe | Descrição |
+|--------|--------|-----------|
+| Default | \`day\` | Dia normal |
+| Selected | \`day_selected\` | Dia atualmente selecionado |
+| Today | \`day_today\` | Dia atual (acento visual) |
+| Outside | \`day_outside\` | Dias de meses vizinhos |
+| Disabled | \`day_disabled\` | Dias não selecionáveis |
+
+## Acessibilidade
+
+- Navegue com \`Arrow Keys\` entre os dias.
+- \`Enter\`/\`Space\` seleciona o dia em foco.
+- Leitores de tela leem a data atual automaticamente.
+- Botões de navegação (\`Previous\`/\`Next\`) têm \`aria-label\` descritivo.
         `,
       },
     },

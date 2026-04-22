@@ -5,6 +5,67 @@ export default {
   title: "Components/RadioGroup",
   component: RadioGroup,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: `
+# RadioGroup
+
+O \`RadioGroup\` é um componente de controle utilizado para selecionar uma única opção entre um conjunto mutuamente exclusivo de escolhas.
+
+## Anatomia do Componente
+
+1. **Container (RadioGroup):** Wrapper que gerencia o estado de seleção via Radix.
+2. **Item (RadioGroupItem):** Cada opção individual do grupo, renderizada como um \`<input type="radio">\`.
+3. **Label:** Texto associado a cada item.
+
+## Tokens e Design System
+
+- \`bg-primary\` / \`text-primary-foreground\`: Injetados quando \`data-[state=checked]\`.
+- \`ring-ring\`: Anel de foco para navegação por teclado.
+- \`bg-background\`: Fundo do círculo do radio button.
+
+## Boas Práticas
+
+### ✅ Faça
+- Use RadioGroup para opções mutuamente exclusivas (só uma pode ser selecionada).
+- Liste as opções em ordem lógica (mais comum primeiro, menos comum por último).
+- Forneça Labels claros e descritivos para cada opção.
+- Use \`defaultValue\` para definir a seleção inicial.
+
+### ❌ Não Faça
+- Não use RadioGroup para escolhas sim/não — use Switch.
+- Não use para listas maiores que 7 itens — considere DropdownMenu ou Select.
+- Não deixe uma lista de RadioGroup sem nenhuma seleção default sem justificativa.
+
+## Estados
+
+| Estado | Descrição |
+|--------|-----------|
+| \`unchecked\` | Não selecionado (círculo vazio) |
+| \`checked\` | Selecionado (círculo preenchido) |
+| \`disabled\` | Desabilitado (não interagível) |
+
+## Acessibilidade
+
+- RadioGroup é um \`<fieldset>\` semanticamente.
+- Cada \`<RadioGroupItem>\` é um \`<input type="radio">\`.
+- Use \`<Label>\` com \`htmlFor\` para cada item.
+- Navegue com Arrow Keys entre as opções.
+- \`aria-checked\` é gerenciado automaticamente pelo Radix.
+
+## Diferença entre RadioGroup, Checkbox e Switch
+
+| Característica | RadioGroup | Checkbox | Switch |
+|----------------|------------|----------|--------|
+| Seleção | Única | Múltipla | Única (toggle) |
+| Mutualamente exclusivo | Sim | Não | Sim |
+| Efeito | Requer submit | Requer submit | Imediato |
+| Uso típico | Escolher uma opção | Aceitar termos | Configurações |
+        `,
+      },
+    },
+  },
 }
 
 export const RadioGroupPlayground = {

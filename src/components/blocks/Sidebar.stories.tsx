@@ -45,12 +45,54 @@ Este bloco é montado combinando várias partes:
 - \`<SidebarContent>\`: A área central rolavel contendo os \`<SidebarItem>\` e \`<SidebarSubItem>\` (que formam o estilo Accordion).
 - \`<SidebarFooter>\`: A área inferior com links fixos (como status online e copyright).
 
+## Estados da Sidebar
+
+A Sidebar suporta dois estados principais que podem ser controlados via \`SidebarProvider\`:
+
+| Estado | Largura | Comportamento |
+|--------|---------|--------------|
+| \`Expanded\` | 260px | Exibe labels e ícones de todos os itens |
+| \`Collapsed\` | 68px | Exibe apenas ícones + tooltips no hover |
+
 ## Tokens e Design System
 
 - **Fundo:** \`bg-card\` com \`border-r\` (separador sutil à direita).
 - **Tipografia:** \`text-sm font-medium\` para os itens principais, \`text-muted-foreground\` para os não-selecionados.
 - **Ícones:** Usa a biblioteca \`lucide-react\` com tamanho padronizado (\`h-5 w-5\` ou \`h-4 w-4\`).
 - **Tooltips:** Injetados automaticamente nos itens e no footer quando o estado \`isCollapsed\` é ativado.
+
+## Boas Práticas
+
+### ✅ Faça
+- Use \`SidebarProvider\` como wrapper para gerenciar o estado de collapse.
+- Mantenha no máximo 5-7 itens no primeiro nível para não poluir visualmente.
+- Use \`<SidebarSubItem>\` aninhado para hierarquias de navegação.
+- Para estados collapsed, use tooltips descritivos para identificar os itens.
+
+### ❌ Não Faça
+- Não ultrapasse 3 níveis de aninhamento (Item → SubItem → SubSubItem).
+- Não use \`<SidebarItem>\` sem ícone — o alinhamento visual será prejudicado.
+- Evite labels muito longos — use texto conciso.
+
+## Acessibilidade
+
+- A Sidebar usa \`<nav>\` semanticamente.
+- Navegue entre itens com \`Arrow Up/Down\` dentro do menu.
+- Itens colapsados mostram tooltip com \`role="tooltip"\`.
+- O estado ativo (\`active\`) deve ser marcado visualmente e com \`aria-current="page"\`.
+
+## Composição de Sub-Componentes
+
+| Sub-componente | Descrição |
+|----------------|-----------|
+| \`<SidebarProvider>\` | Context API wrapper que gerencia \`isCollapsed\` e Tooltips |
+| \`<Sidebar>\` | Container principal (aside) com transição de largura |
+| \`<SidebarHeader>\` | Topo com logo e botão de collapse |
+| \`<SidebarContent>\` | Área central scrollável com itens de navegação |
+| \`<SidebarItem>\` | Item principal com ícone e label (Accordion trigger) |
+| \`<SidebarSubItem>\` | Sub-item de navegação (pode ser aninhado recursivamente) |
+| \`<SidebarFooter>\` | Rodapé com ações fixas |
+| \`<SidebarFooterItem>\` | Item individual do footer |
         `,
       },
     },

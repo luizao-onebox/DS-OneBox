@@ -41,6 +41,36 @@ A estrutura completa de um cartão usa a seguinte composição de sub-componente
 ## Dicas de Uso
 
 O \`<Card>\` é flexível e pode ser combinado com componentes como Tabelas, Formulários de Login ou Dashboards. Por padrão, ele não tem uma largura (width) fixa, então pode crescer para ocupar o espaço do contêiner pai ou receber uma largura fixa via a prop \`className\`.
+
+## Boas Práticas
+
+### ✅ Faça
+- Use \`<CardHeader>\` + \`<CardContent>\` + \`<CardFooter>\` para manter consistência de espaçamento.
+- Mantenha o conteúdo do \`<CardTitle>\` conciso (máximo 1-2 linhas).
+- Use \`<CardDescription>\` para complementar o título com contexto adicional.
+- Em Cards de lista (notificações, mensagens), priorize informações mais importantes no topo.
+
+### ❌ Não Faça
+- Não aninhe Cards dentro de Cards — prefira usar \`<Accordion>\` ou \`<Tabs>\`.
+- Não coloque ações primárias dentro de \`<CardFooter>\` sem um \`<CardHeader>\` — o usuário precisa de contexto antes de agir.
+- Evite Cards muito longos — quebre em múltiplos Cards ou use \`<ScrollArea>\`.
+
+## Acessibilidade
+
+- Cards são elementos \`<article>\` semanticamente quando contêm conteúdo independente.
+- Forneça \`aria-label\` em botões de ação dentro do Card quando o texto do botão não for autoexplicativo.
+- Se o Card for interativo (cliccável), use \`<button>\` como wrapper ou \`role="link"\`.
+
+## Composição de Sub-Componentes
+
+| Componente | Descrição |
+|------------|-----------|
+| \`<Card>\` | Contêiner principal com fundo, bordas e sombra |
+| \`<CardHeader>\` | Região de topo com espaçamento generoso |
+| \`<CardTitle>\` | Título em destaque (semibold) |
+| \`<CardDescription>\` | Texto complementar menor (muted) |
+| \`<CardContent>\` | Área livre para qualquer conteúdo |
+| \`<CardFooter>\` | Região inferior para ações |
         `,
       },
     },

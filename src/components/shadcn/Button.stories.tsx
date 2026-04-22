@@ -61,6 +61,37 @@ Os botões utilizam as seguintes variáveis CSS globais para manter a consistên
 ## Composição Polimórfica (asChild)
 
 Usando a propriedade \`asChild={true}\`, o botão não renderiza a tag \`<button>\`, mas sim o elemento filho passado para ele (como um \`<a>\` ou \`<Link>\` do Next.js), injetando todas as classes CSS necessárias nele.
+
+## Boas Práticas
+
+### ✅ Faça
+- Use verbos de ação claros no label ("Salvar", "Enviar", "Cancelar").
+- Mantenha o texto do botão conciso (máximo 3 palavras).
+- Use \`isLoading\` para ações assíncronas para dar feedback visual.
+- Use a variante \`destructive\` para ações irreversíveis.
+
+### ❌ Não Faça
+- Não use botões para navegação interna — use \`asChild\` com \`<Link>\`.
+- Não desabilite botões sem contexto — forneça tooltip ou texto explicativo.
+- Evite many botões na mesma tela — priorize ações primárias e secundárias.
+
+## Acessibilidade
+
+- Sempre forneça \`aria-label\` em botões que usam apenas ícone.
+- Use \`disabled\` junto com \`aria-disabled\` quando a ação não estiver disponível temporalmente.
+- O spinner de loading usa \`aria-busy="true"\` automaticamente.
+
+## Variants
+
+| Variant | Uso |
+|---------|-----|
+| \`default\` | Ação principal padrão |
+| \`destructive\` | Ações perigosas ou irreversíveis (ex: exclusão) |
+| \`destructiveOutline\` | Ações perigosas com estilo outline |
+| \`outline\` | Ações secundárias alternativas |
+| \`secondary\` | Ações menos importantes que default |
+| \`ghost\` | Ações mínimas, fundo transparente |
+| \`link\` | Links inline com estilo de botão |
         `,
       },
     },

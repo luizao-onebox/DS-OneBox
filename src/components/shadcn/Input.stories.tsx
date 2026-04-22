@@ -17,7 +17,73 @@ const meta = {
 
 Campos de entrada (\`<input>\`) são utilizados para coletar dados fornecidos pelos usuários em formulários e caixas de pesquisa.
 
-Abaixo estão diversas variações comuns de inputs encontrados em interfaces modernas (Ícones, Senhas, Erros, Anexos, etc).
+## Anatomia
+
+O componente Input é composto por:
+1. **Campo (Input):** Área onde o usuário digita o valor.
+2. **Ícone Esquerdo (Opcional):** Elemento visual à esquerda do campo.
+3. **Ícone Direito (Opcional):** Elemento visual à direita do campo (ex: botão de toggle de senha).
+4. **Label (Opcional):** Rótulo descritivo acima do campo.
+5. **Helper Text (Opcional):** Texto de apoio abaixo do campo.
+6. **Error Message (Opcional):** Texto de erro exibido em vermelho quando \`hasError={true}\`.
+
+## Tokens (Design System)
+
+Inputs utilizam as seguintes variáveis CSS globais:
+
+- \`ring-ring\`: Cor do anel de foco (acessibilidade).
+- \`border-border\`: Cor da borda padrão.
+- \`bg-background\`: Fundo do campo.
+- \`text-foreground\`: Cor do texto digitado.
+- \`text-muted-foreground\`: Cor do placeholder.
+- \`ring-offset-background\`: Offset do anel de foco.
+
+## Boas Práticas
+
+### ✅ Faça
+- Sempre use \`<Label>\` associado ao input via \`htmlFor\`.
+- Forneça \`placeholder\` apenas como hint, nunca como substituto do label.
+- Para campos de senha, sempre ofereça toggle de visibilidade.
+- Valide o input em tempo real quando possível e mostre mensagens de erro claras.
+- Use \`type="email"\` para campos de email (permite validação nativa).
+
+### ❌ Não Faça
+- Não use \`defaultValue\` e \`value\` ao mesmo tempo (gera conflito React controlado/não-controlado).
+- Não rely on placeholder alone para descrever o que é esperado — use labels.
+- Não desabilite inputs sem fornecer contexto visual ou tooltip.
+
+## Estados
+
+| Estado | Descrição |
+|--------|-----------|
+| \`default\` | Estado normal, aguardando interação |
+| \`hover\` | Estado quando o cursor está sobre o campo |
+| \`focus\` | Estado quando o campo está em foco (anel azul) |
+| \`disabled\` | Estado desabilitado (campo não interagível, opacidade reduzida) |
+| \`error\` | Estado de erro (\`hasError={true}\`, borda vermelha) |
+
+## Acessibilidade
+
+- Inputs devem sempre ter um \`id\` único e um \`Label\` associado.
+- Use \`aria-invalid="true"\` quando \`hasError={true}\`.
+- Para inputs de senha, o botão de toggle deve ter \`aria-label\` dinâmico ("Mostrar senha" / "Esconder senha").
+- Forneça \`autoComplete\` adequado (\`email\`, \`current-password\`, etc).
+
+## Exemplo de Uso
+
+\`\`\`tsx
+import { Input } from "@/components/shadcn/Input"
+import { Label } from "@/components/shadcn/Label"
+
+function Example() {
+  return (
+    <div className="grid w-full max-w-sm items-center gap-1.5">
+      <Label htmlFor="email">Email</Label>
+      <Input id="email" type="email" placeholder="nome@empresa.com" />
+    </div>
+  )
+}
+\`\`\`
         `,
       },
     },

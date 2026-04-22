@@ -29,14 +29,46 @@ const meta = {
         component: `
 # Topbar (Navbar Superior)
 
-Componente de navegação horizontal projetado para o topo da aplicação OneDocs. 
-Sua anatomia é baseada na imagem de referência fornecida, contendo:
-- \`Logotipo\` fixo à esquerda.
-- Divisores verticais sutis.
-- Seletores de contexto (Módulo, Tenant, Produto).
-- Informações textuais (Solicitação).
-- Ações globais (Fullscreen, Atalhos de Teclado, Notificações com badge).
-- Perfil do Usuário com Dropdown.
+Componente de navegação horizontal projetado para o topo da aplicação OneDocs.
+
+## Anatomia do Componente
+
+A Topbar é composta pelos seguintes sub-componentes:
+
+| Sub-componente | Descrição |
+|----------------|-----------|
+| \`<Topbar>\` | Container principal que aplica o layout flexbox e posiciona os filhos |
+| \`<TopbarLeft>\` | Wrapper à esquerda (logo, seletores, info) |
+| \`<TopbarRight>\` | Wrapper à direita (ações, perfil) |
+| \`<TopbarLogo>\` | Área do logotipo da aplicação |
+| \`<TopbarDivider>\` | Linha vertical separadora entre seções |
+| \`<TopbarSelector>\` | Dropdown de seleção de contexto (Módulo, tenant, Produto) |
+| \`<TopbarInfo>\` | Texto informativo (ex: número de solicitação) |
+| \`<TopbarAction>\` | Botão de ação iconizado (notificação, fullscreen, etc) |
+| \`<TopbarProfile>\` | Área do perfil do usuário com Avatar e dropdown |
+
+## Boas Práticas
+
+### ✅ Faça
+- Use \`<TopbarLogo>\` para inserir o Logo real da aplicação.
+- Use \`<TopbarSelector>\` para contextos que podem mudar (Tenant, Produto, Módulo).
+- Use \`<TopbarInfo>\` para exibir dados contextuais da página atual.
+- Agrupe ações relacionadas em \`<TopbarRight>\`.
+
+### ❌ Não Faça
+- Não adicione mais de 4 seletores na mesma linha — o espaço fica apertado.
+- Não use \`<TopbarAction>\` para ações que não são globais (use botões dentro da página).
+- Não exponha mais de 3 ações na barra direita — agrupe em dropdown se necessário.
+
+## Layout Completo (Topbar + Sidebar)
+
+A \`<Topbar>\` foi projetada para funcionar em conjunto com o componente \`<Sidebar>\`. Use a estrutura do \`FullLayoutExample\` como base para novos layouts.
+
+## Acessibilidade
+
+- Ações de ícone (\`<TopbarAction>\`) devem ter \`aria-label\` descritivo.
+- O \`<TopbarProfile>\` abre um dropdown — certifique-se de que está navegável por Tab.
+- Se a Topbar for fixada no topo, use \`position="sticky"\` ou \`position="fixed"\`.
         `,
       },
     },

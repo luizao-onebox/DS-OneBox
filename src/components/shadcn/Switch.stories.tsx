@@ -27,6 +27,42 @@ A estrutura interativa usa \`@radix-ui/react-switch\`:
 - **Acessibilidade:** Suporta navegação por teclado recebendo um \`ring-ring\` quando focado via \`Tab\`.
 
 **Recomendação de Uso:** Use Switches para configurações do sistema (ex: Ligar modo noturno, Ativar notificações, Aceitar Cookies). Diferente de um Checkbox (que serve para submeter formulários com várias escolhas), Switches refletem ações imediatas.
+
+## Boas Práticas
+
+### ✅ Faça
+- Use Switches para toggles de configuração que têm efeito imediato (não precisam de "Salvar").
+- Use Labels descritivos que indiquem claramente o estado da configuração ("Notificações ativas").
+- Posicione Labels à direita do Switch para manter consistência com sistemas operacionais conhecidos.
+
+### ❌ Não Faça
+- Não use Switch para escolhas que precisam ser submetidas em um formulário — use Checkbox.
+- Não use Switches para ações que requerem confirmação antes de aplicar — o efeito é imediato.
+- Evite Labels que não deixem claro o que está sendo controlado.
+
+## Estados
+
+| Estado | Descrição |
+|--------|-----------|
+| \`unchecked\` | Desligado, fundo cinza, bolinha à esquerda |
+| \`checked\` | Ligado, fundo primário, bolinha à direita |
+| \`disabled\` | Não interagível, opacidade reduzida |
+
+## Acessibilidade
+
+- Sempre use \`id\` único e \`<Label>\` com \`htmlFor\`.
+- O Radix gerencia \`aria-checked\` automaticamente.
+- Suporta navegação por Tab e Space para alternar estados.
+- O componente é semanticamente um \`<button role="switch">\`.
+
+## Diferença entre Switch e Checkbox
+
+| Característica | Switch | Checkbox |
+|----------------|--------|----------|
+| Efeito | Imediato | Requer submit |
+| Uso típico | Configurações | Formulários |
+| Visual | Toggle on/off | Marcar/Desmarcar |
+| Submit | Não precisa | Precisa de formulário |
         `,
       },
     },

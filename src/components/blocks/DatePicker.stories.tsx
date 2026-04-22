@@ -24,6 +24,24 @@ A estrutura de uso é feita pela composição de 3 elementos:
 ## Dicas
 
 Este não é um componente primitivo direto do Radix UI, mas sim um padrão de composição ("Block") de componentes do ecossistema Shadcn. Utilize a biblioteca \`date-fns\` (com o \`locale\` apropriado, como \`ptBR\`) para formatar as datas de exibição.
+
+## Boas Práticas
+
+### ✅ Faça
+- Use \`DatePicker\` em campos de formulário que requerem data (nascimento, agendamento, etc).
+- Formate a data de exibição com \`date-fns\` usando locale pt-BR.
+- Use \`placeholder\` descritivo ("Selecione uma data").
+
+### ❌ Não Faça
+- Não use DatePicker para range de datas — use dois DatePickers ou um \`Calendar mode="range"\`.
+- Não rely em DatePicker para hora — use um componente de Time Picker separado.
+
+## Acessibilidade
+
+- O Popover abre ao clicar no \`Button\` trigger.
+- Navegue entre dias com \`Arrow Keys\`.
+- \`Escape\` fecha o Popover.
+- Leitores de tela leem a data selecionada corretamente.
         `,
       },
     },

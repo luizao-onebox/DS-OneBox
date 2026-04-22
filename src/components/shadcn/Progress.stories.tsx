@@ -1,18 +1,78 @@
 import { Progress } from "./Progress"
 
-// Função auxiliar apenas para retornar a cor do texto, já que o gradiente agora é interno no Progress
-function getRiskTextClass(value: number) {
-  if (value < 33) return "text-emerald-600"
-  if (value < 66) return "text-amber-600"
-  return "text-red-700"
-}
-
 export default {
   title: "Components/Progress",
   component: Progress,
   tags: ["autodocs"],
-  argTypes: {
-    value: { control: "number", min: 0, max: 100 },
+  parameters: {
+    docs: {
+      description: {
+        component: `
+# Progress
+
+O componente \`Progress\` exibe o andamento de uma tarefa ou processo, fornecendo feedback visual sobre quanto falta para completar uma ação.
+
+## Anatomia do Componente
+
+1. **Container (Root):** Faixa de fundo que representa 100% da barra.
+2. **Indicator:** Preenchimento colorido que representa o progresso atual.
+
+## Variants
+
+### \`default\`
+Usa a cor primária (\`bg-primary\`) para representar o progresso. Ideal para uso geral.
+
+### \`gradient\`
+Aplica automaticamente um gradiente de cores baseado no valor do progresso:
+- **< 33%**: Verde esmeralda (\`from-emerald-400 to-emerald-500\`)
+- **33-66%**: Verde para Amarelo (\`from-emerald-400 to-amber-400\`)
+- **> 66%**: Verde para Vermelho (\`from-emerald-400 via-amber-400 to-red-500\`)
+
+Use \`variant="gradient"\` para indicadores de risco ou níveis de confiança.
+
+## Sizes
+
+| Size | Altura |
+|------|--------|
+| \`sm\` | \`h-2\` (8px) |
+| \`default\` | \`h-4\` (16px) |
+| \`lg\` | \`h-6\` (24px) |
+
+## Boas Práticas
+
+### ✅ Faça
+- Use Progress para operações que levam mais de 1 segundo.
+- Mantenha o texto de porcentagem visível quando o valor não for óbvio.
+- Use \`variant="gradient"\` para indicadores de saúde/confiança/risco.
+
+### ❌ Não Faça
+- Não use Progress para operações instantâneas — use Spinner ou Skeleton.
+- Não atualize em intervalos muito frequentes (máximo 100ms entre updates).
+- Não use Progress dentro de espaços muito apertados sem considerar \`size="sm"\`.
+
+## Acessibilidade
+
+- O componente usa \`<progress>\` nativamente quando possível.
+- Forneça \`aria-label\` se houver múltiplos Progress na mesma tela.
+- O valor do progresso é lido por leitores de tela automaticamente.
+
+## Exemplo de Uso
+
+\`\`\`tsx
+import { Progress } from "@/components/shadcn/Progress"
+
+// Basic
+<Progress value={50} />
+
+// Com gradient (risco/confiança)
+<Progress value={75} variant="gradient" />
+
+// Pequeno (espaço limitado)
+<Progress value={30} size="sm" />
+\`\`\`
+        `,
+      },
+    },
   },
 }
 
@@ -30,7 +90,6 @@ export const ProgressGallery = {
         <Progress value={50} />
       </section>
 
-      {/* Variação de Risco baseada nos estilos primitivos */}
       <section>
         <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Variação de Risco (Gradient)</h2>
         <div className="space-y-6">
@@ -39,26 +98,18 @@ export const ProgressGallery = {
             { val: 50, prefix: "Usage" },
             { val: 75, prefix: "Storage" },
             { val: 95, prefix: "Complete" },
-          ].map((item, idx) => {
-            return (
-              <div key={idx} className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <div className="flex items-center gap-1.5 text-foreground">
-                    <span>{item.prefix}</span>
-                  </div>
-                  <span className="text-foreground">{item.val}%</span>
-                </div>
-                <Progress 
-                  value={item.val} 
-                  variant="gradient"
-                />
+          ].map((item, idx) => (
+            <div key={idx} className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-foreground">{item.prefix}</span>
+                <span className="text-foreground">{item.val}%</span>
               </div>
-            )
-          })}
+              <Progress value={item.val} variant="gradient" />
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Variações de Tamanho */}
       <section>
         <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Sizes</h2>
         <div className="space-y-6">
