@@ -6,52 +6,76 @@ import { Meta } from '@storybook/blocks';
 
 Este guia foi criado para responder à pergunta: *"Como eu pego esses componentes bonitos e coloco no meu código?"*
 
-O OneDocs Design System não é instalado via `npm install ds-onebox`. Ele segue a filosofia "copiar e colar" (baseada no Shadcn UI), onde você é dono do código. 
+O OneDocs Design System é empacotado e distribuído como uma biblioteca NPM privada (`ds-onebox`). Este repositório (DS-OneBox) é a única fonte da verdade, e **os desenvolvedores devem consumir o pacote gerado, sem alterar o código dos componentes diretamente em suas aplicações.**
 
-Este repositório (`DS-OneBox`) é a **Fonte da Verdade**. Sempre que um dev precisar de um componente, ele deve vir aqui, copiar o código e colar no seu próprio projeto.
-
----
-
-## 1. Configurando seu Projeto Base
-
-Antes de copiar os componentes, seu projeto (ex: Next.js ou Vite) precisa estar preparado:
-
-1. **Tailwind CSS:** Certifique-se de que o Tailwind está instalado e configurado.
-2. **Utilitários:** Copie o arquivo `src/lib/utils.ts` deste repositório para o seu (ele contém a função `cn` que mescla classes do Tailwind).
-3. **Estilos Globais:** Copie as variáveis CSS (Cores e Dark Mode) do arquivo `src/index.css` deste repositório para o arquivo CSS global do seu projeto.
-4. **Dependências Core:** Instale as bibliotecas base que quase todos os componentes usam:
-   ```bash
-   npm install class-variance-authority clsx tailwind-merge lucide-react @radix-ui/react-slot
-   ```
+Essa abordagem garante que todos os projetos (Admin, Portais, etc.) fiquem consistentes e atualizados automaticamente quando o Design System evoluir.
 
 ---
 
-## 2. Copiando Componentes (O Fluxo de Trabalho)
+## 1. Instalação
 
-Sempre que precisar de um botão, tabela ou modal novo:
+No seu projeto React/Next.js/Vite, instale o pacote do Design System e as dependências pares necessárias:
 
-1. Abra o repositório principal do Design System no GitHub (ou clone-o na sua máquina).
-2. Vá até a pasta `src/components/shadcn` (para primitivos) ou `src/components/blocks` (para padrões complexos).
-3. Copie o arquivo `.tsx` do componente desejado.
-4. Cole dentro da pasta equivalente no seu projeto (ex: `src/components/shadcn/Button.tsx`).
-5. **Atenção às dependências:** Se você copiar um componente complexo (como o `Dialog` ou `Select`), veja os imports no topo do arquivo. Você pode precisar instalar os pacotes do Radix UI referentes a ele:
-   ```bash
-   npm install @radix-ui/react-dialog
-   ```
+```bash
+# Instale o design system (ajuste para o seu registry/link privado do github caso aplicável)
+npm install ds-onebox
+
+# Instale os ícones que são usados em conjunto com o DS
+npm install lucide-react
+```
+
+---
+
+## 2. Configurando o Tema (Tailwind CSS)
+
+Para que os componentes do pacote tenham a mesma cara do Storybook, seu projeto precisa herdar as variáveis de cor e as configurações do Tailwind.
+
+### Passo 2.1: Importar o CSS Global
+No seu arquivo principal (ex: `main.tsx`, `App.tsx` ou `layout.tsx` no Next.js), importe o CSS compilado do pacote logo no topo:
+
+```tsx
+import 'ds-onebox/style.css'
+```
+
+### Passo 2.2: Configurar o Tailwind do seu App
+Seu projeto precisa ler as classes do Tailwind de dentro do `node_modules` do design system para não purgar o CSS dos componentes. No seu `tailwind.config.js` (ou `tailwind.config.ts`), adicione o caminho do pacote no `content`:
+
+```js
+module.exports = {
+  content: [
+    "./src/**/*.{js,ts,jsx,tsx}",
+    // Escaneia os componentes compilados do Design System
+    "./node_modules/ds-onebox/dist/**/*.js"
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+```
 
 ---
 
 ## 3. Importando e Utilizando no seu Código
 
-Para utilizar qualquer componente, basta importá-lo do caminho local do seu projeto. Evite caminhos relativos longos (\`../../../\`) configurando o alias \`@\` no seu \`tsconfig.json\`.
+Para utilizar qualquer componente, você agora os importa diretamente da biblioteca \`ds-onebox\` via NPM, como qualquer outro pacote externo. Não é mais necessário usar caminhos relativos ou copiar arquivos soltos para o seu repositório.
 
 \`\`\`tsx
-// ✅ Faça assim (usando alias):
-import { Button } from "@/components/shadcn/Button"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/shadcn/Card"
+// ✅ Faça assim (importando da lib NPM):
+import { Button, Card, CardHeader, CardTitle, CardContent } from "ds-onebox"
 
-// ❌ Evite assim:
-import { Button } from "../../../components/shadcn/Button"
+export function MinhaTela() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Painel Principal</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Button variant="default">Acessar</Button>
+      </CardContent>
+    </Card>
+  )
+}
 \`\`\`
 
 ---
@@ -104,7 +128,8 @@ Todos os componentes expõem a propriedade \`className\`. Isso significa que se 
 O sistema usa o \`tailwind-merge\` por trás das cortinas, então a sua classe **sempre terá prioridade** sobre a classe padrão do componente.
 
 \`\`\`tsx
-import { Input } from "@/components/shadcn/Input"
+```tsx
+import { Input } from "ds-onebox"
 
 export function MeuFormulario() {
   return (
@@ -125,7 +150,8 @@ export function MeuFormulario() {
 Nós usamos a biblioteca \`lucide-react\`. Para adicionar um ícone ao lado de um texto (como em botões), importe-o diretamente e ajuste o tamanho com as classes \`w-4 h-4\`:
 
 \`\`\`tsx
-import { Button } from "@/components/shadcn/Button"
+```tsx
+import { Button } from "ds-onebox"
 import { Mail, ArrowRight } from "lucide-react"
 
 export function BotoesComIcone() {
