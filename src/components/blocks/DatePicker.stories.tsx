@@ -10,8 +10,6 @@ const meta = {
     docs: {
       description: {
         component: `
-# DatePicker
-
 Um componente avançado (Bloco) que combina um \`<Popover>\` (Dropdown), um \`<Button>\` como trigger, e o primitivo \`<Calendar>\` em seu conteúdo para permitir a seleção de datas em formulários de maneira elegante.
 
 ## Anatomia do Componente
