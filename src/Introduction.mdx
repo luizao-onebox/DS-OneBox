@@ -1,0 +1,56 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Introdução/Bem-vindo" />
+
+# 🎨 OneDocs Design System
+
+Bem-vindo à documentação oficial do **OneDocs Design System**. 
+Este sistema foi construído para unificar e padronizar a interface de usuário da aplicação OneDocs (B2B/Admin), garantindo consistência visual, acessibilidade e agilidade no desenvolvimento.
+
+---
+
+## 🏗️ Como o sistema é estruturado?
+
+Nossa arquitetura de componentes segue um modelo escalável baseado em duas camadas principais:
+
+### 1. Primitivos (Componentes Base)
+Estão localizados na aba **Components**. São os blocos de montar da nossa interface, criados em cima da biblioteca **Shadcn UI** e **Radix UI**. 
+- Eles cuidam de acessibilidade (WAI-ARIA), estados focais e navegação por teclado nativamente.
+- São estúpidos (dumb components) — não possuem regras de negócio, apenas estilo e comportamento visual.
+- *Exemplos: Botões, Inputs, Modais, Tooltips, Avatares.*
+
+### 2. Blocos (Padrões Complexos)
+Estão localizados na aba **Blocks**. São junções de múltiplos componentes primitivos que resolvem problemas específicos de negócio e experiência do usuário (UX).
+- Eles implementam layouts inteiros, modais complexos e funcionalidades ricas (como Drag & Drop).
+- Podem gerenciar estado interno (React State) para simular o comportamento real da aplicação.
+- *Exemplos: Kanban Board, Data Table, Dashboard Charts, Creation Wizards.*
+
+---
+
+## 💅 Tokens e Tema
+
+Nós utilizamos **Tailwind CSS** para estilização. Todo o sistema é compatível com **Light Mode** e **Dark Mode** nativamente.
+Para manter a consistência, não usamos cores hexadecimais perdidas no código. Em vez disso, utilizamos variáveis semânticas do Tailwind:
+
+- \`bg-background\` e \`text-foreground\` para as cores base do sistema.
+- \`bg-primary\` para botões e ações principais.
+- \`text-muted-foreground\` para textos secundários e de apoio.
+- \`border-border\` para linhas e divisórias.
+
+> 💡 **Dica:** Você pode alternar entre os temas Claro e Escuro clicando no ícone de lua/sol na barra superior do Storybook!
+
+---
+
+## 🚀 Ícones e Ilustrações
+
+Todo o sistema utiliza a biblioteca **Lucide React** para iconografia.
+Você pode ver todos os ícones homologados e disponíveis na aba \`Design Tokens / Icons\`.
+
+---
+
+## 📚 Como usar esta documentação?
+
+1. **Navegue pelo menu lateral** para encontrar o componente que você precisa.
+2. **Leia as Boas Práticas (Faça / Não Faça)** de cada componente para entender quando e como utilizá-lo.
+3. A maioria dos componentes tem uma aba **"Show Code"** no rodapé dos exemplos, onde você pode copiar exatamente a estrutura React necessária para reproduzir aquele visual.
+4. Teste as variantes na seção de \`Controls\` no final de cada página para ver como o componente reage a diferentes propriedades (tamanhos, cores, desativado, etc).
