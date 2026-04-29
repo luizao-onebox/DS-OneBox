@@ -9,6 +9,8 @@ import "./index.css";
 // Re-exporta tudo do diretório de componentes base (shadcn)
 export * from "./components/shadcn";
 export * from "./components/shadcn/Separator";
+export * from "./components/shadcn/ScrollArea";
+export * from "./components/shadcn/Pagination";
 export * from "./components/shadcn/Select";
 export * from "./components/shadcn/Sonner";
 export * from "./components/shadcn/NavigationMenu";
