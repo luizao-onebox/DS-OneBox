@@ -91,13 +91,15 @@ const KanbanContainer = () => {
   
   // Modal State
   const [isModalOpen, setIsModalOpen] = React.useState(false)
+  const [modalMode, setModalMode] = React.useState<"add" | "edit">("add")
   const [activeColumnId, setActiveColumnId] = React.useState<string | null>(null)
+  const [activeTaskId, setActiveTaskId] = React.useState<string | null>(null)
   
   // Form State
-  const [newTaskTitle, setNewTaskTitle] = React.useState("")
-  const [newTaskTag, setNewTaskTag] = React.useState("")
-  const [newTaskDate, setNewTaskDate] = React.useState("")
-  const [newTaskAssignee, setNewTaskAssignee] = React.useState("")
+  const [taskTitle, setTaskTitle] = React.useState("")
+  const [taskTag, setTaskTag] = React.useState("")
+  const [taskDate, setTaskDate] = React.useState("")
+  const [taskAssignee, setTaskAssignee] = React.useState("")
 
   const handleDragEnd = (result: DropResult) => {
     const { source, destination } = result
@@ -136,34 +138,82 @@ const KanbanContainer = () => {
   }
 
   const handleAddTask = (columnId: string) => {
+    setModalMode("add")
     setActiveColumnId(columnId)
-    setNewTaskTitle("")
-    setNewTaskTag("")
-    setNewTaskDate("")
-    setNewTaskAssignee("")
+    setActiveTaskId(null)
+    setTaskTitle("")
+    setTaskTag("")
+    setTaskDate("")
+    setTaskAssignee("")
+    setIsModalOpen(true)
+  }
+
+  const handleTaskClick = (task: KanbanTask, columnId: string) => {
+    setModalMode("edit")
+    setActiveColumnId(columnId)
+    setActiveTaskId(task.id)
+    setTaskTitle(task.title)
+    setTaskTag(task.tag?.label || "")
+    setTaskDate(task.dueDate || "")
+    setTaskAssignee(task.assignee?.name || "")
     setIsModalOpen(true)
   }
 
   const handleSaveTask = () => {
-    if (!newTaskTitle || newTaskTitle.trim() === "" || !activeColumnId) return
+    if (!taskTitle || taskTitle.trim() === "" || !activeColumnId) return
 
-    const newTask: KanbanTask = {
-      id: `task-${Date.now()}`,
-      title: newTaskTitle,
-      tag: newTaskTag ? { label: newTaskTag, variant: "default" } : undefined,
-      dueDate: newTaskDate || undefined,
-      assignee: newTaskAssignee ? { name: newTaskAssignee } : undefined,
-    }
+    setColumns((prev) => {
+      if (modalMode === "add") {
+        const newTask: KanbanTask = {
+          id: `task-${Date.now()}`,
+          title: taskTitle,
+          tag: taskTag ? { label: taskTag, variant: "default" } : undefined,
+          dueDate: taskDate || undefined,
+          assignee: taskAssignee ? { name: taskAssignee } : undefined,
+        }
+        return prev.map((col) => {
+          if (col.id === activeColumnId) {
+            return { ...col, tasks: [...col.tasks, newTask] }
+          }
+          return col
+        })
+      } else {
+        return prev.map((col) => {
+          if (col.id === activeColumnId) {
+            return {
+              ...col,
+              tasks: col.tasks.map((t) => {
+                if (t.id === activeTaskId) {
+                  return {
+                    ...t,
+                    title: taskTitle,
+                    tag: taskTag ? { label: taskTag, variant: t.tag?.variant || "default" } : undefined,
+                    dueDate: taskDate || undefined,
+                    assignee: taskAssignee ? { ...t.assignee, name: taskAssignee } : undefined,
+                  }
+                }
+                return t
+              }),
+            }
+          }
+          return col
+        })
+      }
+    })
+    
+    setIsModalOpen(false)
+  }
 
+  const handleDeleteTask = () => {
+    if (!activeColumnId || !activeTaskId) return
     setColumns((prev) =>
       prev.map((col) => {
         if (col.id === activeColumnId) {
-          return { ...col, tasks: [...col.tasks, newTask] }
+          return { ...col, tasks: col.tasks.filter((t) => t.id !== activeTaskId) }
         }
         return col
       })
     )
-    
     setIsModalOpen(false)
   }
 
@@ -178,40 +228,51 @@ const KanbanContainer = () => {
           columns={columns}
           onDragEnd={handleDragEnd}
           onAddTask={handleAddTask}
+          onTaskClick={handleTaskClick}
         />
       </div>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Nova Tarefa</DialogTitle>
+            <DialogTitle>{modalMode === "add" ? "Nova Tarefa" : "Editar Tarefa"}</DialogTitle>
             <DialogDescription>
-              Preencha os detalhes da nova tarefa para adicioná-la ao board.
+              {modalMode === "add" 
+                ? "Preencha os detalhes da nova tarefa para adicioná-la ao board."
+                : "Atualize os detalhes da tarefa selecionada."
+              }
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="title">Título da Tarefa <span className="text-destructive">*</span></Label>
-              <Input id="title" value={newTaskTitle} onChange={(e) => setNewTaskTitle(e.target.value)} placeholder="Ex: Ajustar padding do header" />
+              <Input id="title" value={taskTitle} onChange={(e) => setTaskTitle(e.target.value)} placeholder="Ex: Ajustar padding do header" />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="tag">Tag (Opcional)</Label>
-                <Input id="tag" value={newTaskTag} onChange={(e) => setNewTaskTag(e.target.value)} placeholder="Ex: Frontend" />
+                <Input id="tag" value={taskTag} onChange={(e) => setTaskTag(e.target.value)} placeholder="Ex: Frontend" />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="date">Data (Opcional)</Label>
-                <Input id="date" value={newTaskDate} onChange={(e) => setNewTaskDate(e.target.value)} placeholder="Ex: 20 Abr" />
+                <Input id="date" value={taskDate} onChange={(e) => setTaskDate(e.target.value)} placeholder="Ex: 20 Abr" />
               </div>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="assignee">Responsável (Opcional)</Label>
-              <Input id="assignee" value={newTaskAssignee} onChange={(e) => setNewTaskAssignee(e.target.value)} placeholder="Nome do responsável" />
+              <Input id="assignee" value={taskAssignee} onChange={(e) => setTaskAssignee(e.target.value)} placeholder="Nome do responsável" />
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancelar</Button>
-            <Button onClick={handleSaveTask}>Salvar Tarefa</Button>
+          <DialogFooter className="flex justify-between w-full sm:justify-between">
+            {modalMode === "edit" ? (
+              <Button variant="destructive" onClick={handleDeleteTask}>Excluir</Button>
+            ) : (
+              <div />
+            )}
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancelar</Button>
+              <Button onClick={handleSaveTask}>{modalMode === "add" ? "Salvar Tarefa" : "Salvar Alterações"}</Button>
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>

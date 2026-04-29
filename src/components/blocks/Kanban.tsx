@@ -26,10 +26,11 @@ export interface KanbanBoardProps {
   columns: KanbanColumnData[]
   onDragEnd?: (result: DropResult) => void
   onAddTask?: (columnId: string) => void
+  onTaskClick?: (task: KanbanTask, columnId: string) => void
   className?: string
 }
 
-export function KanbanBoard({ columns, onDragEnd, onAddTask, className }: KanbanBoardProps) {
+export function KanbanBoard({ columns, onDragEnd, onAddTask, onTaskClick, className }: KanbanBoardProps) {
   // If no onDragEnd is provided, the board won't visually update tasks across columns
   // since the parent should handle the state. We expose it so the Story can hold state.
   return (
@@ -40,6 +41,7 @@ export function KanbanBoard({ columns, onDragEnd, onAddTask, className }: Kanban
             key={col.id}
             column={col}
             onAddTask={onAddTask ? () => onAddTask(col.id) : undefined}
+            onTaskClick={onTaskClick ? (task) => onTaskClick(task, col.id) : undefined}
           />
         ))}
       </div>
@@ -47,7 +49,7 @@ export function KanbanBoard({ columns, onDragEnd, onAddTask, className }: Kanban
   )
 }
 
-function KanbanColumn({ column, onAddTask }: { column: KanbanColumnData; onAddTask?: () => void }) {
+function KanbanColumn({ column, onAddTask, onTaskClick }: { column: KanbanColumnData; onAddTask?: () => void; onTaskClick?: (task: KanbanTask) => void }) {
   return (
     <div className="flex h-full w-80 flex-col shrink-0 rounded-lg bg-muted/40">
       <div className="flex items-center justify-between p-3 font-medium text-sm text-foreground">
@@ -91,7 +93,7 @@ function KanbanColumn({ column, onAddTask }: { column: KanbanColumnData; onAddTa
                       opacity: snapshot.isDragging ? 0.8 : 1,
                     }}
                   >
-                    <KanbanCard task={task} />
+                    <KanbanCard task={task} onClick={onTaskClick ? () => onTaskClick(task) : undefined} />
                   </div>
                 )}
               </Draggable>
@@ -104,9 +106,12 @@ function KanbanColumn({ column, onAddTask }: { column: KanbanColumnData; onAddTa
   )
 }
 
-export function KanbanCard({ task }: { task: KanbanTask }) {
+export function KanbanCard({ task, onClick }: { task: KanbanTask; onClick?: () => void }) {
   return (
-    <Card className="cursor-grab active:cursor-grabbing hover:ring-1 hover:ring-primary/50 transition-all shadow-sm">
+    <Card 
+      className="cursor-grab active:cursor-grabbing hover:ring-1 hover:ring-primary/50 transition-all shadow-sm"
+      onClick={onClick}
+    >
       <CardHeader className="p-3 pb-0">
         {task.tag && (
           <div className="mb-2">
