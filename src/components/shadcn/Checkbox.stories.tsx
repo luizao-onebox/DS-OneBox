@@ -9,7 +9,6 @@ export default {
     docs: {
       description: {
         component: `
-# Checkbox
 
 O \`Checkbox\` é um componente de controle utilizado para selecionar uma ou mais opções em um conjunto, podendo atuar independentemente.
 

@@ -11,7 +11,6 @@ const meta = {
     docs: {
       description: {
         component: `
-# FileUploader (Drag & Drop)
 
 Bloco avançado para upload de arquivos. Combina uma área de Dropzone interativa com uma lista de progresso simulando o status de envio de cada arquivo.
 

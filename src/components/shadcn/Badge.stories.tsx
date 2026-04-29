@@ -8,7 +8,6 @@ export default {
     docs: {
       description: {
         component: `
-# Badge
 
 Badges ou "Selos" são elementos não clicáveis usados para fornecer informações suplementares como status de objetos, contadores de notificação, labels e categorias.
 

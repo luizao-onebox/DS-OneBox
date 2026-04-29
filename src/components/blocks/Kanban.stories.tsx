@@ -15,7 +15,6 @@ const meta = {
     docs: {
       description: {
         component: `
-# Kanban Board
 
 Bloco visual e interativo para organizar tarefas em colunas.
 Utiliza a biblioteca \`@hello-pangea/dnd\` para habilitar **Drag and Drop** completo entre colunas e reordenação.

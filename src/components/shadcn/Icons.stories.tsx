@@ -24,7 +24,6 @@ const meta = {
     docs: {
       description: {
         component: `
-# Iconografia
 
 O Design System utiliza a biblioteca **Lucide React** (\`lucide-react\`) como padrão para toda a iconografia.
 

@@ -8,7 +8,6 @@ export default {
     docs: {
       description: {
         component: `
-# Avatar
 
 O \`Avatar\` é um componente que exibe a foto de perfil de um usuário ou uma representação visual (fallback) quando a imagem não está disponível.
 

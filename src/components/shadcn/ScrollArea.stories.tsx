@@ -10,7 +10,6 @@ export default {
     docs: {
       description: {
         component: `
-# ScrollArea
 
 Substitui as barras de rolagem nativas do navegador por barras estilizadas e personalizadas que respeitam o tema (Light/Dark).
 

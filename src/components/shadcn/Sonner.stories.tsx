@@ -12,7 +12,6 @@ const meta = {
     docs: {
       description: {
         component: `
-# Sonner (Toaster)
 
 Uma alternativa moderna e altamente animada ao clássico \`Toast\`. Baseado na biblioteca \`sonner\`.
 

@@ -4,6 +4,13 @@ import { DayPicker } from "react-day-picker"
 
 import { cn } from "../../lib/utils"
 import { buttonVariants } from "./Button"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./Select"
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
@@ -62,6 +69,45 @@ function Calendar({
         Chevron: ({ orientation }) => {
           const Icon = orientation === "left" ? ChevronLeft : ChevronRight
           return <Icon className="h-4 w-4" />
+        },
+        Dropdown: ({ value, onChange, options, "aria-label": ariaLabel, ...props }: any) => {
+          const selected = options?.find((child: any) => child.value === value)
+          
+          const handleChange = (value: string) => {
+            const changeEvent = {
+              target: { value },
+            } as React.ChangeEvent<HTMLSelectElement>
+            onChange?.(changeEvent)
+          }
+
+          return (
+            <Select
+              value={value?.toString()}
+              onValueChange={handleChange}
+            >
+              <SelectTrigger 
+                aria-label={ariaLabel}
+                className={cn(
+                  "h-7 w-fit gap-1 border-0 focus:ring-0 focus:ring-offset-0 bg-transparent hover:bg-accent hover:text-accent-foreground py-0 pl-2 pr-1 font-medium shadow-none",
+                  props.className
+                )}
+              >
+                <SelectValue>{selected?.label}</SelectValue>
+              </SelectTrigger>
+              <SelectContent position="popper" className="max-h-[200px] min-w-[120px]">
+                {options?.map((option: any, id: number) => (
+                  <SelectItem
+                    key={`${option.value}-${id}`}
+                    value={option.value?.toString() ?? ""}
+                    disabled={option.disabled}
+                    className="cursor-pointer"
+                  >
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )
         },
       }}
       captionLayout="dropdown"

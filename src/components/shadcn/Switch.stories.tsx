@@ -9,7 +9,6 @@ export default {
     docs: {
       description: {
         component: `
-# Switch
 
 Um controle (\`toggle\`) que permite o usuário alternar instantaneamente entre dois estados opostos (Ativo / Inativo).
 

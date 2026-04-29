@@ -10,7 +10,6 @@ const meta = {
     docs: {
       description: {
         component: `
-# DashboardCharts
 
 Bloco que reúne exemplos práticos de gráficos baseados na integração do **Shadcn UI** com a biblioteca **Recharts**.
 

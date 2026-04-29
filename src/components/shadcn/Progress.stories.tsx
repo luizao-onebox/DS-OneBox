@@ -8,7 +8,6 @@ export default {
     docs: {
       description: {
         component: `
-# Progress
 
 O componente \`Progress\` exibe o andamento de uma tarefa ou processo, fornecendo feedback visual sobre quanto falta para completar uma ação.
 

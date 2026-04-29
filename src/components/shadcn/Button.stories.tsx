@@ -36,7 +36,6 @@ export default {
     docs: {
       description: {
         component: `
-# Button
 
 O componente \`Button\` é o elemento de ação principal do sistema, utilizado para disparar eventos, enviar formulários ou navegar.
 

@@ -19,7 +19,6 @@ const meta = {
     docs: {
       description: {
         component: `
-# Navigation Menu
 
 Um menu de navegação que suporta submenus (dropdowns flutuantes) ricos em conteúdo, animados e acessíveis.
 

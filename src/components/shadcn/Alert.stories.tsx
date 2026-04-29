@@ -8,7 +8,6 @@ export default {
     docs: {
       description: {
         component: `
-# Alert
 
 O componente de Alerta exibe uma mensagem de atenção ou aviso proeminente que interrompe visualmente a tela (callout box). É ideal para mostrar confirmações, falhas em submissões ou informações úteis e não-dispensáveis no momento.
 

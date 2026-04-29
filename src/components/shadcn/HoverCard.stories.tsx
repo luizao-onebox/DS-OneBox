@@ -17,7 +17,6 @@ const meta = {
     docs: {
       description: {
         component: `
-# Hover Card
 
 Para usuários com visão, exibe um preview rico com informações que estão "escondidas" atrás de um link ou nome. 
 

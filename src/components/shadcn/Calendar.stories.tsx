@@ -11,7 +11,6 @@ const meta = {
     docs: {
       description: {
         component: `
-# Calendar
 
 Um componente de calendário para exibir dias e meses, construído sobre o \`react-day-picker\`.
 

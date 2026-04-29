@@ -9,7 +9,6 @@ export default {
     docs: {
       description: {
         component: `
-# RadioGroup
 
 O \`RadioGroup\` é um componente de controle utilizado para selecionar uma única opção entre um conjunto mutuamente exclusivo de escolhas.
 

@@ -8,7 +8,6 @@ export default {
     docs: {
       description: {
         component: `
-# Skeleton
 
 Um \`Skeleton\` (Esqueleto de Carregamento) serve como um estado de espaço reservado visual que imita o layout final da tela enquanto os dados da aplicação estão sendo carregados.
 

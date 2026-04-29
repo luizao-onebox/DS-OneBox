@@ -8,7 +8,6 @@ export default {
     docs: {
       description: {
         component: `
-# Separator
 
 O componente \`Separator\` desenha linhas horizontais ou verticais para agrupar e separar seções do layout visualmente, além de marcar divisões na árvore semântica HTML de forma acessível.
 

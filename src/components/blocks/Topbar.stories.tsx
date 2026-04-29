@@ -27,7 +27,6 @@ const meta = {
     docs: {
       description: {
         component: `
-# Topbar (Navbar Superior)
 
 Componente de navegação horizontal projetado para o topo da aplicação OneDocs.
 

@@ -10,7 +10,6 @@ const meta = {
     docs: {
       description: {
         component: `
-# Logo Oficial Onebox
 
 Componente responsável por renderizar a identidade visual oficial da Onebox.
 Os arquivos originais SVG estão armazenados no projeto em \`src/assets/logos\`.

@@ -17,7 +17,6 @@ export default {
     docs: {
       description: {
         component: `
-# Pagination
 
 Componente de navegação em páginas para listas longas, como tabelas (\`DataTable\`) ou galerias de itens.
 

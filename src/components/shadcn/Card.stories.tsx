@@ -16,7 +16,6 @@ export default {
     docs: {
       description: {
         component: `
-# Card
 
 O componente de \`Card\` atua como um contêiner agrupador de informações relacionadas, organizando títulos, descrições, conteúdo livre e rodapés de ações em uma única superfície visual.
 

@@ -12,7 +12,6 @@ const meta = {
     docs: {
       description: {
         component: `
-# Stepper (Multi-step Form)
 
 Um bloco visual utilizado para orientar o usuário através de um processo dividido em múltiplas etapas lógicas e sequenciais.
 

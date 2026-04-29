@@ -31,7 +31,6 @@ const meta = {
     docs: {
       description: {
         component: `
-# Sidebar (oneDocs Admin)
 
 Um componente de navegação lateral rico em recursos, inspirado na interface fornecida nas imagens do Figma. 
 Ele suporta 3 estados principais: Default, Expandido (com subníveis) e Colapsado (com tooltips).

@@ -13,7 +13,6 @@ const meta = {
     docs: {
       description: {
         component: `
-# Input
 
 Campos de entrada (\`<input>\`) são utilizados para coletar dados fornecidos pelos usuários em formulários e caixas de pesquisa.
 
