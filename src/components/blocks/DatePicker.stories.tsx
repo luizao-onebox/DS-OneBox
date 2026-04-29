@@ -8,12 +8,9 @@ const meta = {
   parameters: {
     layout: "centered",
     docs: {
+      subtitle: "Componente avançado de seleção de datas com calendário dropdown.",
       description: {
         component: `
-Um componente avançado (Bloco) que combina um \`<Popover>\` (Dropdown), um \`<Button>\` como trigger, e o primitivo \`<Calendar>\` em seu conteúdo para permitir a seleção de datas em formulários de maneira elegante.
-
-## Anatomia do Componente
-
 A estrutura de uso é feita pela composição de 3 elementos:
 1. **Trigger (\`PopoverTrigger\`):** Um \`<Button>\` modificado com \`text-left\` e ícone de calendário. Ele muda a cor (\`text-muted-foreground\`) se estiver vazio.
 2. **Dropdown (\`PopoverContent\`):** O menu flutuante.
