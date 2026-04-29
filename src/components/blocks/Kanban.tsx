@@ -1,12 +1,12 @@
 import * as React from "react"
 import { MoreHorizontal, Plus, Calendar } from "lucide-react"
+import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd"
 import { cn } from "../../lib/utils"
 
 import { Card, CardContent, CardHeader } from "../shadcn/Card"
 import { Badge } from "../shadcn/Badge"
 import { Avatar, AvatarFallback, AvatarImage } from "../shadcn/Avatar"
 import { Button } from "../shadcn/Button"
-import { ScrollArea } from "../shadcn/ScrollArea"
 
 export interface KanbanTask {
   id: string
@@ -16,28 +16,45 @@ export interface KanbanTask {
   dueDate?: string
 }
 
-export interface KanbanColumnProps {
+export interface KanbanColumnData {
+  id: string
   title: string
   tasks: KanbanTask[]
-  onAddTask?: () => void
 }
 
-export function KanbanBoard({ children, className }: { children: React.ReactNode; className?: string }) {
+export interface KanbanBoardProps {
+  columns: KanbanColumnData[]
+  onDragEnd?: (result: DropResult) => void
+  onAddTask?: (columnId: string) => void
+  className?: string
+}
+
+export function KanbanBoard({ columns, onDragEnd, onAddTask, className }: KanbanBoardProps) {
+  // If no onDragEnd is provided, the board won't visually update tasks across columns
+  // since the parent should handle the state. We expose it so the Story can hold state.
   return (
-    <div className={cn("flex h-full w-full gap-4 overflow-x-auto pb-4", className)}>
-      {children}
-    </div>
+    <DragDropContext onDragEnd={onDragEnd || (() => {})}>
+      <div className={cn("flex h-full w-full gap-4 overflow-x-auto pb-4", className)}>
+        {columns.map((col) => (
+          <KanbanColumn
+            key={col.id}
+            column={col}
+            onAddTask={onAddTask ? () => onAddTask(col.id) : undefined}
+          />
+        ))}
+      </div>
+    </DragDropContext>
   )
 }
 
-export function KanbanColumn({ title, tasks, onAddTask }: KanbanColumnProps) {
+function KanbanColumn({ column, onAddTask }: { column: KanbanColumnData; onAddTask?: () => void }) {
   return (
     <div className="flex h-full w-80 flex-col shrink-0 rounded-lg bg-muted/40">
       <div className="flex items-center justify-between p-3 font-medium text-sm text-foreground">
         <div className="flex items-center gap-2">
-          <span>{title}</span>
+          <span>{column.title}</span>
           <Badge variant="secondary" className="px-1.5 py-0 text-xs">
-            {tasks.length}
+            {column.tasks.length}
           </Badge>
         </div>
         <div className="flex items-center gap-1">
@@ -51,20 +68,45 @@ export function KanbanColumn({ title, tasks, onAddTask }: KanbanColumnProps) {
           </Button>
         </div>
       </div>
-      <ScrollArea className="flex-1 px-3 pb-3">
-        <div className="flex flex-col gap-3">
-          {tasks.map((task) => (
-            <KanbanCard key={task.id} task={task} />
-          ))}
-        </div>
-      </ScrollArea>
+      
+      <Droppable droppableId={column.id}>
+        {(provided, snapshot) => (
+          <div
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+            className={cn(
+              "flex-1 px-3 pb-3 overflow-y-auto flex flex-col gap-3 transition-colors",
+              snapshot.isDraggingOver ? "bg-muted/60 rounded-b-lg" : ""
+            )}
+          >
+            {column.tasks.map((task, index) => (
+              <Draggable key={task.id} draggableId={task.id} index={index}>
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    style={{
+                      ...provided.draggableProps.style,
+                      opacity: snapshot.isDragging ? 0.8 : 1,
+                    }}
+                  >
+                    <KanbanCard task={task} />
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
     </div>
   )
 }
 
 export function KanbanCard({ task }: { task: KanbanTask }) {
   return (
-    <Card className="cursor-grab hover:ring-1 hover:ring-primary/50 transition-all shadow-sm">
+    <Card className="cursor-grab active:cursor-grabbing hover:ring-1 hover:ring-primary/50 transition-all shadow-sm">
       <CardHeader className="p-3 pb-0">
         {task.tag && (
           <div className="mb-2">

@@ -1,6 +1,11 @@
 import * as React from "react"
 import { Meta, StoryObj } from "@storybook/react"
-import { KanbanBoard, KanbanColumn, KanbanTask } from "./Kanban"
+import { DropResult } from "@hello-pangea/dnd"
+import { KanbanBoard, KanbanColumnData, KanbanTask } from "./Kanban"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "../shadcn/Dialog"
+import { Input } from "../shadcn/Input"
+import { Label } from "../shadcn/Label"
+import { Button } from "../shadcn/Button"
 
 const meta = {
   title: "Blocks/KanbanBoard",
@@ -12,14 +17,13 @@ const meta = {
         component: `
 # Kanban Board
 
-Bloco visual para organizar tarefas, projetos ou cards em colunas (estilo Trello/Jira). Utiliza a \`ScrollArea\` internamente para rolagem suave das colunas.
+Bloco visual e interativo para organizar tarefas em colunas.
+Utiliza a biblioteca \`@hello-pangea/dnd\` para habilitar **Drag and Drop** completo entre colunas e reordenação.
 
-## Estrutura
-- **\`KanbanBoard\`**: Container horizontal com scroll (flex-row).
-- **\`KanbanColumn\`**: Coluna vertical com cabeçalho e scroll interno.
-- **\`KanbanCard\`**: Cartão de tarefa, composto pelo componente \`Card\` básico.
-
-*(Nota: Este é um componente visual para o Design System. Para drag-and-drop real, recomenda-se integrar com \`dnd-kit\` ou \`react-beautiful-dnd\` usando este layout como base).*
+## Funcionalidades
+- **Drag and Drop**: Arraste os cartões de uma coluna para outra.
+- **Criação de Tarefas**: Botão de \`+\` no cabeçalho das colunas permite criar novas tarefas interativamente.
+- **Scroll Inteligente**: As colunas scrollam independentemente, e o board principal tem scroll horizontal se houver muitas colunas.
         `,
       },
     },
@@ -30,58 +34,191 @@ Bloco visual para organizar tarefas, projetos ou cards em colunas (estilo Trello
 export default meta
 type Story = StoryObj<typeof meta>
 
-const tasksTodo: KanbanTask[] = [
+const initialColumns: KanbanColumnData[] = [
   {
-    id: "1",
-    title: "Revisar especificações do módulo de IA",
-    tag: { label: "Design", variant: "outline" },
-    dueDate: "12 Abr",
-    assignee: { name: "Luiz" }
+    id: "todo",
+    title: "To Do",
+    tasks: [
+      {
+        id: "task-1",
+        title: "Revisar especificações do módulo de IA",
+        tag: { label: "Design", variant: "outline" },
+        dueDate: "12 Abr",
+        assignee: { name: "Luiz" },
+      },
+      {
+        id: "task-2",
+        title: "Implementar autenticação via SSO",
+        tag: { label: "Backend", variant: "default" },
+        dueDate: "15 Abr",
+      },
+    ],
   },
   {
-    id: "2",
-    title: "Implementar autenticação via SSO",
-    tag: { label: "Backend", variant: "default" },
-    dueDate: "15 Abr",
+    id: "in-progress",
+    title: "In Progress",
+    tasks: [
+      {
+        id: "task-3",
+        title: "Migrar banco de dados para a nova estrutura",
+        tag: { label: "DevOps", variant: "warning" },
+        assignee: { name: "Maria", avatarUrl: "https://github.com/shadcn.png" },
+      },
+    ],
+  },
+  {
+    id: "done",
+    title: "Done",
+    tasks: [
+      {
+        id: "task-4",
+        title: "Criar layout da Topbar",
+        tag: { label: "Frontend", variant: "success" },
+        dueDate: "Ontem",
+        assignee: { name: "Luiz" },
+      },
+      {
+        id: "task-5",
+        title: "Aprovar PR de correções",
+        assignee: { name: "Carlos" },
+      },
+    ],
   },
 ]
 
-const tasksInProgress: KanbanTask[] = [
-  {
-    id: "3",
-    title: "Migrar banco de dados para a nova estrutura",
-    tag: { label: "DevOps", variant: "warning" },
-    assignee: { name: "Maria", avatarUrl: "https://github.com/shadcn.png" }
-  },
-]
+const KanbanContainer = () => {
+  const [columns, setColumns] = React.useState<KanbanColumnData[]>(initialColumns)
+  
+  // Modal State
+  const [isModalOpen, setIsModalOpen] = React.useState(false)
+  const [activeColumnId, setActiveColumnId] = React.useState<string | null>(null)
+  
+  // Form State
+  const [newTaskTitle, setNewTaskTitle] = React.useState("")
+  const [newTaskTag, setNewTaskTag] = React.useState("")
+  const [newTaskDate, setNewTaskDate] = React.useState("")
+  const [newTaskAssignee, setNewTaskAssignee] = React.useState("")
 
-const tasksDone: KanbanTask[] = [
-  {
-    id: "4",
-    title: "Criar layout da Topbar",
-    tag: { label: "Frontend", variant: "success" },
-    dueDate: "Ontem",
-    assignee: { name: "Luiz" }
-  },
-  {
-    id: "5",
-    title: "Aprovar PR de correções",
-    assignee: { name: "Carlos" }
-  },
-]
+  const handleDragEnd = (result: DropResult) => {
+    const { source, destination } = result
 
-export const Default: Story = {
-  render: () => (
-    <div className="h-[600px] p-6 bg-background">
-      <div className="mb-6">
+    // If dropped outside a droppable area
+    if (!destination) return
+
+    // If dropped in the same place
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) {
+      return
+    }
+
+    const sourceColIndex = columns.findIndex((col) => col.id === source.droppableId)
+    const destColIndex = columns.findIndex((col) => col.id === destination.droppableId)
+
+    const sourceCol = columns[sourceColIndex]
+    const destCol = columns[destColIndex]
+
+    const sourceTasks = [...sourceCol.tasks]
+    const destTasks = source.droppableId === destination.droppableId ? sourceTasks : [...destCol.tasks]
+
+    // Remove from source
+    const [movedTask] = sourceTasks.splice(source.index, 1)
+
+    // Insert into destination
+    destTasks.splice(destination.index, 0, movedTask)
+
+    const newColumns = [...columns]
+    newColumns[sourceColIndex] = { ...sourceCol, tasks: sourceTasks }
+    newColumns[destColIndex] = { ...destCol, tasks: destTasks }
+
+    setColumns(newColumns)
+  }
+
+  const handleAddTask = (columnId: string) => {
+    setActiveColumnId(columnId)
+    setNewTaskTitle("")
+    setNewTaskTag("")
+    setNewTaskDate("")
+    setNewTaskAssignee("")
+    setIsModalOpen(true)
+  }
+
+  const handleSaveTask = () => {
+    if (!newTaskTitle || newTaskTitle.trim() === "" || !activeColumnId) return
+
+    const newTask: KanbanTask = {
+      id: `task-${Date.now()}`,
+      title: newTaskTitle,
+      tag: newTaskTag ? { label: newTaskTag, variant: "default" } : undefined,
+      dueDate: newTaskDate || undefined,
+      assignee: newTaskAssignee ? { name: newTaskAssignee } : undefined,
+    }
+
+    setColumns((prev) =>
+      prev.map((col) => {
+        if (col.id === activeColumnId) {
+          return { ...col, tasks: [...col.tasks, newTask] }
+        }
+        return col
+      })
+    )
+    
+    setIsModalOpen(false)
+  }
+
+  return (
+    <div className="h-[600px] p-6 bg-background flex flex-col">
+      <div className="mb-6 shrink-0">
         <h2 className="text-2xl font-bold tracking-tight">Roadmap do Produto</h2>
         <p className="text-muted-foreground">Acompanhamento das tarefas da Sprint atual.</p>
       </div>
-      <KanbanBoard className="h-[450px]">
-        <KanbanColumn title="To Do" tasks={tasksTodo} onAddTask={() => {}} />
-        <KanbanColumn title="In Progress" tasks={tasksInProgress} onAddTask={() => {}} />
-        <KanbanColumn title="Done" tasks={tasksDone} />
-      </KanbanBoard>
+      <div className="flex-1 overflow-hidden">
+        <KanbanBoard
+          columns={columns}
+          onDragEnd={handleDragEnd}
+          onAddTask={handleAddTask}
+        />
+      </div>
+
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Nova Tarefa</DialogTitle>
+            <DialogDescription>
+              Preencha os detalhes da nova tarefa para adicioná-la ao board.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="title">Título da Tarefa <span className="text-destructive">*</span></Label>
+              <Input id="title" value={newTaskTitle} onChange={(e) => setNewTaskTitle(e.target.value)} placeholder="Ex: Ajustar padding do header" />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="tag">Tag (Opcional)</Label>
+                <Input id="tag" value={newTaskTag} onChange={(e) => setNewTaskTag(e.target.value)} placeholder="Ex: Frontend" />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="date">Data (Opcional)</Label>
+                <Input id="date" value={newTaskDate} onChange={(e) => setNewTaskDate(e.target.value)} placeholder="Ex: 20 Abr" />
+              </div>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="assignee">Responsável (Opcional)</Label>
+              <Input id="assignee" value={newTaskAssignee} onChange={(e) => setNewTaskAssignee(e.target.value)} placeholder="Nome do responsável" />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancelar</Button>
+            <Button onClick={handleSaveTask}>Salvar Tarefa</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
-  ),
+  )
+}
+
+export const Interactive: Story = {
+  render: () => <KanbanContainer />,
 }
