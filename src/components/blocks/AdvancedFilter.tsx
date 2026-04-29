@@ -78,11 +78,11 @@ export function AdvancedFilter({
                         onSelect={() => onFilterChange?.(category.title, option.value, !isSelected)}
                       >
                         <div
-                          className={\`mr-2 flex h-4 w-4 items-center justify-center rounded-sm border \${
+                          className={`mr-2 flex h-4 w-4 items-center justify-center rounded-sm border ${
                             isSelected
                               ? "bg-primary text-primary-foreground"
                               : "opacity-50 [&_svg]:invisible"
-                          }\`}
+                          }`}
                         >
                           <Check className="h-4 w-4" />
                         </div>
@@ -123,7 +123,7 @@ export function AdvancedFilter({
             return values.map(val => {
               const option = category?.options.find(o => o.value === val)
               return (
-                <Badge key={\`\${categoryTitle}-\${val}\`} variant="secondary" className="h-8 gap-1">
+                <Badge key={`${categoryTitle}-${val}`} variant="secondary" className="h-8 gap-1">
                   <span className="text-muted-foreground mr-1">{categoryTitle}:</span>
                   {option?.label || val}
                   <button
