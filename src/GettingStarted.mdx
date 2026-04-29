@@ -1,0 +1,113 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Guia do Desenvolvedor" />
+
+# 💻 Guia do Desenvolvedor: Como utilizar o Design System
+
+Este guia foi criado para responder à pergunta: *"Como eu pego esses componentes bonitos e coloco no meu código?"*
+
+O OneDocs Design System não é instalado via \`npm install\`. Ele segue a filosofia do **Shadcn UI**, ou seja, você é dono do código. Os componentes vivem diretamente dentro do repositório da sua aplicação (geralmente na pasta \`src/components/shadcn\` ou \`src/components/blocks\`).
+
+---
+
+## 1. Importando Componentes
+
+Para utilizar qualquer componente, basta importá-lo do caminho local do seu projeto. Evite caminhos relativos longos (\`../../../\`) configurando o alias \`@\` no seu \`tsconfig.json\`.
+
+\`\`\`tsx
+// ✅ Faça assim (usando alias):
+import { Button } from "@/components/shadcn/Button"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/shadcn/Card"
+
+// ❌ Evite assim:
+import { Button } from "../../../components/shadcn/Button"
+\`\`\`
+
+---
+
+## 2. Utilizando as Variantes (Variants)
+
+A maioria dos nossos componentes primitivos usa a biblioteca \`class-variance-authority\` (cva) por baixo dos panos. Isso significa que eles possuem "modos" pré-programados de cores e tamanhos.
+
+Você não precisa recriar estilos. Basta passar as props \`variant\` e \`size\`:
+
+\`\`\`tsx
+export function MinhaTela() {
+  return (
+    <div className="flex gap-4">
+      {/* Botão Padrão (Azul) */}
+      <Button>Salvar</Button>
+
+      {/* Botão Secundário e Pequeno */}
+      <Button variant="secondary" size="sm">Cancelar</Button>
+
+      {/* Botão de Erro e Grande */}
+      <Button variant="destructive" size="lg">Excluir Conta</Button>
+    </div>
+  )
+}
+\`\`\`
+
+> 💡 **Como saber quais variants existem?**
+> Navegue até o componente aqui no Storybook. Role até a seção **"Controls"** no final da página. Lá você verá um *dropdown* com todas as opções de \`variant\` e \`size\` disponíveis para testar ao vivo!
+
+---
+
+## 3. Consultando o Código no Storybook
+
+Você não precisa adivinhar como montar componentes complexos (como um Modal, uma Tabela ou um Acordeão). 
+
+Em **qualquer componente** aqui no Storybook:
+1. Vá para a página do componente.
+2. Olhe o bloco de exemplo renderizado.
+3. No canto inferior direito desse bloco, clique no botão **"Show Code"**.
+4. Copie a estrutura exata do React (JSX) e cole no seu arquivo!
+
+---
+
+## 4. Sobrescrevendo Estilos (className)
+
+Nosso sistema é 100% construído com **Tailwind CSS**. 
+Todos os componentes expõem a propriedade \`className\`. Isso significa que se um componente não se encaixar perfeitamente no seu layout, você pode passar classes do Tailwind para forçar margens, larguras ou comportamentos específicos.
+
+O sistema usa o \`tailwind-merge\` por trás das cortinas, então a sua classe **sempre terá prioridade** sobre a classe padrão do componente.
+
+\`\`\`tsx
+import { Input } from "@/components/shadcn/Input"
+
+export function MeuFormulario() {
+  return (
+    // O Input já tem seus estilos de borda e foco.
+    // Estamos apenas adicionando uma margem superior (mt-4) e forçando largura (w-full).
+    <Input 
+      placeholder="Digite seu nome..." 
+      className="mt-4 w-full md:w-[300px]" 
+    />
+  )
+}
+\`\`\`
+
+---
+
+## 5. Lidando com Ícones
+
+Nós usamos a biblioteca \`lucide-react\`. Para adicionar um ícone ao lado de um texto (como em botões), importe-o diretamente e ajuste o tamanho com as classes \`w-4 h-4\`:
+
+\`\`\`tsx
+import { Button } from "@/components/shadcn/Button"
+import { Mail, ArrowRight } from "lucide-react"
+
+export function BotoesComIcone() {
+  return (
+    <div className="flex gap-4">
+      <Button>
+        <Mail className="mr-2 w-4 h-4" /> Entrar com Email
+      </Button>
+
+      <Button variant="outline">
+        Avançar <ArrowRight className="ml-2 w-4 h-4" />
+      </Button>
+    </div>
+  )
+}
+\`\`\`
