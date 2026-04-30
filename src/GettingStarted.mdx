@@ -60,7 +60,7 @@ module.exports = {
 
 Para utilizar qualquer componente, você agora os importa diretamente da biblioteca \`ds-onebox\` via NPM, como qualquer outro pacote externo. Não é mais necessário usar caminhos relativos ou copiar arquivos soltos para o seu repositório.
 
-\`\`\`tsx
+```tsx
 // ✅ Faça assim (importando da lib NPM):
 import { Button, Card, CardHeader, CardTitle, CardContent } from "ds-onebox"
 
@@ -76,7 +76,7 @@ export function MinhaTela() {
     </Card>
   )
 }
-\`\`\`
+```
 
 ---
 
@@ -86,7 +86,7 @@ A maioria dos nossos componentes primitivos usa a biblioteca \`class-variance-au
 
 Você não precisa recriar estilos. Basta passar as props \`variant\` e \`size\`:
 
-\`\`\`tsx
+```tsx
 export function MinhaTela() {
   return (
     <div className="flex gap-4">
@@ -101,7 +101,7 @@ export function MinhaTela() {
     </div>
   )
 }
-\`\`\`
+```
 
 > 💡 **Como saber quais variants existem?**
 > Navegue até o componente aqui no Storybook. Role até a seção **"Controls"** no final da página. Lá você verá um *dropdown* com todas as opções de \`variant\` e \`size\` disponíveis para testar ao vivo!
@@ -127,7 +127,6 @@ Todos os componentes expõem a propriedade \`className\`. Isso significa que se 
 
 O sistema usa o \`tailwind-merge\` por trás das cortinas, então a sua classe **sempre terá prioridade** sobre a classe padrão do componente.
 
-\`\`\`tsx
 ```tsx
 import { Input } from "ds-onebox"
 
@@ -141,7 +140,7 @@ export function MeuFormulario() {
     />
   )
 }
-\`\`\`
+```
 
 ---
 
@@ -149,7 +148,6 @@ export function MeuFormulario() {
 
 Nós usamos a biblioteca \`lucide-react\`. Para adicionar um ícone ao lado de um texto (como em botões), importe-o diretamente e ajuste o tamanho com as classes \`w-4 h-4\`:
 
-\`\`\`tsx
 ```tsx
 import { Button } from "ds-onebox"
 import { Mail, ArrowRight } from "lucide-react"
@@ -167,4 +165,4 @@ export function BotoesComIcone() {
     </div>
   )
 }
-\`\`\`
+```
