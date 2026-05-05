@@ -5,18 +5,14 @@
 import { useState } from 'react'
 
 const colors = [
-  { name: 'Background', hex: '#FFFFFF', description: 'Main background' },
-  { name: 'Foreground', hex: '#0A0A0A', description: 'Primary text' },
-  { name: 'Primary', hex: '#4F6EF7', description: 'Primary actions' },
-  { name: 'Primary Foreground', hex: '#F8FAFC', description: 'Text on primary' },
-  { name: 'Secondary', hex: '#F1F5F9', description: 'Secondary elements' },
-  { name: 'Secondary Foreground', hex: '#111827', description: 'Text on secondary' },
-  { name: 'Muted', hex: '#F1F5F9', description: 'Muted backgrounds' },
-  { name: 'Muted Foreground', hex: '#6B7280', description: 'Muted text' },
-  { name: 'Accent', hex: '#F1F5F9', description: 'Accent backgrounds' },
-  { name: 'Accent Foreground', hex: '#111827', description: 'Text on accent' },
-  { name: 'Destructive', hex: '#EF4444', description: 'Destructive actions' },
-  { name: 'Border', hex: '#E2E8F0', description: 'Borders' },
+  { name: 'Background', class: 'bg-background', hex: 'var(--background)', description: 'Main background' },
+  { name: 'Foreground', class: 'bg-foreground', hex: 'var(--foreground)', description: 'Primary text' },
+  { name: 'Primary', class: 'bg-primary-500', hex: 'var(--primary-500)', description: 'Primary actions' },
+  { name: 'Success', class: 'bg-success-500', hex: 'var(--success-500)', description: 'Success states' },
+  { name: 'Warning', class: 'bg-warning-500', hex: 'var(--warning-500)', description: 'Warning states' },
+  { name: 'Destructive', class: 'bg-destructive-500', hex: 'var(--destructive-500)', description: 'Error states' },
+  { name: 'Info', class: 'bg-info-500', hex: 'var(--info-500)', description: 'Informational states' },
+  { name: 'Neutral', class: 'bg-neutral-500', hex: 'var(--neutral-500)', description: 'Secondary text and borders' },
 ]
 
 const spacing = [4, 8, 12, 16, 24, 32, 48, 64]
@@ -48,9 +44,10 @@ export const TokensGallery = {
         <div className="grid grid-cols-4 gap-4">
           {colors.map((c) => (
             <div key={c.name} className="space-y-2">
-              <div className="h-12 rounded-lg border shadow-sm" style={{ backgroundColor: c.hex }} />
+              <div className={`h-12 rounded-lg border shadow-sm ${c.class}`} />
               <p className="font-medium text-sm">{c.name}</p>
               <p className="text-xs font-mono text-muted-foreground">{c.hex}</p>
+              <p className="text-xs text-muted-foreground">{c.description}</p>
             </div>
           ))}
         </div>
@@ -128,16 +125,20 @@ export const TokensGallery = {
         <h2 className="text-lg font-semibold mb-4">Components Preview</h2>
         <div className="space-y-4">
           <div className="flex gap-3">
-            <button className="px-4 py-2 rounded-md bg-primary text-primary-foreground">Primary</button>
-            <button className="px-4 py-2 rounded-md bg-secondary text-secondary-foreground">Secondary</button>
-            <button className="px-4 py-2 rounded-md bg-destructive text-destructive-foreground">Destructive</button>
-            <button className="px-4 py-2 rounded-md border border-input">Outline</button>
+            <button className="px-4 py-2 rounded-md bg-primary-500 hover:bg-primary-600 text-primary-foreground">Primary</button>
+            <button className="px-4 py-2 rounded-md bg-success-500 hover:bg-success-600 text-success-foreground">Success</button>
+            <button className="px-4 py-2 rounded-md bg-warning-500 hover:bg-warning-600 text-warning-foreground">Warning</button>
+            <button className="px-4 py-2 rounded-md bg-destructive-500 hover:bg-destructive-600 text-destructive-foreground">Destructive</button>
+            <button className="px-4 py-2 rounded-md bg-info-500 hover:bg-info-600 text-info-foreground">Info</button>
+            <button className="px-4 py-2 rounded-md border border-neutral-300 text-neutral-900 dark:text-neutral-50">Outline</button>
           </div>
           <div className="flex gap-3">
-            <span className="px-2.5 py-0.5 text-xs rounded-md bg-primary text-primary-foreground">Badge</span>
-            <span className="px-2.5 py-0.5 text-xs rounded-md bg-secondary text-secondary-foreground">Secondary</span>
-            <span className="px-2.5 py-0.5 text-xs rounded-md bg-destructive text-destructive-foreground">Destructive</span>
-            <span className="px-2.5 py-0.5 text-xs rounded-md border">Outline</span>
+            <span className="px-2.5 py-0.5 text-xs rounded-md bg-primary-100 text-primary-800 border border-primary-200">Primary</span>
+            <span className="px-2.5 py-0.5 text-xs rounded-md bg-success-100 text-success-800 border border-success-200">Success</span>
+            <span className="px-2.5 py-0.5 text-xs rounded-md bg-warning-100 text-warning-800 border border-warning-200">Warning</span>
+            <span className="px-2.5 py-0.5 text-xs rounded-md bg-destructive-100 text-destructive-800 border border-destructive-200">Destructive</span>
+            <span className="px-2.5 py-0.5 text-xs rounded-md bg-info-100 text-info-800 border border-info-200">Info</span>
+            <span className="px-2.5 py-0.5 text-xs rounded-md border border-neutral-300 text-neutral-700">Outline</span>
           </div>
         </div>
       </section>
