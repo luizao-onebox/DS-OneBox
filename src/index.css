@@ -1,6 +1,95 @@
 @import "tailwindcss";
+@config "../tailwind.config.js";
+@source "./**/*.mdx";
+@source "./**/*.{js,ts,jsx,tsx}";
 
 @theme {
+  /* Typography Tokens */
+  --text-display-lg: 4rem;
+  --text-display-lg--line-height: 4.5rem;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-display-lg--font-weight: 700;
+
+  --text-display-md: 3.5rem;
+  --text-display-md--line-height: 4rem;
+  --text-display-md--letter-spacing: -0.02em;
+  --text-display-md--font-weight: 700;
+
+  --text-display-sm: 3rem;
+  --text-display-sm--line-height: 3.5rem;
+  --text-display-sm--letter-spacing: -0.02em;
+  --text-display-sm--font-weight: 700;
+
+  --text-h1: 2.5rem;
+  --text-h1--line-height: 3rem;
+  --text-h1--letter-spacing: -0.02em;
+  --text-h1--font-weight: 700;
+
+  --text-h2: 2rem;
+  --text-h2--line-height: 2.5rem;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h2--font-weight: 700;
+
+  --text-h3: 1.75rem;
+  --text-h3--line-height: 2.25rem;
+  --text-h3--letter-spacing: -0.01em;
+  --text-h3--font-weight: 600;
+
+  --text-h4: 1.5rem;
+  --text-h4--line-height: 2rem;
+  --text-h4--letter-spacing: -0.01em;
+  --text-h4--font-weight: 600;
+
+  --text-h5: 1.25rem;
+  --text-h5--line-height: 1.75rem;
+  --text-h5--letter-spacing: 0;
+  --text-h5--font-weight: 600;
+
+  --text-h6: 1.125rem;
+  --text-h6--line-height: 1.5rem;
+  --text-h6--letter-spacing: 0;
+  --text-h6--font-weight: 600;
+
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.75rem;
+  --text-body-lg--letter-spacing: 0;
+  --text-body-lg--font-weight: 400;
+
+  --text-body-md: 1rem;
+  --text-body-md--line-height: 1.5rem;
+  --text-body-md--letter-spacing: 0;
+  --text-body-md--font-weight: 400;
+
+  --text-body-sm: 0.875rem;
+  --text-body-sm--line-height: 1.25rem;
+  --text-body-sm--letter-spacing: 0;
+  --text-body-sm--font-weight: 400;
+
+  --text-label-lg: 1rem;
+  --text-label-lg--line-height: 1.5rem;
+  --text-label-lg--letter-spacing: 0;
+  --text-label-lg--font-weight: 500;
+
+  --text-label-md: 0.875rem;
+  --text-label-md--line-height: 1.25rem;
+  --text-label-md--letter-spacing: 0;
+  --text-label-md--font-weight: 500;
+
+  --text-label-sm: 0.75rem;
+  --text-label-sm--line-height: 1rem;
+  --text-label-sm--letter-spacing: 0;
+  --text-label-sm--font-weight: 500;
+
+  --text-code-md: 0.875rem;
+  --text-code-md--line-height: 1.25rem;
+  --text-code-md--letter-spacing: 0;
+  --text-code-md--font-weight: 400;
+
+  --text-code-sm: 0.75rem;
+  --text-code-sm--line-height: 1rem;
+  --text-code-sm--letter-spacing: 0;
+  --text-code-sm--font-weight: 400;
+
   --radius: 0.5rem;
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));

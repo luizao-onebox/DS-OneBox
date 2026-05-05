@@ -75,9 +75,9 @@ export const TokensGallery = {
           <div>
             <h3 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">Body</h3>
             <div className="space-y-2">
-              <p className="text-body-lg">Body Large - Utilizado para parágrafos de destaque ou introduções longas na interface.</p>
-              <p className="text-body-md">Body Medium - O corpo de texto padrão do sistema para a maior parte das descrições.</p>
-              <p className="text-body-sm">Body Small - Textos secundários, observações e parágrafos auxiliares.</p>
+              <p className="text-body-lg">Body Large - Utilizado para parágrafos de destaque.</p>
+              <p className="text-body-md">Body Medium - O corpo de texto padrão do sistema.</p>
+              <p className="text-body-sm">Body Small - Textos secundários e auxiliares.</p>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
