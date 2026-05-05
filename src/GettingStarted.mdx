@@ -39,27 +39,61 @@ import 'ds-onebox/style.css'
 ```
 
 ### Passo 2.2: Configurar o Tailwind do seu App
-Seu projeto precisa ler as classes do Tailwind de dentro do `node_modules` do design system para não purgar o CSS dos componentes. No seu `tailwind.config.js` (ou `tailwind.config.ts`), adicione o caminho do pacote no `content`:
+Seu projeto precisa ler as classes do Tailwind de dentro do `node_modules` do design system e herdar as configurações exatas da empresa (breakpoints, cores, espaçamentos). Para isso, use o nosso preset no seu `tailwind.config.js` (ou `tailwind.config.ts`):
 
 ```js
-module.exports = {
+import dsOneBoxPreset from "ds-onebox/tailwind-preset"
+
+/** @type {import('tailwindcss').Config} */
+export default {
+  presets: [dsOneBoxPreset], // Puxa todas as regras visuais da empresa
   content: [
     "./src/**/*.{js,ts,jsx,tsx}",
     // Escaneia os componentes compilados do Design System
     "./node_modules/ds-onebox/dist/**/*.js"
   ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
+}
+```
+
+> **Atenção:** Se o seu projeto usar CommonJS (sem `type: "module"`), você pode usar `require("ds-onebox/tailwind-preset")` caso o Node permita, mas a biblioteca moderna exporta via ES Modules.
+
+---
+
+## 3. Primitivos de Layout (Layout Primitives)
+
+Para que você não precise "adivinhar" ou configurar regras do Tailwind do zero para montar suas telas, o Design System exporta componentes estruturais que já embutem as regras de espaçamento (tokens), colunas e breakpoints da empresa.
+
+Exemplos de componentes disponíveis:
+- `<Container>`: Centraliza o conteúdo e define a largura máxima (max-width) padrão das telas.
+- `<Grid>`: Define o sistema de colunas e ajusta automaticamente as margens em telas menores.
+- `<Flex>`: Facilita o alinhamento de itens (horizontal ou vertical) com espaçamentos padronizados (`gap`).
+- `<Section>`: Cria os blocos de conteúdo com espaçamento correto (`padding`) em cima e embaixo.
+
+**Como usar na prática:**
+
+```tsx
+import { Container, Grid, Card } from "ds-onebox"
+
+export function MinhaPagina() {
+  return (
+    <Container>
+      {/* Grade responsiva que muda de 1 para 2 e depois para 4 colunas dependendo da tela */}
+      <Grid columns={{ sm: 1, md: 2, lg: 4 }} gap="md">
+        <Card>Card 1</Card>
+        <Card>Card 2</Card>
+        <Card>Card 3</Card>
+        <Card>Card 4</Card>
+      </Grid>
+    </Container>
+  )
 }
 ```
 
 ---
 
-## 3. Importando e Utilizando no seu Código
+## 4. Importando e Utilizando no seu Código
 
-Para utilizar qualquer componente, você agora os importa diretamente da biblioteca \`ds-onebox\` via NPM, como qualquer outro pacote externo. Não é mais necessário usar caminhos relativos ou copiar arquivos soltos para o seu repositório.
+Para utilizar qualquer componente, você os importa diretamente da biblioteca `ds-onebox` via NPM.
 
 ```tsx
 // ✅ Faça assim (importando da lib NPM):
@@ -81,7 +115,7 @@ export function MinhaTela() {
 
 ---
 
-## 4. Utilizando as Variantes (Variants)
+## 5. Utilizando as Variantes (Variants)
 
 A maioria dos nossos componentes primitivos usa a biblioteca \`class-variance-authority\` (cva) por baixo dos panos. Isso significa que eles possuem "modos" pré-programados de cores e tamanhos.
 
@@ -109,7 +143,7 @@ export function MinhaTela() {
 
 ---
 
-## 5. Consultando o Código no Storybook
+## 6. Consultando o Código no Storybook
 
 Você não precisa adivinhar como montar componentes complexos (como um Modal, uma Tabela ou um Acordeão). 
 
@@ -121,7 +155,7 @@ Em **qualquer componente** aqui no Storybook:
 
 ---
 
-## 6. Sobrescrevendo Estilos (className)
+## 7. Sobrescrevendo Estilos (className)
 
 Nosso sistema é 100% construído com **Tailwind CSS**. 
 Todos os componentes expõem a propriedade \`className\`. Isso significa que se um componente não se encaixar perfeitamente no seu layout, você pode passar classes do Tailwind para forçar margens, larguras ou comportamentos específicos.
@@ -145,7 +179,7 @@ export function MeuFormulario() {
 
 ---
 
-## 7. Lidando com Ícones
+## 8. Lidando com Ícones
 
 Nós usamos a biblioteca \`lucide-react\`. Para adicionar um ícone ao lado de um texto (como em botões), importe-o diretamente e ajuste o tamanho com as classes \`w-4 h-4\`:
 
