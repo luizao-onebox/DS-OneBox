@@ -121,9 +121,9 @@ export function MinhaTela() {
 
 ## 5. Utilizando as Variantes (Variants)
 
-A maioria dos nossos componentes primitivos usa a biblioteca \`class-variance-authority\` (cva) por baixo dos panos. Isso significa que eles possuem "modos" pré-programados de cores e tamanhos.
+A maioria dos nossos componentes primitivos usa a biblioteca `class-variance-authority` (cva) por baixo dos panos. Isso significa que eles possuem "modos" pré-programados de cores e tamanhos.
 
-Você não precisa recriar estilos. Basta passar as props \`variant\` e \`size\`:
+Você não precisa recriar estilos. Basta passar as props `variant` e `size`:
 
 ```tsx
 export function MinhaTela() {
@@ -143,7 +143,7 @@ export function MinhaTela() {
 ```
 
 > 💡 **Como saber quais variants existem?**
-> Navegue até o componente aqui no Storybook. Role até a seção **"Controls"** no final da página. Lá você verá um *dropdown* com todas as opções de \`variant\` e \`size\` disponíveis para testar ao vivo!
+> Navegue até o componente aqui no Storybook. Role até a seção **"Controls"** no final da página. Lá você verá um *dropdown* com todas as opções de `variant` e `size` disponíveis para testar ao vivo!
 
 ---
 
@@ -162,9 +162,9 @@ Em **qualquer componente** aqui no Storybook:
 ## 7. Sobrescrevendo Estilos (className)
 
 Nosso sistema é 100% construído com **Tailwind CSS**. 
-Todos os componentes expõem a propriedade \`className\`. Isso significa que se um componente não se encaixar perfeitamente no seu layout, você pode passar classes do Tailwind para forçar margens, larguras ou comportamentos específicos.
+Todos os componentes expõem a propriedade `className`. Isso significa que se um componente não se encaixar perfeitamente no seu layout, você pode passar classes do Tailwind para forçar margens, larguras ou comportamentos específicos.
 
-O sistema usa o \`tailwind-merge\` por trás das cortinas, então a sua classe **sempre terá prioridade** sobre a classe padrão do componente.
+O sistema usa o `tailwind-merge` por trás das cortinas, então a sua classe **sempre terá prioridade** sobre a classe padrão do componente.
 
 ```tsx
 import { Input } from "ds-onebox"
@@ -185,7 +185,7 @@ export function MeuFormulario() {
 
 ## 8. Lidando com Ícones
 
-Nós usamos a biblioteca \`lucide-react\`. Para adicionar um ícone ao lado de um texto (como em botões), importe-o diretamente e ajuste o tamanho com as classes \`w-4 h-4\`:
+Nós usamos a biblioteca `lucide-react`. Para adicionar um ícone ao lado de um texto (como em botões), importe-o diretamente e ajuste o tamanho com as classes `w-4 h-4`:
 
 ```tsx
 import { Button } from "ds-onebox"
