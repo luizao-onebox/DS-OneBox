@@ -11,7 +11,7 @@
       "import": "./dist/index.es.js",
       "require": "./dist/index.umd.js"
     },
-    "./style.css": "./dist/index.css"
+    "./style.css": "./dist/ds-onebox.css"
   },
   "type": "module",
   "files": [
@@ -20,6 +20,7 @@
   "scripts": {
     "dev": "vite",
     "build:lib": "vite build",
+    "prepare": "npm run build:lib",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
@@ -61,11 +62,12 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@storybook/addon-essentials": "^8.6.0",
-    "@storybook/addon-interactions": "^8.6.0",
+    "@storybook/addon-essentials": "^8.6.18",
+    "@storybook/addon-interactions": "^8.6.18",
     "@storybook/addon-themes": "^8.6.18",
-    "@storybook/react": "^8.6.0",
-    "@storybook/react-vite": "^8.6.0",
+    "@storybook/react": "^8.6.18",
+    "@storybook/react-vite": "^8.6.18",
+    "@storybook/test": "^8.6.18",
     "@tailwindcss/postcss": "^4.2.2",
     "@types/node": "^25.6.0",
     "@types/react": "^18.3.28",
@@ -80,7 +82,7 @@
     "he": "^1.2.0",
     "local-pkg": "^1.1.2",
     "postcss": "^8.5.9",
-    "storybook": "^8.6.0",
+    "storybook": "^8.6.18",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.2",
     "typescript": "^6.0.3",
