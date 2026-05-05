@@ -60,6 +60,10 @@ export const TokensGallery = {
           <div>
             <h3 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">Display</h3>
             <div className="space-y-2">
+              <p className="text-display-2xl">Display 2XL</p>
+              <p className="text-display-xl">Display XL</p>
+              <p className="text-display-lg">Display Large</p>
+              <p className="text-display-md">Display Medium</p>
               <p className="text-display-sm">Display Small</p>
             </div>
           </div>
@@ -70,30 +74,38 @@ export const TokensGallery = {
               <p className="text-h2">Heading 2</p>
               <p className="text-h3">Heading 3</p>
               <p className="text-h4">Heading 4</p>
+              <p className="text-h5">Heading 5</p>
+              <p className="text-h6">Heading 6</p>
             </div>
           </div>
           <div>
             <h3 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">Body</h3>
             <div className="space-y-2">
+              <p className="text-body-xl">Body Extra Large - Lead paragraphs and hero descriptions.</p>
               <p className="text-body-lg">Body Large - Utilizado para parágrafos de destaque.</p>
               <p className="text-body-md">Body Medium - O corpo de texto padrão do sistema.</p>
               <p className="text-body-sm">Body Small - Textos secundários e auxiliares.</p>
+              <p className="text-body-xs">Body Extra Small - Disclaimers e notas de rodapé.</p>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <h3 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">Label / Caption</h3>
               <div className="space-y-2">
+                <p className="text-label-xl">Label Extra Large</p>
                 <p className="text-label-lg">Label Large</p>
                 <p className="text-label-md">Label Medium</p>
                 <p className="text-label-sm">Label Small</p>
+                <p className="text-label-xs">Label Extra Small</p>
               </div>
             </div>
             <div>
               <h3 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">Code</h3>
               <div className="space-y-2">
+                <p className="text-code-lg font-mono">text-code-lg</p>
                 <p className="text-code-md font-mono">text-code-md</p>
                 <p className="text-code-sm font-mono">text-code-sm</p>
+                <p className="text-code-xs font-mono">text-code-xs</p>
               </div>
             </div>
           </div>

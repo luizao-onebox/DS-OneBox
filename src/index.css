@@ -5,6 +5,16 @@
 
 @theme {
   /* Typography Tokens */
+  --text-display-2xl: 5rem;
+  --text-display-2xl--line-height: 5.5rem;
+  --text-display-2xl--letter-spacing: -0.02em;
+  --text-display-2xl--font-weight: 800;
+
+  --text-display-xl: 4.5rem;
+  --text-display-xl--line-height: 5rem;
+  --text-display-xl--letter-spacing: -0.02em;
+  --text-display-xl--font-weight: 800;
+
   --text-display-lg: 4rem;
   --text-display-lg--line-height: 4.5rem;
   --text-display-lg--letter-spacing: -0.02em;
@@ -50,6 +60,11 @@
   --text-h6--letter-spacing: 0;
   --text-h6--font-weight: 600;
 
+  --text-body-xl: 1.25rem;
+  --text-body-xl--line-height: 1.875rem;
+  --text-body-xl--letter-spacing: 0;
+  --text-body-xl--font-weight: 400;
+
   --text-body-lg: 1.125rem;
   --text-body-lg--line-height: 1.75rem;
   --text-body-lg--letter-spacing: 0;
@@ -64,6 +79,16 @@
   --text-body-sm--line-height: 1.25rem;
   --text-body-sm--letter-spacing: 0;
   --text-body-sm--font-weight: 400;
+
+  --text-body-xs: 0.75rem;
+  --text-body-xs--line-height: 1.125rem;
+  --text-body-xs--letter-spacing: 0.01em;
+  --text-body-xs--font-weight: 400;
+
+  --text-label-xl: 1.125rem;
+  --text-label-xl--line-height: 1.5rem;
+  --text-label-xl--letter-spacing: 0;
+  --text-label-xl--font-weight: 500;
 
   --text-label-lg: 1rem;
   --text-label-lg--line-height: 1.5rem;
@@ -80,6 +105,16 @@
   --text-label-sm--letter-spacing: 0;
   --text-label-sm--font-weight: 500;
 
+  --text-label-xs: 0.625rem;
+  --text-label-xs--line-height: 0.875rem;
+  --text-label-xs--letter-spacing: 0.02em;
+  --text-label-xs--font-weight: 500;
+
+  --text-code-lg: 1rem;
+  --text-code-lg--line-height: 1.5rem;
+  --text-code-lg--letter-spacing: 0;
+  --text-code-lg--font-weight: 400;
+
   --text-code-md: 0.875rem;
   --text-code-md--line-height: 1.25rem;
   --text-code-md--letter-spacing: 0;
@@ -89,6 +124,11 @@
   --text-code-sm--line-height: 1rem;
   --text-code-sm--letter-spacing: 0;
   --text-code-sm--font-weight: 400;
+
+  --text-code-xs: 0.625rem;
+  --text-code-xs--line-height: 0.875rem;
+  --text-code-xs--letter-spacing: 0;
+  --text-code-xs--font-weight: 400;
 
   --radius: 0.5rem;
   --color-border: hsl(var(--border));
@@ -123,6 +163,18 @@
   --color-chart-5: hsl(var(--chart-5));
 }
 
+@utility text-display-2xl {
+  font-size: var(--text-display-2xl);
+  line-height: var(--text-display-2xl--line-height);
+  letter-spacing: var(--text-display-2xl--letter-spacing);
+  font-weight: var(--text-display-2xl--font-weight);
+}
+@utility text-display-xl {
+  font-size: var(--text-display-xl);
+  line-height: var(--text-display-xl--line-height);
+  letter-spacing: var(--text-display-xl--letter-spacing);
+  font-weight: var(--text-display-xl--font-weight);
+}
 @utility text-display-lg {
   font-size: var(--text-display-lg);
   line-height: var(--text-display-lg--line-height);
@@ -147,14 +199,20 @@
 @utility text-h4 { font-size: var(--text-h4); line-height: var(--text-h4--line-height); letter-spacing: var(--text-h4--letter-spacing); font-weight: var(--text-h4--font-weight); }
 @utility text-h5 { font-size: var(--text-h5); line-height: var(--text-h5--line-height); letter-spacing: var(--text-h5--letter-spacing); font-weight: var(--text-h5--font-weight); }
 @utility text-h6 { font-size: var(--text-h6); line-height: var(--text-h6--line-height); letter-spacing: var(--text-h6--letter-spacing); font-weight: var(--text-h6--font-weight); }
+@utility text-body-xl { font-size: var(--text-body-xl); line-height: var(--text-body-xl--line-height); letter-spacing: var(--text-body-xl--letter-spacing); font-weight: var(--text-body-xl--font-weight); }
 @utility text-body-lg { font-size: var(--text-body-lg); line-height: var(--text-body-lg--line-height); letter-spacing: var(--text-body-lg--letter-spacing); font-weight: var(--text-body-lg--font-weight); }
 @utility text-body-md { font-size: var(--text-body-md); line-height: var(--text-body-md--line-height); letter-spacing: var(--text-body-md--letter-spacing); font-weight: var(--text-body-md--font-weight); }
 @utility text-body-sm { font-size: var(--text-body-sm); line-height: var(--text-body-sm--line-height); letter-spacing: var(--text-body-sm--letter-spacing); font-weight: var(--text-body-sm--font-weight); }
+@utility text-body-xs { font-size: var(--text-body-xs); line-height: var(--text-body-xs--line-height); letter-spacing: var(--text-body-xs--letter-spacing); font-weight: var(--text-body-xs--font-weight); }
+@utility text-label-xl { font-size: var(--text-label-xl); line-height: var(--text-label-xl--line-height); letter-spacing: var(--text-label-xl--letter-spacing); font-weight: var(--text-label-xl--font-weight); }
 @utility text-label-lg { font-size: var(--text-label-lg); line-height: var(--text-label-lg--line-height); letter-spacing: var(--text-label-lg--letter-spacing); font-weight: var(--text-label-lg--font-weight); }
 @utility text-label-md { font-size: var(--text-label-md); line-height: var(--text-label-md--line-height); letter-spacing: var(--text-label-md--letter-spacing); font-weight: var(--text-label-md--font-weight); }
 @utility text-label-sm { font-size: var(--text-label-sm); line-height: var(--text-label-sm--line-height); letter-spacing: var(--text-label-sm--letter-spacing); font-weight: var(--text-label-sm--font-weight); }
+@utility text-label-xs { font-size: var(--text-label-xs); line-height: var(--text-label-xs--line-height); letter-spacing: var(--text-label-xs--letter-spacing); font-weight: var(--text-label-xs--font-weight); }
+@utility text-code-lg { font-size: var(--text-code-lg); line-height: var(--text-code-lg--line-height); letter-spacing: var(--text-code-lg--letter-spacing); font-weight: var(--text-code-lg--font-weight); }
 @utility text-code-md { font-size: var(--text-code-md); line-height: var(--text-code-md--line-height); letter-spacing: var(--text-code-md--letter-spacing); font-weight: var(--text-code-md--font-weight); }
 @utility text-code-sm { font-size: var(--text-code-sm); line-height: var(--text-code-sm--line-height); letter-spacing: var(--text-code-sm--letter-spacing); font-weight: var(--text-code-sm--font-weight); }
+@utility text-code-xs { font-size: var(--text-code-xs); line-height: var(--text-code-xs--line-height); letter-spacing: var(--text-code-xs--letter-spacing); font-weight: var(--text-code-xs--font-weight); }
 
 :root {
   --background: 0 0% 100%;
