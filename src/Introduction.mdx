@@ -1,4 +1,6 @@
 import { Meta } from '@storybook/blocks';
+import { Button } from './components/shadcn/Button';
+import { Download } from 'lucide-react';
 
 <Meta title="Introdução/Bem-vindo" />
 
@@ -19,22 +21,12 @@ Ele contém todas as regras do Design System, os tokens de cores e tipografia, e
   href="https://luizao-onebox.github.io/DS-OneBox/llms.txt?v=2" 
   target="_blank" 
   download="llms.txt"
-  style={{ 
-    display: 'inline-flex', 
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    padding: '0.75rem 1.5rem', 
-    backgroundColor: '#09090b', 
-    color: '#ffffff', 
-    borderRadius: '0.375rem', 
-    fontWeight: '500', 
-    textDecoration: 'none',
-    marginTop: '1rem',
-    marginBottom: '2rem',
-    border: '1px solid #333'
-  }}
+  style={{ textDecoration: 'none' }}
 >
-  📥 Baixar Contexto para IA (llms.txt)
+  <Button size="lg" className="mt-4 mb-8 cursor-pointer">
+    <Download className="mr-2 h-5 w-5" />
+    Baixar Contexto para IA (llms.txt)
+  </Button>
 </a>
 
 ---
