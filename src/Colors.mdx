@@ -4,9 +4,14 @@ import { Meta, ColorPalette, ColorItem } from '@storybook/blocks';
 
 # 🎨 Sistema de Cores (Tokens)
 
-O **DS-OneBox** utiliza um sistema de cores semântico moderno baseado no padrão de mercado (inspirado no Shadcn UI e Radix Colors). As cores são definidas em variáveis CSS (HSL) para facilitar o suporte automático ao **Dark Mode** e permitir sobrescritas simples.
+O **DS-OneBox** utiliza um sistema de cores semântico moderno baseado nas melhores práticas de mercado (Material Design, Atlassian, Radix). Nossa arquitetura de cores foi desenhada para ser escalável, acessível e suportar nativamente **Light e Dark Modes**.
 
-Abaixo você encontra a paleta de cores completa disponível no nosso `tailwind-preset.js`.
+Conforme os padrões da indústria, estruturamos nossas cores em três camadas principais:
+1. **Primitives (Escalas Base)**: As paletas brutas de cores com steps de 50 a 950.
+2. **Semantic Tokens (Tokens de Propósito)**: Cores mapeadas para intenções específicas (ex: `success`, `warning`, `destructive`).
+3. **Component Tokens (Tokens de Interface)**: Aplicação direta em componentes (ex: `bg-primary`, `text-muted-foreground`).
+
+Abaixo você encontra a documentação interativa de todas as cores disponíveis no nosso `tailwind-preset.js`.
 
 ---
 
@@ -205,19 +210,45 @@ Paleta otimizada para gráficos (Recharts, Chart.js), garantindo contraste e ace
 
 ## Como utilizar no código?
 
-Como todas essas cores já estão injetadas no nosso `tailwind-preset.js`, você pode utilizá-las nativamente no Tailwind usando os prefixos padrão (`bg-`, `text-`, `border-`, `ring-`):
+Ao invés de "adivinhar" cores (ex: `#FF3B30` ou `blue-500`), o Design System fornece uma **única fonte da verdade** através de Tokens Semânticos. Isso garante que, se a marca mudar o tom de azul no futuro, todo o sistema será atualizado automaticamente, além de prover suporte automático ao Dark Mode.
+
+### 1. Aplicando Backgrounds e Textos
+Use os tokens semânticos e suas variações de escala para fundos e textos. A regra geral de contraste acessível (WCAG) é usar tons `50-100` para fundos grandes e tons `700-900` para os textos internos.
 
 ```tsx
-// Exemplo de uso de cores semânticas
-<div className="bg-success/10 text-success border-success">
-  Operação realizada com sucesso!
+// ✅ CERTO: Fundo suave de erro com texto legível e alto contraste
+<div className="bg-destructive-50 text-destructive-900 border border-destructive-200 p-4 rounded-md">
+  Falha ao processar o pagamento.
 </div>
 
-// Exemplo de uso de cores informativas
-<div className="bg-info text-info-foreground p-4 rounded-md">
-  Você tem 3 novas mensagens.
-</div>
-
-// Exemplo com cores de gráfico
-<div className="bg-chart-1 w-full h-2 rounded-full" />
+// ❌ ERRADO: Usar cores hardcoded ou do tailwind padrão
+<div className="bg-red-100 text-red-800">...</div>
 ```
+
+### 2. Ações e Elementos de Interface
+Para botões, badges e ícones de alerta, utilize os tons centrais (geralmente mapeados para a variante `DEFAULT` e `500`).
+
+```tsx
+// ✅ CERTO: Uso de cor de destaque (Primary) e alerta (Warning)
+<Button className="bg-primary hover:bg-primary-600 text-primary-foreground">
+  Salvar Alterações
+</Button>
+
+<Alert variant="warning">
+  <AlertCircle className="text-warning-600" />
+  Sua assinatura expira em 3 dias.
+</Alert>
+```
+
+### 3. Cores Neutras para UI
+Utilize a escala `Neutral` para textos secundários, bordas sutis e fundos de áreas de separação.
+
+```tsx
+// ✅ CERTO: Hierarquia visual com cinzas do Design System
+<div className="border border-neutral-200 bg-neutral-50 p-6">
+  <h3 className="text-neutral-900 font-bold">Título Principal</h3>
+  <p className="text-neutral-500 text-sm">Descrição de apoio com menor ênfase visual.</p>
+</div>
+```
+
+> **Dica de Acessibilidade:** Lembre-se que para textos regulares (abaixo de 24px), o contraste mínimo com o fundo deve ser de **4.5:1** (WCAG AA). As escalas de `700` a `950` sobre fundos de `50` a `100` geralmente garantem aprovação neste critério.
