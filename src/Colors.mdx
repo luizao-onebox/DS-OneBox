@@ -44,7 +44,24 @@ Cores utilizadas para ações principais e elementos interativos.
 <ColorPalette>
   <ColorItem
     title="Primary"
-    subtitle="Cor primária da marca (Botões principais, links)"
+    subtitle="Cor primária da marca (Escala completa)"
+    colors={{
+      '50': 'hsl(var(--primary-50))',
+      '100': 'hsl(var(--primary-100))',
+      '200': 'hsl(var(--primary-200))',
+      '300': 'hsl(var(--primary-300))',
+      '400': 'hsl(var(--primary-400))',
+      '500 (Default)': 'hsl(var(--primary-500))',
+      '600': 'hsl(var(--primary-600))',
+      '700': 'hsl(var(--primary-700))',
+      '800': 'hsl(var(--primary-800))',
+      '900': 'hsl(var(--primary-900))',
+      '950': 'hsl(var(--primary-950))',
+    }}
+  />
+  <ColorItem
+    title="Primary Componentes"
+    subtitle="Uso direto em componentes"
     colors={{ Primary: 'hsl(var(--primary))', 'Primary Foreground': 'hsl(var(--primary-foreground))' }}
   />
   <ColorItem
@@ -67,28 +84,101 @@ Cores utilizadas para ações principais e elementos interativos.
 ---
 
 ## Cores Semânticas (Estados)
-Utilizadas para comunicar feedback visual, alertas e status do sistema.
+Utilizadas para comunicar feedback visual, alertas e status do sistema. Apresentadas em escalas completas para permitir fundos sutis (50/100) e textos com alto contraste (800/900).
 
 <ColorPalette>
   <ColorItem
     title="Success"
     subtitle="Sucesso, confirmações e status positivo"
-    colors={{ Success: 'hsl(var(--success))', 'Success Foreground': 'hsl(var(--success-foreground))' }}
+    colors={{
+      '50': 'hsl(var(--success-50))',
+      '100': 'hsl(var(--success-100))',
+      '200': 'hsl(var(--success-200))',
+      '300': 'hsl(var(--success-300))',
+      '400': 'hsl(var(--success-400))',
+      '500 (Default)': 'hsl(var(--success-500))',
+      '600': 'hsl(var(--success-600))',
+      '700': 'hsl(var(--success-700))',
+      '800': 'hsl(var(--success-800))',
+      '900': 'hsl(var(--success-900))',
+      '950': 'hsl(var(--success-950))',
+    }}
   />
   <ColorItem
     title="Warning"
     subtitle="Avisos, atenção e ações que requerem cuidado"
-    colors={{ Warning: 'hsl(var(--warning))', 'Warning Foreground': 'hsl(var(--warning-foreground))' }}
+    colors={{
+      '50': 'hsl(var(--warning-50))',
+      '100': 'hsl(var(--warning-100))',
+      '200': 'hsl(var(--warning-200))',
+      '300': 'hsl(var(--warning-300))',
+      '400': 'hsl(var(--warning-400))',
+      '500 (Default)': 'hsl(var(--warning-500))',
+      '600': 'hsl(var(--warning-600))',
+      '700': 'hsl(var(--warning-700))',
+      '800': 'hsl(var(--warning-800))',
+      '900': 'hsl(var(--warning-900))',
+      '950': 'hsl(var(--warning-950))',
+    }}
   />
   <ColorItem
     title="Destructive / Error"
-    subtitle="Erros, falhas e ações destrutivas (excluir)"
-    colors={{ Destructive: 'hsl(var(--destructive))', 'Destructive Foreground': 'hsl(var(--destructive-foreground))' }}
+    subtitle="Erros, falhas e ações destrutivas"
+    colors={{
+      '50': 'hsl(var(--destructive-50))',
+      '100': 'hsl(var(--destructive-100))',
+      '200': 'hsl(var(--destructive-200))',
+      '300': 'hsl(var(--destructive-300))',
+      '400': 'hsl(var(--destructive-400))',
+      '500 (Default)': 'hsl(var(--destructive-500))',
+      '600': 'hsl(var(--destructive-600))',
+      '700': 'hsl(var(--destructive-700))',
+      '800': 'hsl(var(--destructive-800))',
+      '900': 'hsl(var(--destructive-900))',
+      '950': 'hsl(var(--destructive-950))',
+    }}
   />
   <ColorItem
     title="Info"
     subtitle="Informações neutras e dicas"
-    colors={{ Info: 'hsl(var(--info))', 'Info Foreground': 'hsl(var(--info-foreground))' }}
+    colors={{
+      '50': 'hsl(var(--info-50))',
+      '100': 'hsl(var(--info-100))',
+      '200': 'hsl(var(--info-200))',
+      '300': 'hsl(var(--info-300))',
+      '400': 'hsl(var(--info-400))',
+      '500 (Default)': 'hsl(var(--info-500))',
+      '600': 'hsl(var(--info-600))',
+      '700': 'hsl(var(--info-700))',
+      '800': 'hsl(var(--info-800))',
+      '900': 'hsl(var(--info-900))',
+      '950': 'hsl(var(--info-950))',
+    }}
+  />
+</ColorPalette>
+
+---
+
+## Escala Neutra (Grays/Slate)
+Tons de cinza utilizados para textos, bordas sutis e fundos secundários.
+
+<ColorPalette>
+  <ColorItem
+    title="Neutral"
+    subtitle="Escala completa de cinzas (Slate)"
+    colors={{
+      '50': 'hsl(var(--neutral-50))',
+      '100': 'hsl(var(--neutral-100))',
+      '200': 'hsl(var(--neutral-200))',
+      '300': 'hsl(var(--neutral-300))',
+      '400': 'hsl(var(--neutral-400))',
+      '500': 'hsl(var(--neutral-500))',
+      '600': 'hsl(var(--neutral-600))',
+      '700': 'hsl(var(--neutral-700))',
+      '800': 'hsl(var(--neutral-800))',
+      '900': 'hsl(var(--neutral-900))',
+      '950': 'hsl(var(--neutral-950))',
+    }}
   />
 </ColorPalette>
 

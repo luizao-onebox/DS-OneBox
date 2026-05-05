@@ -56,13 +56,92 @@
   --ring: 221.2 83.2% 53.3%;
   --radius: 0.5rem;
   
-  /* Semantic Colors */
+  /* Semantic Colors Base */
   --success: 142.1 76.2% 36.3%;
   --success-foreground: 355.7 100% 97.3%;
   --warning: 38 92% 50%;
   --warning-foreground: 48 96% 89%;
   --info: 199 89% 48%;
   --info-foreground: 210 40% 98%;
+
+  /* Color Scales (Light Mode) */
+  /* Primary Scale */
+  --primary-50: 214 100% 97%;
+  --primary-100: 214 100% 93%;
+  --primary-200: 214 100% 86%;
+  --primary-300: 214 100% 75%;
+  --primary-400: 214 100% 64%;
+  --primary-500: 221 83% 53%; /* Default Primary */
+  --primary-600: 221 83% 45%;
+  --primary-700: 221 83% 36%;
+  --primary-800: 221 83% 30%;
+  --primary-900: 221 83% 25%;
+  --primary-950: 221 83% 16%;
+
+  /* Success Scale */
+  --success-50: 138 76% 97%;
+  --success-100: 141 79% 93%;
+  --success-200: 141 74% 85%;
+  --success-300: 142 76% 73%;
+  --success-400: 141 74% 59%;
+  --success-500: 142 76% 36%; /* Default Success */
+  --success-600: 142 76% 28%;
+  --success-700: 143 76% 22%;
+  --success-800: 143 76% 18%;
+  --success-900: 144 76% 15%;
+  --success-950: 144 76% 8%;
+
+  /* Warning Scale */
+  --warning-50: 45 100% 96%;
+  --warning-100: 45 100% 90%;
+  --warning-200: 45 100% 80%;
+  --warning-300: 45 100% 67%;
+  --warning-400: 45 100% 55%;
+  --warning-500: 38 92% 50%; /* Default Warning */
+  --warning-600: 32 98% 43%;
+  --warning-700: 26 90% 35%;
+  --warning-800: 22 82% 29%;
+  --warning-900: 20 78% 24%;
+  --warning-950: 18 80% 13%;
+
+  /* Destructive/Error Scale */
+  --destructive-50: 0 86% 97%;
+  --destructive-100: 0 93% 94%;
+  --destructive-200: 0 96% 89%;
+  --destructive-300: 0 94% 82%;
+  --destructive-400: 0 91% 71%;
+  --destructive-500: 0 84% 60%; /* Default Destructive */
+  --destructive-600: 0 72% 51%;
+  --destructive-700: 0 74% 42%;
+  --destructive-800: 0 70% 35%;
+  --destructive-900: 0 63% 31%;
+  --destructive-950: 0 75% 15%;
+
+  /* Info Scale */
+  --info-50: 204 100% 97%;
+  --info-100: 204 100% 93%;
+  --info-200: 201 94% 86%;
+  --info-300: 199 92% 76%;
+  --info-400: 198 90% 63%;
+  --info-500: 199 89% 48%; /* Default Info */
+  --info-600: 200 98% 39%;
+  --info-700: 201 96% 32%;
+  --info-800: 201 90% 27%;
+  --info-900: 202 80% 24%;
+  --info-950: 203 84% 15%;
+
+  /* Neutral/Gray Scale (Slate based) */
+  --neutral-50: 210 40% 98%;
+  --neutral-100: 210 40% 96%;
+  --neutral-200: 214 32% 91%;
+  --neutral-300: 213 27% 84%;
+  --neutral-400: 215 20% 65%;
+  --neutral-500: 215 16% 47%;
+  --neutral-600: 215 19% 35%;
+  --neutral-700: 215 25% 27%;
+  --neutral-800: 217 33% 17%;
+  --neutral-900: 222 47% 11%;
+  --neutral-950: 224 71% 4%;
 
   /* Chart Colors */
   --chart-1: 12 76% 61%;
@@ -94,13 +173,92 @@
   --input: 217.2 32.6% 17.5%;
   --ring: 224.3 76.3% 48%;
   
-  /* Semantic Colors */
+  /* Semantic Colors Base */
   --success: 142.1 70.6% 45.3%;
   --success-foreground: 144.9 80.4% 10%;
   --warning: 48 96% 53%;
   --warning-foreground: 38 92% 10%;
   --info: 199 89% 48%;
   --info-foreground: 210 40% 98%;
+
+  /* Color Scales (Dark Mode) - Reversão suave para melhor contraste */
+  /* Primary Scale (Dark) */
+  --primary-50: 221 83% 10%;
+  --primary-100: 221 83% 16%;
+  --primary-200: 221 83% 25%;
+  --primary-300: 221 83% 36%;
+  --primary-400: 221 83% 45%;
+  --primary-500: 217 91% 60%; /* Default Primary Dark */
+  --primary-600: 214 100% 64%;
+  --primary-700: 214 100% 75%;
+  --primary-800: 214 100% 86%;
+  --primary-900: 214 100% 93%;
+  --primary-950: 214 100% 97%;
+
+  /* Success Scale (Dark) */
+  --success-50: 144 76% 8%;
+  --success-100: 144 76% 15%;
+  --success-200: 143 76% 22%;
+  --success-300: 142 76% 28%;
+  --success-400: 142 76% 36%;
+  --success-500: 142 71% 45%; /* Default Success Dark */
+  --success-600: 141 74% 59%;
+  --success-700: 142 76% 73%;
+  --success-800: 141 74% 85%;
+  --success-900: 141 79% 93%;
+  --success-950: 138 76% 97%;
+
+  /* Warning Scale (Dark) */
+  --warning-50: 18 80% 13%;
+  --warning-100: 20 78% 24%;
+  --warning-200: 26 90% 35%;
+  --warning-300: 32 98% 43%;
+  --warning-400: 38 92% 50%;
+  --warning-500: 48 96% 53%; /* Default Warning Dark */
+  --warning-600: 45 100% 55%;
+  --warning-700: 45 100% 67%;
+  --warning-800: 45 100% 80%;
+  --warning-900: 45 100% 90%;
+  --warning-950: 45 100% 96%;
+
+  /* Destructive/Error Scale (Dark) */
+  --destructive-50: 0 75% 15%;
+  --destructive-100: 0 63% 31%;
+  --destructive-200: 0 70% 35%;
+  --destructive-300: 0 74% 42%;
+  --destructive-400: 0 72% 51%;
+  --destructive-500: 0 63% 51%; /* Default Destructive Dark */
+  --destructive-600: 0 91% 71%;
+  --destructive-700: 0 94% 82%;
+  --destructive-800: 0 96% 89%;
+  --destructive-900: 0 93% 94%;
+  --destructive-950: 0 86% 97%;
+
+  /* Info Scale (Dark) */
+  --info-50: 203 84% 15%;
+  --info-100: 202 80% 24%;
+  --info-200: 201 90% 27%;
+  --info-300: 201 96% 32%;
+  --info-400: 200 98% 39%;
+  --info-500: 199 89% 48%; /* Default Info Dark */
+  --info-600: 198 90% 63%;
+  --info-700: 199 92% 76%;
+  --info-800: 201 94% 86%;
+  --info-900: 204 100% 93%;
+  --info-950: 204 100% 97%;
+
+  /* Neutral/Gray Scale (Dark) */
+  --neutral-50: 224 71% 4%;
+  --neutral-100: 222 47% 11%;
+  --neutral-200: 217 33% 17%;
+  --neutral-300: 215 25% 27%;
+  --neutral-400: 215 19% 35%;
+  --neutral-500: 215 16% 47%;
+  --neutral-600: 215 20% 65%;
+  --neutral-700: 213 27% 84%;
+  --neutral-800: 214 32% 91%;
+  --neutral-900: 210 40% 96%;
+  --neutral-950: 210 40% 98%;
 
   /* Chart Colors */
   --chart-1: 220 70% 50%;
