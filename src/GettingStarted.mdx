@@ -31,6 +31,10 @@ npm install lucide-react
 
 Para que os componentes do pacote tenham a mesma cara do Storybook, seu projeto precisa herdar as variáveis de cor e as configurações do Tailwind.
 
+> ⚠️ **Aviso Importante: Limpando a Casa!**
+> Se você criou seu projeto usando ferramentas como `create-vite`, elas injetam um arquivo `index.css` ou `App.css` padrão que possui regras globais (ex: `#root { display: flex; flex-direction: column; text-align: center; }`). Essas regras podem quebrar completamente o layout dos nossos componentes (como o `Sidebar`). 
+> **A regra de ouro é: apague todo o CSS boilerplate do seu framework antes de começar.** O seu CSS global deve conter idealmente apenas as diretivas do Tailwind (`@tailwind base; @tailwind components; @tailwind utilities;`) e a importação do nosso Design System.
+
 ### Passo 2.1: Importar o CSS Global
 No seu arquivo principal (ex: `main.tsx`, `App.tsx` ou `layout.tsx` no Next.js), importe o CSS compilado do pacote logo no topo:
 
