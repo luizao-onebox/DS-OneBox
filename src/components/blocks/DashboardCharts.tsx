@@ -221,7 +221,7 @@ export function DashboardCharts() {
         <CardContent className="flex-1 pb-0">
           <ChartContainer
             config={pieConfig}
-            className="mx-auto aspect-square max-h-[250px]"
+            className="mx-auto aspect-square max-h-64"
           >
             <PieChart>
               <ChartTooltip

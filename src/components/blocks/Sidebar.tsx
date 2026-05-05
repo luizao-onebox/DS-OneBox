@@ -69,7 +69,7 @@ export function Sidebar({ className, children }: React.HTMLAttributes<HTMLDivEle
     <aside
       className={cn(
         "flex h-full flex-col border-r bg-card transition-all duration-300 ease-in-out",
-        isCollapsed ? "w-[68px]" : "w-[260px]",
+        isCollapsed ? "w-[var(--sidebar-width-icon,4.5rem)]" : "w-[var(--sidebar-width,16rem)]",
         className
       )}
     >
@@ -93,7 +93,7 @@ export function SidebarHeader({
   return (
     <div
       className={cn(
-        "flex h-[60px] items-center justify-between px-4 py-4",
+        "flex h-16 items-center justify-between px-4 py-4",
         isCollapsed && "justify-center px-0",
         className
       )}

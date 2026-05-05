@@ -53,7 +53,7 @@ export const DefaultLight: Story = {
 
 export const DarkVersion: Story = {
   render: () => (
-    <div className="p-8 bg-zinc-950 rounded-md border border-zinc-800">
+    <div className="p-8 bg-neutral-950 rounded-md border border-zinc-800">
       <Logo variant="full" theme="dark" className="h-8" />
     </div>
   )

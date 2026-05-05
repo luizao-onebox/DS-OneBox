@@ -26,10 +26,10 @@ export function RoleManager({ permissions, onPermissionChange }: RoleManagerProp
       <Table>
         <TableHeader>
           <TableRow className="bg-muted/50">
-            <TableHead className="w-[300px]">Módulo / Recurso</TableHead>
-            <TableHead className="text-center w-[100px]">Ler</TableHead>
-            <TableHead className="text-center w-[100px]">Escrever</TableHead>
-            <TableHead className="text-center w-[100px]">Excluir</TableHead>
+            <TableHead className="w-72">Módulo / Recurso</TableHead>
+            <TableHead className="text-center w-24">Ler</TableHead>
+            <TableHead className="text-center w-24">Escrever</TableHead>
+            <TableHead className="text-center w-24">Excluir</TableHead>
             <TableHead className="text-right">Acesso Total</TableHead>
           </TableRow>
         </TableHeader>

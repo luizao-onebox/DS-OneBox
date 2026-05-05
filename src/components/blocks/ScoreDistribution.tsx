@@ -50,7 +50,7 @@ export function ScoreDistribution() {
               key={item.id}
               style={{ width: `${item.value}%` }}
               className={`${item.colorClass} flex items-center justify-center text-body-xs font-bold transition-all hover:brightness-110 ${
-                item.id === "unbalanced" ? "text-amber-950" : "text-white"
+                item.id === "unbalanced" ? "text-warning-950" : "text-white"
               }`}
             >
               {item.value}%
@@ -62,7 +62,7 @@ export function ScoreDistribution() {
         <div className="flex flex-wrap gap-x-6 gap-y-2 mb-4 text-body-xs sm:text-body-sm">
           {items.map((item) => (
             <div key={item.id} className="flex items-center gap-2">
-              <div className={`h-3 w-3 shrink-0 rounded-[2px] ${item.colorClass.split(" ")[0]}`} />
+              <div className={`h-3 w-3 shrink-0 rounded-sm ${item.colorClass.split(" ")[0]}`} />
               <div className="leading-none mt-[2px]">
                 <span className="font-bold text-foreground">
                   {item.label} ({item.value}%)

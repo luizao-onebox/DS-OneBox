@@ -84,8 +84,8 @@ export function Stepper({
                 className={cn(
                   "transition-colors",
                   orientation === "horizontal"
-                    ? "h-[2px] flex-1 mx-4 -mt-10"
-                    : "w-[2px] h-full min-h-[32px] ml-4 mt-2",
+                    ? "h-0.5 flex-1 mx-4 -mt-10"
+                    : "w-0.5 h-full min-h-8 ml-4 mt-2",
                   index < currentStep ? "bg-primary" : "bg-muted"
                 )}
               />

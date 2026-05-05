@@ -27,7 +27,7 @@ export function UserSettings() {
   return (
     <div className="flex w-full max-w-4xl flex-col md:flex-row gap-6">
       {/* Sidebar Navigation */}
-      <nav className="flex md:flex-col gap-2 md:w-[200px] shrink-0 overflow-x-auto md:overflow-visible">
+      <nav className="flex md:flex-col gap-2 md:w-52 shrink-0 overflow-x-auto md:overflow-visible">
         <Button variant="secondary" className="justify-start">
           Perfil
         </Button>

@@ -66,7 +66,7 @@ export const BarChartExample: Story = {
   render: () => (
     <div className="w-full max-w-lg">
       <h2 className="text-h4 font-bold mb-4">Gráfico de Barras</h2>
-      <ChartContainer config={chartConfig} className="min-h-[250px] w-full">
+      <ChartContainer config={chartConfig} className="min-h-64 w-full">
         <BarChart accessibilityLayer data={chartData}>
           <CartesianGrid vertical={false} />
           <XAxis
@@ -90,7 +90,7 @@ export const BarChartHorizontalExample: Story = {
   render: () => (
     <div className="w-full max-w-lg">
       <h2 className="text-h4 font-bold mb-4">Gráfico de Barras Horizontal</h2>
-      <ChartContainer config={chartConfig} className="min-h-[250px] w-full">
+      <ChartContainer config={chartConfig} className="min-h-64 w-full">
         <BarChart accessibilityLayer data={chartData} layout="vertical" margin={{ left: -20 }}>
           <CartesianGrid horizontal={false} vertical={true} />
           <XAxis type="number" dataKey="desktop" hide />
@@ -116,7 +116,7 @@ export const LineChartExample: Story = {
   render: () => (
     <div className="w-full max-w-lg">
       <h2 className="text-h4 font-bold mb-4">Gráfico de Linhas</h2>
-      <ChartContainer config={chartConfig} className="min-h-[250px] w-full">
+      <ChartContainer config={chartConfig} className="min-h-64 w-full">
         <LineChart accessibilityLayer data={chartData} margin={{ left: 12, right: 12 }}>
           <CartesianGrid vertical={false} />
           <XAxis
@@ -140,7 +140,7 @@ export const AreaChartExample: Story = {
   render: () => (
     <div className="w-full max-w-lg">
       <h2 className="text-h4 font-bold mb-4">Gráfico de Área (Stacked)</h2>
-      <ChartContainer config={chartConfig} className="min-h-[250px] w-full">
+      <ChartContainer config={chartConfig} className="min-h-64 w-full">
         <AreaChart accessibilityLayer data={chartData} margin={{ left: 12, right: 12 }}>
           <CartesianGrid vertical={false} />
           <XAxis
@@ -164,7 +164,7 @@ export const PieChartExample: Story = {
   render: () => (
     <div className="w-full max-w-lg">
       <h2 className="text-h4 font-bold mb-4">Gráfico de Rosca (Donut)</h2>
-      <ChartContainer config={pieConfig} className="mx-auto aspect-square max-h-[300px]">
+      <ChartContainer config={pieConfig} className="mx-auto aspect-square max-h-72">
         <PieChart>
           <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
           <Pie data={pieData} dataKey="visitors" nameKey="browser" innerRadius={60} strokeWidth={5}>
@@ -228,7 +228,7 @@ export const DistributionBarExample: Story = {
         <div className="flex flex-wrap gap-x-6 gap-y-2 text-body-xs sm:text-body-sm">
           {distributionData.map((item) => (
             <div key={item.id} className="flex items-center gap-2">
-              <div className={`h-3 w-3 shrink-0 rounded-[2px] ${item.colorClass}`} />
+              <div className={`h-3 w-3 shrink-0 rounded-sm ${item.colorClass}`} />
               <div className="leading-none mt-[2px]">
                 <span className="font-bold text-foreground">
                   {item.label} ({item.value}%)

@@ -72,7 +72,7 @@ export function PricingCards() {
         <h2 className="text-h1 font-bold tracking-tight sm:text-display-sm md:text-display-md">
           Preços simples e transparentes
         </h2>
-        <p className="text-muted-foreground text-body-lg max-w-[600px] mx-auto">
+        <p className="text-muted-foreground text-body-lg max-w-full max-w-2xl mx-auto">
           Escolha o plano ideal para a sua equipe. Cancele a qualquer momento.
         </p>
       </div>

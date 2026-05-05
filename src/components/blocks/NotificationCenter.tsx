@@ -86,7 +86,7 @@ export function NotificationCenter({
           </div>
         </div>
         <Separator />
-        <ScrollArea className="h-[350px]">
+        <ScrollArea className="max-h-96">
           {notifications.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center p-8 text-center">
               <MailOpen className="h-8 w-8 text-muted-foreground/50 mb-3" />

@@ -61,7 +61,7 @@ export function CreationWizard({
           />
         </div>
 
-        <div className="min-h-[250px] max-h-[50vh] overflow-y-auto pr-2 pb-4">
+        <div className="min-h-64 max-h-[50vh] overflow-y-auto pr-2 pb-4">
           {children}
         </div>
 

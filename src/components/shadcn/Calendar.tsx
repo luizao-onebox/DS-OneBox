@@ -94,7 +94,7 @@ function Calendar({
               >
                 <SelectValue>{selected?.label}</SelectValue>
               </SelectTrigger>
-              <SelectContent position="popper" className="max-h-[200px] min-w-[120px]">
+              <SelectContent position="popper" className="max-h-48 min-w-32">
                 {options?.map((option: any, id: number) => (
                   <SelectItem
                     key={`${option.value}-${id}`}

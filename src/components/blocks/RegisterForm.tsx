@@ -28,7 +28,7 @@ export function RegisterForm() {
   }
 
   return (
-    <Card className="mx-auto w-[400px]">
+    <Card className="mx-auto w-full max-w-md">
       <CardHeader className="space-y-1 text-center">
         <CardTitle className="text-h3">Criar uma conta</CardTitle>
         <CardDescription>
