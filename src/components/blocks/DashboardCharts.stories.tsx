@@ -82,7 +82,7 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   render: () => (
     <div className="w-full">
-      <h2 className="text-3xl font-bold tracking-tight mb-4">Métricas e Gráficos</h2>
+      <h2 className="text-h1 font-bold tracking-tight mb-4">Métricas e Gráficos</h2>
       <p className="text-muted-foreground mb-8">Passe o mouse sobre os gráficos para visualizar os tooltips estilizados.</p>
       <DashboardCharts />
     </div>

@@ -176,7 +176,7 @@ export const CardGallery = {
         <CardHeader>
           <CardTitle>Pro Plan</CardTitle>
           <CardDescription>For teams and businesses</CardDescription>
-          <div className="mt-4"><span className="text-4xl font-bold">$29</span><span className="text-muted-foreground">/month</span></div>
+          <div className="mt-4"><span className="text-display-sm font-bold">$29</span><span className="text-muted-foreground">/month</span></div>
         </CardHeader>
         <CardContent>
           <ul className="space-y-2 text-body-sm">

@@ -69,7 +69,7 @@ export function PricingCards() {
     <div className="w-full max-w-6xl mx-auto flex flex-col items-center gap-8 py-10">
       {/* Header Section */}
       <div className="text-center space-y-4">
-        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+        <h2 className="text-h1 font-bold tracking-tight sm:text-display-sm md:text-display-md">
           Preços simples e transparentes
         </h2>
         <p className="text-muted-foreground text-body-lg max-w-[600px] mx-auto">
@@ -116,7 +116,7 @@ export function PricingCards() {
           >
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-2xl">{plan.title}</CardTitle>
+                <CardTitle className="text-h3">{plan.title}</CardTitle>
                 {plan.popular && (
                   <Badge className="uppercase text-[10px]">Mais Popular</Badge>
                 )}
@@ -126,7 +126,7 @@ export function PricingCards() {
               </CardDescription>
             </CardHeader>
             <CardContent className="flex-1 space-y-6">
-              <div className="flex items-baseline gap-1 text-5xl font-extrabold">
+              <div className="flex items-baseline gap-1 text-display-md font-extrabold">
                 {isAnnual ? plan.priceAnnually : plan.priceMonthly}
                 <span className="text-body-lg font-medium text-muted-foreground">
                   /mês

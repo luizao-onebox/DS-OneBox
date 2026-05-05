@@ -23,7 +23,7 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   render: () => (
     <div className="w-full">
-      <h2 className="text-3xl font-bold tracking-tight mb-4">Dashboard</h2>
+      <h2 className="text-h1 font-bold tracking-tight mb-4">Dashboard</h2>
       <DashboardMetrics />
     </div>
   ),

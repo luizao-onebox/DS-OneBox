@@ -51,7 +51,7 @@ export function DetailDrawer({
         <div className="px-6 py-6 pb-4">
           <SheetHeader className="text-left space-y-0">
             <div className="flex items-center justify-between">
-              <SheetTitle className="text-xl flex items-center gap-2">
+              <SheetTitle className="text-h4 flex items-center gap-2">
                 {title}
                 {status && <Badge variant="secondary">{status}</Badge>}
               </SheetTitle>

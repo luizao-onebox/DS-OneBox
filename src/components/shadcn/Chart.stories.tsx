@@ -65,7 +65,7 @@ const pieConfig = {
 export const BarChartExample: Story = {
   render: () => (
     <div className="w-full max-w-lg">
-      <h2 className="text-xl font-bold mb-4">Gráfico de Barras</h2>
+      <h2 className="text-h4 font-bold mb-4">Gráfico de Barras</h2>
       <ChartContainer config={chartConfig} className="min-h-[250px] w-full">
         <BarChart accessibilityLayer data={chartData}>
           <CartesianGrid vertical={false} />
@@ -89,7 +89,7 @@ export const BarChartExample: Story = {
 export const BarChartHorizontalExample: Story = {
   render: () => (
     <div className="w-full max-w-lg">
-      <h2 className="text-xl font-bold mb-4">Gráfico de Barras Horizontal</h2>
+      <h2 className="text-h4 font-bold mb-4">Gráfico de Barras Horizontal</h2>
       <ChartContainer config={chartConfig} className="min-h-[250px] w-full">
         <BarChart accessibilityLayer data={chartData} layout="vertical" margin={{ left: -20 }}>
           <CartesianGrid horizontal={false} vertical={true} />
@@ -115,7 +115,7 @@ export const BarChartHorizontalExample: Story = {
 export const LineChartExample: Story = {
   render: () => (
     <div className="w-full max-w-lg">
-      <h2 className="text-xl font-bold mb-4">Gráfico de Linhas</h2>
+      <h2 className="text-h4 font-bold mb-4">Gráfico de Linhas</h2>
       <ChartContainer config={chartConfig} className="min-h-[250px] w-full">
         <LineChart accessibilityLayer data={chartData} margin={{ left: 12, right: 12 }}>
           <CartesianGrid vertical={false} />
@@ -139,7 +139,7 @@ export const LineChartExample: Story = {
 export const AreaChartExample: Story = {
   render: () => (
     <div className="w-full max-w-lg">
-      <h2 className="text-xl font-bold mb-4">Gráfico de Área (Stacked)</h2>
+      <h2 className="text-h4 font-bold mb-4">Gráfico de Área (Stacked)</h2>
       <ChartContainer config={chartConfig} className="min-h-[250px] w-full">
         <AreaChart accessibilityLayer data={chartData} margin={{ left: 12, right: 12 }}>
           <CartesianGrid vertical={false} />
@@ -163,7 +163,7 @@ export const AreaChartExample: Story = {
 export const PieChartExample: Story = {
   render: () => (
     <div className="w-full max-w-lg">
-      <h2 className="text-xl font-bold mb-4">Gráfico de Rosca (Donut)</h2>
+      <h2 className="text-h4 font-bold mb-4">Gráfico de Rosca (Donut)</h2>
       <ChartContainer config={pieConfig} className="mx-auto aspect-square max-h-[300px]">
         <PieChart>
           <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
@@ -207,7 +207,7 @@ export const DistributionBarExample: Story = {
 
     return (
       <div className="w-full max-w-4xl">
-        <h2 className="text-xl font-bold mb-4">Gráfico de Distribuição (Proporção)</h2>
+        <h2 className="text-h4 font-bold mb-4">Gráfico de Distribuição (Proporção)</h2>
         
         {/* Barra de Proporção */}
         <div className="flex h-8 w-full overflow-hidden rounded-md mb-4">

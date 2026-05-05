@@ -222,7 +222,7 @@ export const ThemeCustomizer = {
           </div>
         </div>
         <div className="p-6 rounded-lg border space-y-4" style={{ backgroundColor: bg, color: fg }}>
-          <h3 className="text-xl font-bold">Preview Card</h3>
+          <h3 className="text-h4 font-bold">Preview Card</h3>
           <p>This card adapts to your custom theme colors.</p>
           <div className="flex gap-2">
             <button className="px-4 py-2 rounded-md text-white" style={{ backgroundColor: accent }}>Primary</button>
