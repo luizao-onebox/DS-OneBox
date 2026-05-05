@@ -33,7 +33,7 @@ export function AdvancedFilter({
   onClearFilters,
   title = "Filtros",
 }: AdvancedFilterProps) {
-  const activeCount = Object.values(selectedValues).reduce((acc, val) => acc + val.length, 0)
+  const activeCount = Object.values(selectedValues).reduce((acc, vals) => acc + vals.length, 0)
 
   return (
     <div className="flex items-center gap-2">
@@ -82,7 +82,7 @@ export function AdvancedFilter({
                         onSelect={() => onFilterChange?.(category.title, option.value, !isSelected)}
                       >
                         <div
-                          className={`mr-2 flex h-4 w-4 items-center justify-center rounded-sm border ${
+                          className={`mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary ${
                             isSelected
                               ? "bg-primary text-primary-foreground"
                               : "opacity-50 [&_svg]:invisible"

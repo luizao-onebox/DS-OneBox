@@ -41,6 +41,7 @@ export * from "./components/shadcn/Sheet";
 export * from "./components/shadcn/Skeleton";
 export * from "./components/shadcn/Slider";
 export * from "./components/shadcn/Sonner";
+export { toast } from "sonner";
 export * from "./components/shadcn/Switch";
 export * from "./components/shadcn/Table";
 export * from "./components/shadcn/Tabs";
