@@ -1,0 +1,113 @@
+import { Meta, Typeset } from '@storybook/blocks';
+
+<Meta title="Fundamentos/Tipografia" />
+
+# 📝 Sistema de Tipografia (Tokens)
+
+A tipografia do **DS-OneBox** segue padrões de mercado rigorosos (inspirados no Material Design, Carbon e Atlassian) para garantir escalabilidade, acessibilidade e clareza visual.
+
+Em vez de usar valores absolutos ou as classes genéricas do Tailwind (`text-sm`, `text-lg`), nós utilizamos **Tokens Semânticos**. Isso significa que cada tamanho de fonte tem um *propósito* (ex: Título de página, Corpo de texto, Legenda).
+
+Cada token tipográfico em nosso `tailwind-preset.js` já embute:
+1. Tamanho da Fonte (`font-size` em `rem`)
+2. Altura da Linha (`line-height`)
+3. Peso da Fonte (`font-weight`)
+4. Espaçamento entre letras (`letter-spacing`)
+
+---
+
+## 1. Display
+Textos gigantescos usados primariamente em páginas de marketing, hero banners ou dashboards vazios com grandes contadores. **Não devem ser usados em blocos de texto contínuo.**
+
+- `text-display-lg`: 4rem (64px) / Bold
+- `text-display-md`: 3.5rem (56px) / Bold
+- `text-display-sm`: 3rem (48px) / Bold
+
+<div className="p-4 border rounded-md mb-8 flex flex-col gap-4">
+  <div className="text-display-lg">Display Large</div>
+  <div className="text-display-md">Display Medium</div>
+  <div className="text-display-sm">Display Small</div>
+</div>
+
+## 2. Headings (Títulos)
+Usados para hierarquia de páginas, seções e modais. Eles garantem legibilidade e estrutura lógica (H1 a H6).
+
+- `text-h1`: 2.5rem (40px) / Bold - Título principal da página.
+- `text-h2`: 2rem (32px) / Bold - Subtítulos principais ou seções grandes.
+- `text-h3`: 1.75rem (28px) / Semibold - Títulos de modais ou grandes cartões.
+- `text-h4`: 1.5rem (24px) / Semibold - Títulos de seções internas.
+- `text-h5`: 1.25rem (20px) / Semibold - Títulos de grupos de informações.
+- `text-h6`: 1.125rem (18px) / Semibold - Pequenos blocos de destaque.
+
+<div className="p-4 border rounded-md mb-8 flex flex-col gap-4">
+  <div className="text-h1">Heading 1</div>
+  <div className="text-h2">Heading 2</div>
+  <div className="text-h3">Heading 3</div>
+  <div className="text-h4">Heading 4</div>
+  <div className="text-h5">Heading 5</div>
+  <div className="text-h6">Heading 6</div>
+</div>
+
+## 3. Body (Corpo de Texto)
+Utilizado para textos corridos, descrições longas e parágrafos normais. A altura de linha é otimizada para leitura.
+
+- `text-body-lg`: 1.125rem (18px) / Regular - Parágrafos de destaque ou introduções.
+- `text-body-md`: 1rem (16px) / Regular - **Corpo de texto padrão** do sistema.
+- `text-body-sm`: 0.875rem (14px) / Regular - Textos secundários longos.
+
+<div className="p-4 border rounded-md mb-8 flex flex-col gap-4">
+  <div className="text-body-lg">Body Large: O rápido raposo marrom salta sobre o cão preguiçoso. O design system facilita a vida dos desenvolvedores provendo componentes acessíveis e consistentes.</div>
+  <div className="text-body-md">Body Medium: O rápido raposo marrom salta sobre o cão preguiçoso. O design system facilita a vida dos desenvolvedores provendo componentes acessíveis e consistentes.</div>
+  <div className="text-body-sm">Body Small: O rápido raposo marrom salta sobre o cão preguiçoso. O design system facilita a vida dos desenvolvedores provendo componentes acessíveis e consistentes.</div>
+</div>
+
+## 4. Label / Caption (Rótulos e Legendas)
+Utilizados para formulários (labels), badges, metadados, datas e pequenas dicas na interface. Possuem um peso de fonte ligeiramente maior (`medium`) para garantir legibilidade mesmo em tamanhos pequenos.
+
+- `text-label-lg`: 1rem (16px) / Medium - Labels de formulários importantes.
+- `text-label-md`: 0.875rem (14px) / Medium - Labels padrão e metadados.
+- `text-label-sm`: 0.75rem (12px) / Medium - Badges, tags e textos muito curtos (captions).
+
+<div className="p-4 border rounded-md mb-8 flex flex-col gap-4">
+  <div className="text-label-lg">Label Large / Formulário</div>
+  <div className="text-label-md">Label Medium / Status: Ativo</div>
+  <div className="text-label-sm">Label Small / Atualizado há 5 min</div>
+</div>
+
+## 5. Code
+Tipografia monoespaçada usada para blocos de código, IDs de sistema, hashes ou valores técnicos.
+
+- `text-code-md`: 0.875rem (14px) / Regular
+- `text-code-sm`: 0.75rem (12px) / Regular
+
+<div className="p-4 border rounded-md mb-8 flex flex-col gap-4">
+  <div className="text-code-md font-mono bg-neutral-100 p-1 rounded w-fit">npm install ds-onebox</div>
+  <div className="text-code-sm font-mono bg-neutral-100 p-1 rounded w-fit">ID: a8f9c2d1</div>
+</div>
+
+---
+
+## Exemplo de Uso no Código
+
+Ao desenvolver uma interface, sempre prefira as classes semânticas acima. O Tailwind aplicará automaticamente o peso, tamanho e altura da linha ideais.
+
+```tsx
+// ✅ CERTO: Usando semântica de hierarquia
+<article>
+  <h1 className="text-h2 text-neutral-900">Configurações de Conta</h1>
+  <p className="text-body-md text-neutral-600 mt-2">
+    Gerencie suas informações pessoais e preferências de segurança.
+  </p>
+  
+  <div className="mt-4">
+    <label className="text-label-sm text-neutral-500 uppercase">ID de Usuário</label>
+    <div className="text-code-md text-neutral-800">USR-99823</div>
+  </div>
+</article>
+
+// ❌ ERRADO: Advinhação manual de tamanhos e pesos (difícil de manter)
+<article>
+  <h1 className="text-3xl font-bold text-gray-900">Configurações de Conta</h1>
+  <p className="text-base text-gray-600 mt-2 leading-relaxed">...</p>
+</article>
+```

@@ -55,14 +55,48 @@ export const TokensGallery = {
 
       {/* Typography */}
       <section>
-        <h2 className="text-lg font-semibold mb-4">Typography</h2>
-        <div className="space-y-3">
-          <p className="text-xs">Extra Small (12px) - Labels and captions</p>
-          <p className="text-sm">Small (14px) - Secondary text</p>
-          <p className="text-base">Base (16px) - Primary text</p>
-          <p className="text-lg">Large (18px) - Subtitles</p>
-          <p className="text-xl">Extra Large (20px) - Section titles</p>
-          <p className="text-2xl">2XL (24px) - Page titles</p>
+        <h2 className="text-lg font-semibold mb-4">Typography (Semantic)</h2>
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">Display</h3>
+            <div className="space-y-2">
+              <p className="text-display-sm">Display Small</p>
+            </div>
+          </div>
+          <div>
+            <h3 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">Headings</h3>
+            <div className="space-y-2">
+              <p className="text-h1">Heading 1</p>
+              <p className="text-h2">Heading 2</p>
+              <p className="text-h3">Heading 3</p>
+              <p className="text-h4">Heading 4</p>
+            </div>
+          </div>
+          <div>
+            <h3 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">Body</h3>
+            <div className="space-y-2">
+              <p className="text-body-lg">Body Large - Utilizado para parágrafos de destaque ou introduções longas na interface.</p>
+              <p className="text-body-md">Body Medium - O corpo de texto padrão do sistema para a maior parte das descrições.</p>
+              <p className="text-body-sm">Body Small - Textos secundários, observações e parágrafos auxiliares.</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <h3 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">Label / Caption</h3>
+              <div className="space-y-2">
+                <p className="text-label-lg">Label Large</p>
+                <p className="text-label-md">Label Medium</p>
+                <p className="text-label-sm">Label Small</p>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">Code</h3>
+              <div className="space-y-2">
+                <p className="text-code-md font-mono">text-code-md</p>
+                <p className="text-code-sm font-mono">text-code-sm</p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
