@@ -55,8 +55,12 @@ export function AdvancedFilter({
                     </Badge>
                   ) : (
                     Object.entries(selectedValues).flatMap(([cat, vals]) =>
-                      val
-                    ) // simplificando a exibição para a story
+                      vals.map(val => (
+                        <Badge key={val} variant="secondary" className="rounded-sm px-1 font-normal">
+                          {val}
+                        </Badge>
+                      ))
+                    )
                   )}
                 </div>
               </>

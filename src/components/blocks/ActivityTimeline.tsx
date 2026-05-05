@@ -2,7 +2,7 @@ import * as React from "react"
 import { cn } from "../../lib/utils"
 import { Check, Circle } from "lucide-react"
 
-export interface TimelineItemProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface TimelineItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
   title: React.ReactNode
   description?: React.ReactNode
   time?: React.ReactNode
