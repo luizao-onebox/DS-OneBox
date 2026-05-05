@@ -17,7 +17,7 @@ A estrutura de uso é feita pela composição de:
 1. **\`<Alert>\`:** O contêiner de fundo colorido ou com borda contornada.
 2. **Ícone Decorativo:** Posicionado no topo à esquerda via filhos injetados no \`<Alert>\` (Normalmente usando os ícones do Lucide).
 3. **\`<AlertTitle>\`:** O título (em negrito \`font-medium\`) com tamanho maior e espaçamentos no fundo.
-4. **\`<AlertDescription>\`:** O texto principal, menor (\`text-sm\`), descrevendo a ação, erro ou contexto.
+4. **\`<AlertDescription>\`:** O texto principal, menor (\`text-body-sm\`), descrevendo a ação, erro ou contexto.
 
 ## Variantes (Tokens)
 
@@ -75,7 +75,7 @@ export const AlertGallery = {
   render: () => (
     <div className="space-y-6 w-full max-w-md">
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Variants</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Variants</h2>
         <div className="flex flex-col gap-4">
           <Alert>
             <AlertTitle>Default</AlertTitle>

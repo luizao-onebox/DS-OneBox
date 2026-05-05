@@ -64,7 +64,7 @@ export function DetailDrawer({
             {subtitle && <SheetDescription className="mt-1">{subtitle}</SheetDescription>}
             
             {id && (
-              <div className="flex items-center gap-2 mt-4 text-xs text-muted-foreground">
+              <div className="flex items-center gap-2 mt-4 text-body-xs text-muted-foreground">
                 <span className="font-mono bg-muted px-1.5 py-0.5 rounded">{id}</span>
                 <button className="hover:text-foreground transition-colors flex items-center gap-1" onClick={() => navigator.clipboard.writeText(id)}>
                   <Copy className="h-3 w-3" />

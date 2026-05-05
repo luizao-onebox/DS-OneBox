@@ -20,7 +20,7 @@ export function SettingsLayout({
   return (
     <div className={cn("hidden space-y-6 p-10 pb-16 md:block", className)} {...props}>
       <div className="space-y-0.5">
-        <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
+        <h2 className="text-h3 tracking-tight">{title}</h2>
         {description && (
           <p className="text-muted-foreground">{description}</p>
         )}

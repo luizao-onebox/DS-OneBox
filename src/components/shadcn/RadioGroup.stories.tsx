@@ -90,7 +90,7 @@ export const RadioGroupGallery = {
   render: () => (
     <div className="space-y-6 w-full max-w-md">
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Basic</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Basic</h2>
         <RadioGroup defaultValue="option-1" className="space-y-3">
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="option-1" id="g-r1" />
@@ -107,7 +107,7 @@ export const RadioGroupGallery = {
         </RadioGroup>
       </section>
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Disabled</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Disabled</h2>
         <RadioGroup defaultValue="option-1" className="space-y-3">
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="option-1" id="d1" disabled />

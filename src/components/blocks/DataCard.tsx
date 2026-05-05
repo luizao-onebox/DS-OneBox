@@ -52,7 +52,7 @@ export function DataCard({
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col gap-1">
-            <CardTitle className="text-lg">{title}</CardTitle>
+            <CardTitle className="text-body-lg">{title}</CardTitle>
             {subtitle && (
               <CardDescription>{subtitle}</CardDescription>
             )}
@@ -89,7 +89,7 @@ export function DataCard({
       {(tags.length > 0 || metadata.length > 0) && (
         <CardContent className="grid gap-4">
           {metadata.length > 0 && (
-            <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+            <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-body-sm">
               {metadata.map((item, index) => (
                 <div key={index} className="flex flex-col gap-1">
                   <dt className="text-muted-foreground">{item.label}</dt>

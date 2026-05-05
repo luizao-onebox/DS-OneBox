@@ -55,9 +55,9 @@ export function NotificationCenter({
       <PopoverContent align="end" className="w-80 p-0" sideOffset={8}>
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2">
-            <h4 className="text-sm font-semibold">Notificações</h4>
+            <h4 className="text-label-md font-semibold">Notificações</h4>
             {unreadCount > 0 && (
-              <Badge variant="secondary" className="h-5 text-xs">
+              <Badge variant="secondary" className="h-5 text-body-xs">
                 {unreadCount} novas
               </Badge>
             )}
@@ -90,8 +90,8 @@ export function NotificationCenter({
           {notifications.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center p-8 text-center">
               <MailOpen className="h-8 w-8 text-muted-foreground/50 mb-3" />
-              <p className="text-sm font-medium">Nenhuma notificação</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-label-md">Nenhuma notificação</p>
+              <p className="text-body-xs text-muted-foreground">
                 Você está em dia com suas tarefas.
               </p>
             </div>
@@ -107,14 +107,14 @@ export function NotificationCenter({
                   )}
                 >
                   <div className="flex w-full justify-between items-start gap-2">
-                    <span className="text-sm font-medium leading-none">
+                    <span className="text-label-md leading-none">
                       {notification.title}
                     </span>
-                    <span className="text-xs text-muted-foreground whitespace-nowrap shrink-0">
+                    <span className="text-body-xs text-muted-foreground whitespace-nowrap shrink-0">
                       {notification.time}
                     </span>
                   </div>
-                  <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
+                  <p className="text-body-xs text-muted-foreground line-clamp-2 mt-1">
                     {notification.description}
                   </p>
                   {!notification.isRead && (
@@ -131,7 +131,7 @@ export function NotificationCenter({
           <>
             <Separator />
             <div className="p-2">
-              <Button variant="ghost" className="w-full h-8 text-xs justify-center">
+              <Button variant="ghost" className="w-full h-8 text-body-xs justify-center">
                 Ver todas as notificações
               </Button>
             </div>

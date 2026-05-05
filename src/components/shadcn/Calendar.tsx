@@ -28,9 +28,9 @@ function Calendar({
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4 relative",
         month_caption: "flex justify-center pt-1 relative items-center h-8",
-        caption_label: "text-sm font-medium hidden",
+        caption_label: "text-label-md hidden",
         caption_dropdowns: "flex justify-center gap-1 w-full",
-        dropdown: "text-sm font-medium bg-transparent border-0 focus:ring-0 cursor-pointer appearance-none px-1 rounded hover:bg-accent hover:text-accent-foreground",
+        dropdown: "text-label-md bg-transparent border-0 focus:ring-0 cursor-pointer appearance-none px-1 rounded hover:bg-accent hover:text-accent-foreground",
         dropdown_month: "flex items-center capitalize",
         dropdown_year: "flex items-center",
         dropdown_icon: "hidden",
@@ -48,7 +48,7 @@ function Calendar({
         weekday:
           "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
         week: "flex w-full mt-2",
-        day: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+        day: "h-9 w-9 text-center text-body-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
         day_button: cn(
           buttonVariants({ variant: "ghost" }),
           "h-9 w-9 p-0 font-normal aria-selected:opacity-100"

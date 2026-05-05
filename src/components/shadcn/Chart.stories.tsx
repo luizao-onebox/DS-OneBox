@@ -215,7 +215,7 @@ export const DistributionBarExample: Story = {
             <div
               key={item.id}
               style={{ width: `${item.value}%` }}
-              className={`${item.colorClass} flex items-center justify-center text-xs font-bold transition-all hover:brightness-110 ${
+              className={`${item.colorClass} flex items-center justify-center text-body-xs font-bold transition-all hover:brightness-110 ${
                 item.textClass || "text-white"
               }`}
             >
@@ -225,7 +225,7 @@ export const DistributionBarExample: Story = {
         </div>
 
         {/* Legenda */}
-        <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs sm:text-sm">
+        <div className="flex flex-wrap gap-x-6 gap-y-2 text-body-xs sm:text-body-sm">
           {distributionData.map((item) => (
             <div key={item.id} className="flex items-center gap-2">
               <div className={`h-3 w-3 shrink-0 rounded-[2px] ${item.colorClass}`} />

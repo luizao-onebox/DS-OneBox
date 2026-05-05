@@ -37,7 +37,7 @@ export const BreadcrumbGallery = {
   render: () => (
     <div className="space-y-6">
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Default</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Default</h2>
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -55,7 +55,7 @@ export const BreadcrumbGallery = {
         </Breadcrumb>
       </section>
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Custom Separator</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Custom Separator</h2>
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>

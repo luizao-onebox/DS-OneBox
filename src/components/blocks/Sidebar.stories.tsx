@@ -56,7 +56,7 @@ A Sidebar suporta dois estados principais que podem ser controlados via \`Sideba
 ## Tokens e Design System
 
 - **Fundo:** \`bg-card\` com \`border-r\` (separador sutil à direita).
-- **Tipografia:** \`text-sm font-medium\` para os itens principais, \`text-muted-foreground\` para os não-selecionados.
+- **Tipografia:** \`text-label-md\` para os itens principais, \`text-muted-foreground\` para os não-selecionados.
 - **Ícones:** Usa a biblioteca \`lucide-react\` com tamanho padronizado (\`h-5 w-5\` ou \`h-4 w-4\`).
 - **Tooltips:** Injetados automaticamente nos itens e no footer quando o estado \`isCollapsed\` é ativado.
 
@@ -160,7 +160,7 @@ const AppSidebar = ({ defaultCollapsed = false }: { defaultCollapsed?: boolean }
 
       {/* Conteúdo da Página Fictício para compor o Layout */}
       <div className="flex-1 bg-muted/20 p-8 overflow-y-auto">
-        <h1 className="text-2xl font-bold tracking-tight mb-4">Dashboard Principal</h1>
+        <h1 className="text-h3 tracking-tight mb-4">Dashboard Principal</h1>
         <p className="text-muted-foreground max-w-2xl">
           Este é um exemplo de como o conteúdo principal se comporta ao lado da Sidebar. 
           Você pode clicar nos botões no topo da Sidebar para expandir ou colapsar o menu.

@@ -33,7 +33,7 @@ export const CarouselGallery = {
   render: () => (
     <div className="space-y-8 w-full">
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Basic</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Basic</h2>
         <div className="w-full max-w-xs mx-auto">
           <Carousel>
             <CarouselContent>
@@ -59,7 +59,7 @@ export const CarouselGallery = {
         </div>
       </section>
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Multiple Slides</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Multiple Slides</h2>
         <div className="w-full max-w-md mx-auto">
           <Carousel>
             <CarouselContent>

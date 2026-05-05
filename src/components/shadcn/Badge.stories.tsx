@@ -14,7 +14,7 @@ Badges ou "Selos" são elementos não clicáveis usados para fornecer informaç�
 ## Anatomia
 
 - **Badge (Container):** Tem forma arredondada (geralmente \`rounded-full\`) e contorna o conteúdo interno.
-- **Label:** O texto explicativo (tamanho \`text-xs\`, \`font-semibold\`).
+- **Label:** O texto explicativo (tamanho \`text-body-xs\`, \`font-semibold\`).
 
 ## Variantes (Tokens)
 
@@ -84,7 +84,7 @@ export const BadgeGallery = {
   render: () => (
     <div className="flex flex-wrap gap-3">
       <section className="w-full">
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Variants</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Variants</h2>
         <div className="flex flex-wrap gap-2">
           <Badge variant="default">Default</Badge>
           <Badge variant="secondary">Secondary</Badge>

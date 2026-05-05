@@ -37,7 +37,7 @@ export const DropdownMenuGallery = {
   render: () => (
     <div className="space-y-6">
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Basic</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Basic</h2>
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Button variant="outline">Open Menu</Button>
@@ -53,7 +53,7 @@ export const DropdownMenuGallery = {
         </DropdownMenu>
       </section>
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">With Labels</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">With Labels</h2>
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Button variant="outline">Options</Button>
@@ -72,7 +72,7 @@ export const DropdownMenuGallery = {
         </DropdownMenu>
       </section>
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Checkbox Items</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Checkbox Items</h2>
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Button variant="outline">Preferences</Button>

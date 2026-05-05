@@ -32,7 +32,7 @@ export const ToastGallery = {
   render: () => (
     <div className="flex flex-col gap-3">
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Default</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Default</h2>
         <Toast>
           <div className="grid gap-1">
             <ToastTitle>Scheduled: Catch up</ToastTitle>
@@ -41,7 +41,7 @@ export const ToastGallery = {
         </Toast>
       </section>
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Success</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Success</h2>
         <Toast>
           <div className="grid gap-1">
             <ToastTitle>Success</ToastTitle>
@@ -50,7 +50,7 @@ export const ToastGallery = {
         </Toast>
       </section>
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Error</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Error</h2>
         <Toast>
           <div className="grid gap-1">
             <ToastTitle>Error</ToastTitle>

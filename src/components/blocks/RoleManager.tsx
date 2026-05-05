@@ -41,7 +41,7 @@ export function RoleManager({ permissions, onPermissionChange }: RoleManagerProp
                 <TableCell className="font-medium">
                   <div>{perm.name}</div>
                   {perm.description && (
-                    <div className="text-xs text-muted-foreground font-normal">
+                    <div className="text-body-xs text-muted-foreground font-normal">
                       {perm.description}
                     </div>
                   )}

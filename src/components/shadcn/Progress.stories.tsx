@@ -85,12 +85,12 @@ export const ProgressGallery = {
   render: () => (
     <div className="space-y-12 w-full max-w-3xl">
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Basic</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Basic</h2>
         <Progress value={50} />
       </section>
 
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Variação de Risco (Gradient)</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Variação de Risco (Gradient)</h2>
         <div className="space-y-6">
           {[
             { val: 25, prefix: "Storage" },
@@ -99,7 +99,7 @@ export const ProgressGallery = {
             { val: 95, prefix: "Complete" },
           ].map((item, idx) => (
             <div key={idx} className="space-y-2">
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-body-sm">
                 <span className="text-foreground">{item.prefix}</span>
                 <span className="text-foreground">{item.val}%</span>
               </div>
@@ -110,18 +110,18 @@ export const ProgressGallery = {
       </section>
 
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Sizes</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Sizes</h2>
         <div className="space-y-6">
           <div className="space-y-2">
-            <span className="text-xs text-muted-foreground">Small (sm)</span>
+            <span className="text-body-xs text-muted-foreground">Small (sm)</span>
             <Progress value={40} size="sm" />
           </div>
           <div className="space-y-2">
-            <span className="text-xs text-muted-foreground">Default</span>
+            <span className="text-body-xs text-muted-foreground">Default</span>
             <Progress value={60} size="default" />
           </div>
           <div className="space-y-2">
-            <span className="text-xs text-muted-foreground">Large (lg)</span>
+            <span className="text-body-xs text-muted-foreground">Large (lg)</span>
             <Progress value={80} size="lg" />
           </div>
         </div>

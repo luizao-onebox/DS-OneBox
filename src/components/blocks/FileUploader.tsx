@@ -129,10 +129,10 @@ export function FileUploader({
           <div className={cn("p-3 rounded-full mb-3", isDragging ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground")}>
             <UploadCloud className="w-8 h-8" />
           </div>
-          <p className="mb-2 text-sm text-foreground font-semibold">
+          <p className="mb-2 text-body-sm text-foreground font-semibold">
             <span className="text-primary hover:underline">Clique para selecionar</span> ou arraste e solte
           </p>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-body-xs text-muted-foreground">
             SVG, PNG, JPG ou PDF (Máx. {maxSize}MB)
           </p>
         </div>
@@ -148,10 +148,10 @@ export function FileUploader({
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex justify-between mb-1">
-                  <p className="text-sm font-medium truncate text-foreground">
+                  <p className="text-label-md truncate text-foreground">
                     {fileObj.file.name}
                   </p>
-                  <span className="text-xs text-muted-foreground shrink-0">
+                  <span className="text-body-xs text-muted-foreground shrink-0">
                     {formatFileSize(fileObj.file.size)}
                   </span>
                 </div>

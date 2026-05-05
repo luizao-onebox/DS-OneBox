@@ -17,7 +17,7 @@ export const PopoverPlayground = {
         <div className="grid gap-4">
           <div className="space-y-2">
             <h4 className="font-medium leading-none">Dimensions</h4>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-body-sm text-muted-foreground">
               Set the dimensions for the layer.
             </p>
           </div>
@@ -31,7 +31,7 @@ export const PopoverGallery = {
   render: () => (
     <div className="space-y-6">
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Default</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Default</h2>
         <Popover>
           <PopoverTrigger>
             <Button variant="outline">Open Popover</Button>
@@ -40,7 +40,7 @@ export const PopoverGallery = {
             <div className="grid gap-4">
               <div className="space-y-2">
                 <h4 className="font-medium leading-none">Dimensions</h4>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-body-sm text-muted-foreground">
                   Set the dimensions for the layer.
                 </p>
               </div>
@@ -49,7 +49,7 @@ export const PopoverGallery = {
         </Popover>
       </section>
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Align End</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Align End</h2>
         <Popover>
           <PopoverTrigger>
             <Button variant="outline">Align End</Button>
@@ -57,7 +57,7 @@ export const PopoverGallery = {
           <PopoverContent align="end">
             <div className="space-y-2">
               <h4 className="font-medium">Popover Content</h4>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-body-sm text-muted-foreground">
                 This popover is aligned to the end.
               </p>
             </div>

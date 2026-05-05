@@ -42,7 +42,7 @@ export const TableGallery = {
   render: () => (
     <div className="space-y-8 w-full">
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">With Caption</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">With Caption</h2>
         <Table>
           <TableCaption>A list of your recent invoices.</TableCaption>
           <TableHeader>
@@ -76,7 +76,7 @@ export const TableGallery = {
         </Table>
       </section>
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Simple</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Simple</h2>
         <Table>
           <TableHeader>
             <TableRow>

@@ -30,7 +30,7 @@ export function LoginForm({ isLoading = false, errorMessage, onSubmit }: LoginFo
   return (
     <Card className="w-full max-w-sm mx-auto shadow-md">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold tracking-tight">Login na OneBox</CardTitle>
+        <CardTitle className="text-h3 tracking-tight">Login na OneBox</CardTitle>
         <CardDescription>Insira seu email e senha abaixo para acessar sua conta</CardDescription>
       </CardHeader>
       
@@ -40,7 +40,7 @@ export function LoginForm({ isLoading = false, errorMessage, onSubmit }: LoginFo
       }}>
         <CardContent className="space-y-4">
           {errorMessage && (
-            <div className="p-3 text-sm text-destructive-foreground bg-destructive/90 rounded-md">
+            <div className="p-3 text-body-sm text-destructive-foreground bg-destructive/90 rounded-md">
               {errorMessage}
             </div>
           )}
@@ -59,7 +59,7 @@ export function LoginForm({ isLoading = false, errorMessage, onSubmit }: LoginFo
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="password">Senha</Label>
-              <a href="#" className="text-sm font-medium text-primary hover:underline" tabIndex={-1}>
+              <a href="#" className="text-label-md text-primary hover:underline" tabIndex={-1}>
                 Esqueceu a senha?
               </a>
             </div>

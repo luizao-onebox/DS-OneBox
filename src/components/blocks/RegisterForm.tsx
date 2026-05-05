@@ -80,7 +80,7 @@ export function RegisterForm() {
             <Checkbox id="terms" required />
             <label
               htmlFor="terms"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="text-label-md leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               Eu aceito os{" "}
               <a href="#" className="underline text-primary hover:text-primary/80">
@@ -109,7 +109,7 @@ export function RegisterForm() {
           <div className="absolute inset-0 flex items-center">
             <Separator className="w-full" />
           </div>
-          <div className="relative flex justify-center text-xs uppercase">
+          <div className="relative flex justify-center text-body-xs uppercase">
             <span className="bg-background px-2 text-muted-foreground">
               Ou continue com
             </span>
@@ -125,7 +125,7 @@ export function RegisterForm() {
           </Button>
         </div>
       </CardContent>
-      <CardFooter className="flex flex-wrap items-center justify-center gap-2 text-sm text-muted-foreground">
+      <CardFooter className="flex flex-wrap items-center justify-center gap-2 text-body-sm text-muted-foreground">
         Já tem uma conta?{" "}
         <a href="#" className="underline hover:text-primary">
           Fazer login

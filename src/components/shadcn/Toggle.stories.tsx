@@ -24,14 +24,14 @@ export const ToggleGallery = {
   render: () => (
     <div className="space-y-6">
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Variants</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Variants</h2>
         <div className="flex gap-2">
           <Toggle>Default</Toggle>
           <Toggle variant="outline">Outline</Toggle>
         </div>
       </section>
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Sizes</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Sizes</h2>
         <div className="flex gap-2 items-center">
           <Toggle size="sm">Small</Toggle>
           <Toggle size="default">Default</Toggle>
@@ -39,7 +39,7 @@ export const ToggleGallery = {
         </div>
       </section>
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Disabled</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Disabled</h2>
         <div className="flex gap-2">
           <Toggle disabled>Disabled</Toggle>
           <Toggle disabled variant="outline">Disabled Outline</Toggle>

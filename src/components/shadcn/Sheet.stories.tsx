@@ -39,7 +39,7 @@ export const SheetGallery = {
   render: () => (
     <div className="flex flex-wrap gap-3">
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Right (Default)</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Right (Default)</h2>
         <Sheet>
           <SheetTrigger>
             <Button variant="outline">Open</Button>
@@ -56,7 +56,7 @@ export const SheetGallery = {
         </Sheet>
       </section>
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Left</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Left</h2>
         <Sheet>
           <SheetTrigger>
             <Button variant="outline">Open</Button>
@@ -72,7 +72,7 @@ export const SheetGallery = {
         </Sheet>
       </section>
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Top</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Top</h2>
         <Sheet>
           <SheetTrigger>
             <Button variant="outline">Open</Button>
@@ -88,7 +88,7 @@ export const SheetGallery = {
         </Sheet>
       </section>
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Bottom</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Bottom</h2>
         <Sheet>
           <SheetTrigger>
             <Button variant="outline">Open</Button>

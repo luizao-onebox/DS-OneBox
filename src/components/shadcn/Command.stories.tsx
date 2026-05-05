@@ -39,7 +39,7 @@ export const CommandGallery = {
   render: () => (
     <div className="space-y-6">
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Command Palette</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Command Palette</h2>
         <CommandDialog open={true}>
           <CommandInput placeholder="Type a command or search..." />
           <CommandList>

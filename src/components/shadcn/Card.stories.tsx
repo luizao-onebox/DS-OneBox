@@ -114,7 +114,7 @@ export const CardGallery = {
           <p>Project progress details go here.</p>
         </CardContent>
         <CardFooter>
-          <p className="text-sm text-muted-foreground">Last updated: 2 days ago</p>
+          <p className="text-body-sm text-muted-foreground">Last updated: 2 days ago</p>
         </CardFooter>
       </Card>
 
@@ -127,8 +127,8 @@ export const CardGallery = {
               <AvatarFallback>VC</AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-sm font-medium">Vercel</p>
-              <p className="text-xs text-muted-foreground">@vercel</p>
+              <p className="text-label-md">Vercel</p>
+              <p className="text-body-xs text-muted-foreground">@vercel</p>
             </div>
           </div>
           <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -136,10 +136,10 @@ export const CardGallery = {
           </Button>
         </CardHeader>
         <CardContent>
-          <p className="text-sm mb-3">Excited to announce our new dashboard with real-time analytics!</p>
+          <p className="text-body-sm mb-3">Excited to announce our new dashboard with real-time analytics!</p>
           <div className="rounded-lg bg-muted p-4">
-            <p className="text-xs text-muted-foreground">Dashboard Preview</p>
-            <p className="text-sm font-medium">Analytics Dashboard v2.0</p>
+            <p className="text-body-xs text-muted-foreground">Dashboard Preview</p>
+            <p className="text-label-md">Analytics Dashboard v2.0</p>
           </div>
         </CardContent>
         <CardFooter className="flex justify-between border-t pt-4">
@@ -154,9 +154,9 @@ export const CardGallery = {
         <CardHeader className="flex flex-col items-center text-center pb-2">
           <Avatar className="h-20 w-20 mb-2">
             <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback className="text-lg">CN</AvatarFallback>
+            <AvatarFallback className="text-body-lg">CN</AvatarFallback>
           </Avatar>
-          <CardTitle className="text-lg">Shadcn</CardTitle>
+          <CardTitle className="text-body-lg">Shadcn</CardTitle>
           <CardDescription>Software Engineer</CardDescription>
         </CardHeader>
         <CardContent className="text-center">
@@ -179,7 +179,7 @@ export const CardGallery = {
           <div className="mt-4"><span className="text-4xl font-bold">$29</span><span className="text-muted-foreground">/month</span></div>
         </CardHeader>
         <CardContent>
-          <ul className="space-y-2 text-sm">
+          <ul className="space-y-2 text-body-sm">
             <li className="flex items-center gap-2"><Check className="h-4 w-4 text-success-500" />Unlimited projects</li>
             <li className="flex items-center gap-2"><Check className="h-4 w-4 text-success-500" />100GB storage</li>
             <li className="flex items-center gap-2"><Check className="h-4 w-4 text-success-500" />Priority support</li>
@@ -193,25 +193,25 @@ export const CardGallery = {
       {/* Notifications */}
       <Card className="w-[340px]">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base">Notifications</CardTitle>
+          <CardTitle className="text-body-md">Notifications</CardTitle>
           <CardDescription>You have 3 unread messages</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex items-start gap-3 p-2 rounded-lg bg-muted/50">
             <Avatar className="h-8 w-8"><AvatarImage src="https://github.com/teamb.png" /><AvatarFallback>TB</AvatarFallback></Avatar>
             <div className="flex-1">
-              <p className="text-sm font-medium">Team Battle</p>
-              <p className="text-xs text-muted-foreground">Started following you</p>
+              <p className="text-label-md">Team Battle</p>
+              <p className="text-body-xs text-muted-foreground">Started following you</p>
             </div>
-            <span className="text-xs text-muted-foreground">2m</span>
+            <span className="text-body-xs text-muted-foreground">2m</span>
           </div>
           <div className="flex items-start gap-3 p-2 rounded-lg bg-muted/50">
             <Avatar className="h-8 w-8"><AvatarImage src="https://github.com/rauno.png" /><AvatarFallback>RV</AvatarFallback></Avatar>
             <div className="flex-1">
-              <p className="text-sm font-medium">Rauno</p>
-              <p className="text-xs text-muted-foreground">Left a comment</p>
+              <p className="text-label-md">Rauno</p>
+              <p className="text-body-xs text-muted-foreground">Left a comment</p>
             </div>
-            <span className="text-xs text-muted-foreground">1h</span>
+            <span className="text-body-xs text-muted-foreground">1h</span>
           </div>
         </CardContent>
         <CardFooter>
@@ -229,21 +229,21 @@ export const CardGallery = {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Bell className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm">Email notifications</span>
+              <span className="text-body-sm">Email notifications</span>
             </div>
             <Button size="sm" variant="outline"><Settings className="mr-1 h-3 w-3" />Configure</Button>
           </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <UserPlus className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm">Team members</span>
+              <span className="text-body-sm">Team members</span>
             </div>
             <Button size="sm" variant="secondary"><Edit className="mr-1 h-3 w-3" />Manage</Button>
           </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Trash2 className="h-4 w-4 text-destructive" />
-              <span className="text-sm text-destructive">Delete account</span>
+              <span className="text-body-sm text-destructive">Delete account</span>
             </div>
             <Button size="sm" variant="destructiveOutline"><Trash2 className="mr-1 h-3 w-3" />Delete</Button>
           </div>

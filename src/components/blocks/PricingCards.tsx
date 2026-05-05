@@ -72,7 +72,7 @@ export function PricingCards() {
         <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
           Preços simples e transparentes
         </h2>
-        <p className="text-muted-foreground text-lg max-w-[600px] mx-auto">
+        <p className="text-muted-foreground text-body-lg max-w-[600px] mx-auto">
           Escolha o plano ideal para a sua equipe. Cancele a qualquer momento.
         </p>
       </div>
@@ -81,7 +81,7 @@ export function PricingCards() {
       <div className="flex items-center gap-3">
         <Label
           htmlFor="billing"
-          className={`text-sm ${!isAnnual ? "font-bold" : "text-muted-foreground"}`}
+          className={`text-body-sm ${!isAnnual ? "font-bold" : "text-muted-foreground"}`}
         >
           Mensal
         </Label>
@@ -92,7 +92,7 @@ export function PricingCards() {
         />
         <Label
           htmlFor="billing"
-          className={`flex items-center gap-1.5 text-sm ${
+          className={`flex items-center gap-1.5 text-body-sm ${
             isAnnual ? "font-bold" : "text-muted-foreground"
           }`}
         >
@@ -128,13 +128,13 @@ export function PricingCards() {
             <CardContent className="flex-1 space-y-6">
               <div className="flex items-baseline gap-1 text-5xl font-extrabold">
                 {isAnnual ? plan.priceAnnually : plan.priceMonthly}
-                <span className="text-lg font-medium text-muted-foreground">
+                <span className="text-body-lg font-medium text-muted-foreground">
                   /mês
                 </span>
               </div>
               
               {isAnnual && plan.priceAnnually !== "$0" && (
-                <p className="text-sm text-muted-foreground">
+                <p className="text-body-sm text-muted-foreground">
                   Cobrado anualmente ({parseInt(plan.priceAnnually.replace('$', '')) * 12} USD)
                 </p>
               )}
@@ -143,7 +143,7 @@ export function PricingCards() {
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-center gap-3">
                     <Check className="h-4 w-4 text-primary shrink-0" />
-                    <span className="text-sm">{feature}</span>
+                    <span className="text-body-sm">{feature}</span>
                   </li>
                 ))}
               </ul>

@@ -100,7 +100,7 @@ export function SidebarHeader({
     >
       {!isCollapsed ? (
         <>
-          <div className="flex items-center gap-2 font-bold text-lg text-foreground">
+          <div className="flex items-center gap-2 font-bold text-body-lg text-foreground">
             {logo || <Grip className="h-5 w-5 text-primary" />}
             <span className="tracking-tight">{title}</span>
           </div>
@@ -175,7 +175,7 @@ export function SidebarItem({
       type="button"
       onClick={handleClick}
       className={cn(
-        "flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
+        "flex w-full items-center justify-between rounded-md px-3 py-2 text-label-md transition-colors hover:bg-accent hover:text-accent-foreground",
         active ? "bg-accent/50 text-foreground font-semibold" : "text-muted-foreground",
         isCollapsed && "justify-center px-0 py-3",
         className
@@ -251,7 +251,7 @@ export function SidebarSubItem({
         type="button"
         onClick={handleClick}
         className={cn(
-          "flex w-full items-center justify-between rounded-md px-3 py-1.5 text-sm transition-colors hover:text-foreground hover:bg-accent/50",
+          "flex w-full items-center justify-between rounded-md px-3 py-1.5 text-body-sm transition-colors hover:text-foreground hover:bg-accent/50",
           active ? "text-foreground font-medium bg-accent/30" : "text-muted-foreground",
           className
         )}
@@ -297,7 +297,7 @@ export function SidebarFooterItem({
     <div
       onClick={onClick}
       className={cn(
-        "flex items-center gap-3 text-sm text-muted-foreground transition-colors hover:text-foreground",
+        "flex items-center gap-3 text-body-sm text-muted-foreground transition-colors hover:text-foreground",
         onClick && "cursor-pointer",
         isCollapsed && "justify-center",
         className

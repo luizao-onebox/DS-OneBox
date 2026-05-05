@@ -58,20 +58,20 @@ export const TimelineItem = React.forwardRef<HTMLDivElement, TimelineItemProps>(
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-4">
             <h4
               className={cn(
-                "text-sm font-medium leading-none",
+                "text-label-md leading-none",
                 isActive || isDone ? "text-foreground" : "text-muted-foreground"
               )}
             >
               {title}
             </h4>
             {time && (
-              <time className="text-xs text-muted-foreground shrink-0 tabular-nums">
+              <time className="text-body-xs text-muted-foreground shrink-0 tabular-nums">
                 {time}
               </time>
             )}
           </div>
           {description && (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-body-sm text-muted-foreground">
               {description}
             </p>
           )}

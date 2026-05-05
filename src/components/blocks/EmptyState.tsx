@@ -36,8 +36,8 @@ export function EmptyState({
         <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted/50 mb-4">
           {icon}
         </div>
-        <h3 className="mt-4 text-lg font-semibold">{title}</h3>
-        <p className="mb-4 mt-2 text-sm text-muted-foreground">
+        <h3 className="mt-4 text-h5">{title}</h3>
+        <p className="mb-4 mt-2 text-body-sm text-muted-foreground">
           {description}
         </p>
         {actionLabel && (

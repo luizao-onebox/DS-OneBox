@@ -52,10 +52,10 @@ export function KanbanBoard({ columns, onDragEnd, onAddTask, onTaskClick, classN
 function KanbanColumn({ column, onAddTask, onTaskClick }: { column: KanbanColumnData; onAddTask?: () => void; onTaskClick?: (task: KanbanTask) => void }) {
   return (
     <div className="flex h-full w-80 flex-col shrink-0 rounded-lg bg-muted/40">
-      <div className="flex items-center justify-between p-3 font-medium text-sm text-foreground">
+      <div className="flex items-center justify-between p-3 font-medium text-body-sm text-foreground">
         <div className="flex items-center gap-2">
           <span>{column.title}</span>
-          <Badge variant="secondary" className="px-1.5 py-0 text-xs">
+          <Badge variant="secondary" className="px-1.5 py-0 text-body-xs">
             {column.tasks.length}
           </Badge>
         </div>
@@ -120,10 +120,10 @@ export function KanbanCard({ task, onClick }: { task: KanbanTask; onClick?: () =
             </Badge>
           </div>
         )}
-        <h4 className="text-sm font-medium leading-tight">{task.title}</h4>
+        <h4 className="text-label-md leading-tight">{task.title}</h4>
       </CardHeader>
       <CardContent className="p-3 pt-3 flex items-center justify-between">
-        <div className="flex items-center gap-1.5 text-muted-foreground text-xs">
+        <div className="flex items-center gap-1.5 text-muted-foreground text-body-xs">
           {task.dueDate && (
             <>
               <Calendar className="h-3 w-3" />

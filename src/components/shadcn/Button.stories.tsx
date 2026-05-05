@@ -149,7 +149,7 @@ export const ButtonGallery = {
   render: () => (
     <div className="space-y-8 p-6">
       <section>
-        <h2 className="text-lg font-semibold mb-4">Variants</h2>
+        <h2 className="text-h5 mb-4">Variants</h2>
         <div className="flex flex-wrap gap-3">
           <Button variant="default">Default</Button>
           <Button variant="destructive">Destructive</Button>
@@ -162,7 +162,7 @@ export const ButtonGallery = {
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold mb-4">Loading State (Novo)</h2>
+        <h2 className="text-h5 mb-4">Loading State (Novo)</h2>
         <div className="flex flex-wrap gap-3">
           <Button isLoading>Processando</Button>
           <Button isLoading variant="secondary">Salvando</Button>
@@ -173,7 +173,7 @@ export const ButtonGallery = {
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold mb-4">Composition (Novo padrão)</h2>
+        <h2 className="text-h5 mb-4">Composition (Novo padrão)</h2>
         <div className="flex flex-wrap gap-3">
           <Button>
             <Mail className="mr-2 h-4 w-4" />
@@ -193,7 +193,7 @@ export const ButtonGallery = {
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold mb-4">Legacy Icons</h2>
+        <h2 className="text-h5 mb-4">Legacy Icons</h2>
         <div className="flex flex-wrap gap-3">
           <Button icon={Mail} iconPosition="left">Email</Button>
           <Button icon={Download} iconPosition="right">Download</Button>
@@ -207,7 +207,7 @@ export const ButtonGallery = {
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold mb-4">Icon Only</h2>
+        <h2 className="text-h5 mb-4">Icon Only</h2>
         <div className="flex items-center gap-3">
           <Button icon={Bell} size="icon" variant="default" />
           <Button icon={Plus} size="icon" variant="outline" />
@@ -221,7 +221,7 @@ export const ButtonGallery = {
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold mb-4">Sizes</h2>
+        <h2 className="text-h5 mb-4">Sizes</h2>
         <div className="flex items-center gap-3">
           <Button size="sm">Small</Button>
           <Button size="default">Default</Button>
@@ -233,7 +233,7 @@ export const ButtonGallery = {
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold mb-4">Disabled</h2>
+        <h2 className="text-h5 mb-4">Disabled</h2>
         <div className="flex flex-wrap gap-3">
           <Button disabled>Default</Button>
           <Button disabled variant="outline">Outline</Button>
@@ -245,7 +245,7 @@ export const ButtonGallery = {
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold mb-4">With Badge</h2>
+        <h2 className="text-h5 mb-4">With Badge</h2>
         <div className="flex items-center gap-3">
           <Button icon={Bell}>
             Notifications

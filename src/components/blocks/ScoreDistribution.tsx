@@ -38,7 +38,7 @@ export function ScoreDistribution() {
   return (
     <Card className="w-full">
       <CardHeader className="pb-3">
-        <CardTitle className="text-xs text-muted-foreground uppercase tracking-wider font-bold">
+        <CardTitle className="text-body-xs text-muted-foreground uppercase tracking-wider font-bold">
           Decomposição do Score — Distribuição do peso de referência
         </CardTitle>
       </CardHeader>
@@ -49,7 +49,7 @@ export function ScoreDistribution() {
             <div
               key={item.id}
               style={{ width: `${item.value}%` }}
-              className={`${item.colorClass} flex items-center justify-center text-xs font-bold transition-all hover:brightness-110 ${
+              className={`${item.colorClass} flex items-center justify-center text-body-xs font-bold transition-all hover:brightness-110 ${
                 item.id === "unbalanced" ? "text-amber-950" : "text-white"
               }`}
             >
@@ -59,7 +59,7 @@ export function ScoreDistribution() {
         </div>
 
         {/* Legend */}
-        <div className="flex flex-wrap gap-x-6 gap-y-2 mb-4 text-xs sm:text-sm">
+        <div className="flex flex-wrap gap-x-6 gap-y-2 mb-4 text-body-xs sm:text-body-sm">
           {items.map((item) => (
             <div key={item.id} className="flex items-center gap-2">
               <div className={`h-3 w-3 shrink-0 rounded-[2px] ${item.colorClass.split(" ")[0]}`} />
@@ -74,7 +74,7 @@ export function ScoreDistribution() {
         </div>
 
         {/* Methodology Note */}
-        <Alert className="mt-2 text-xs">
+        <Alert className="mt-2 text-body-xs">
           <AlertDescription>
             <span className="font-bold">Metodologia — Coeficiente de Sobreposição:</span> para cada IF da referência, computa-se min(ref%, amostra%). A soma desses mínimos dividida pelo total de peso da referência (82,35%) mede a fração do universo de contratos efetivamente coberta pela amostra com as proporções corretas. Base: 61 docs na amostra vs. dataset do cliente (14 IFs, ~82% do universo).
           </AlertDescription>

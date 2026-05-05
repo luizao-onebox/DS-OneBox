@@ -23,7 +23,7 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   render: () => (
     <div className="w-full">
-      <h2 className="text-2xl font-bold tracking-tight mb-4">Decomposição Estatística</h2>
+      <h2 className="text-h3 tracking-tight mb-4">Decomposição Estatística</h2>
       <p className="text-muted-foreground mb-8">
         Exemplo de gráfico de proporções horizontais com legenda explicativa e metodologia.
       </p>

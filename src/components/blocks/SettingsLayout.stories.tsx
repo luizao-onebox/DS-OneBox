@@ -53,8 +53,8 @@ export const Default: Story = {
           {activeTab === "Perfil" && (
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-medium">Perfil</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="text-body-lg font-medium">Perfil</h3>
+                <p className="text-body-sm text-muted-foreground">
                   Estas informações serão exibidas publicamente.
                 </p>
               </div>
@@ -78,7 +78,7 @@ export const Default: Story = {
                 <div className="space-y-2">
                   <Label htmlFor="bio">Bio</Label>
                   <textarea 
-                    className="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     id="bio" 
                     placeholder="Conte-nos um pouco sobre você"
                   />

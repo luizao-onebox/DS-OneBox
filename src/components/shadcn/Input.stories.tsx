@@ -112,7 +112,7 @@ export const WithLabelAndHelper: Story = {
     <div className="grid w-full max-w-sm items-center gap-1.5">
       <Label htmlFor="email-2">Email</Label>
       <Input id="email-2" type="email" placeholder="nome@empresa.com.br" />
-      <p className="text-xs text-muted-foreground">Enviaremos um link de confirmação.</p>
+      <p className="text-body-xs text-muted-foreground">Enviaremos um link de confirmação.</p>
     </div>
   ),
 }
@@ -183,7 +183,7 @@ export const WithErrorState: Story = {
         defaultValue="usuario@email-errado"
         hasError={true} 
       />
-      <p className="text-xs text-destructive">Por favor, insira um email corporativo válido.</p>
+      <p className="text-body-xs text-destructive">Por favor, insira um email corporativo válido.</p>
     </div>
   ),
 }

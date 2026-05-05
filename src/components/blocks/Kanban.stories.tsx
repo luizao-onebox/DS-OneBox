@@ -219,7 +219,7 @@ const KanbanContainer = () => {
   return (
     <div className="h-[600px] p-6 bg-background flex flex-col">
       <div className="mb-6 shrink-0">
-        <h2 className="text-2xl font-bold tracking-tight">Roadmap do Produto</h2>
+        <h2 className="text-h3 tracking-tight">Roadmap do Produto</h2>
         <p className="text-muted-foreground">Acompanhamento das tarefas da Sprint atual.</p>
       </div>
       <div className="flex-1 overflow-hidden">

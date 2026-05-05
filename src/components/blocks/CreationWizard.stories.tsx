@@ -94,8 +94,8 @@ export const Default: Story = {
         {currentStep === 2 && (
           <div className="space-y-4">
             <div className="rounded-md border p-4 bg-muted/50">
-              <h4 className="font-medium text-sm mb-2">Resumo da Criação</h4>
-              <p className="text-sm text-muted-foreground">
+              <h4 className="font-medium text-body-sm mb-2">Resumo da Criação</h4>
+              <p className="text-body-sm text-muted-foreground">
                 Revise os dados acima. Ao clicar em finalizar, o projeto será ativado e e-mails de notificação serão enviados para os responsáveis do Tenant selecionado.
               </p>
             </div>

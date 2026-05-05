@@ -44,7 +44,7 @@ export function Stepper({
             <div className={cn("flex flex-col", orientation === "horizontal" ? "items-center" : "items-start")}>
               <div
                 className={cn(
-                  "flex h-8 w-8 items-center justify-center rounded-full border-2 font-semibold text-sm shrink-0 transition-colors",
+                  "flex h-8 w-8 items-center justify-center rounded-full border-2 font-semibold text-body-sm shrink-0 transition-colors",
                   isCompleted
                     ? "border-primary bg-primary text-primary-foreground"
                     : isCurrent
@@ -57,11 +57,11 @@ export function Stepper({
               
               {orientation === "horizontal" && (
                 <div className="mt-2 flex flex-col items-center text-center">
-                  <span className={cn("text-sm font-medium", isCurrent ? "text-foreground" : "text-muted-foreground")}>
+                  <span className={cn("text-label-md", isCurrent ? "text-foreground" : "text-muted-foreground")}>
                     {step.title}
                   </span>
                   {step.description && (
-                    <span className="text-xs text-muted-foreground mt-0.5">{step.description}</span>
+                    <span className="text-body-xs text-muted-foreground mt-0.5">{step.description}</span>
                   )}
                 </div>
               )}
@@ -69,11 +69,11 @@ export function Stepper({
 
             {orientation === "vertical" && (
               <div className="ml-4 mt-1 flex flex-col">
-                <span className={cn("text-sm font-medium", isCurrent ? "text-foreground" : "text-muted-foreground")}>
+                <span className={cn("text-label-md", isCurrent ? "text-foreground" : "text-muted-foreground")}>
                   {step.title}
                 </span>
                 {step.description && (
-                  <span className="text-xs text-muted-foreground mt-0.5">{step.description}</span>
+                  <span className="text-body-xs text-muted-foreground mt-0.5">{step.description}</span>
                 )}
               </div>
             )}

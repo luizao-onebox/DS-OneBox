@@ -43,7 +43,7 @@ export const DialogGallery = {
   render: () => (
     <div className="space-y-6">
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Confirmation</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Confirmation</h2>
         <Dialog open={false}>
           <DialogTrigger>
             <Button variant="outline">Open Dialog</Button>
@@ -63,7 +63,7 @@ export const DialogGallery = {
         </Dialog>
       </section>
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Form</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Form</h2>
         <Dialog open={false}>
           <DialogTrigger>
             <Button>Edit Profile</Button>

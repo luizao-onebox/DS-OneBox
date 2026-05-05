@@ -55,7 +55,7 @@ export const Default: Story = {
             time="Em andamento"
             description={
               <div className="flex flex-col gap-2 mt-2">
-                <span className="text-sm">Aguardando aprovação de um analista nível 2 devido à divergência de endereço.</span>
+                <span className="text-body-sm">Aguardando aprovação de um analista nível 2 devido à divergência de endereço.</span>
                 <Badge variant="outline" className="w-fit">Risco Médio</Badge>
               </div>
             }

@@ -50,13 +50,13 @@ export const Basic: Story = {
             <AvatarFallback>VC</AvatarFallback>
           </Avatar>
           <div className="space-y-1">
-            <h4 className="text-sm font-semibold">@nextjs</h4>
-            <p className="text-sm text-muted-foreground">
+            <h4 className="text-label-md font-semibold">@nextjs</h4>
+            <p className="text-body-sm text-muted-foreground">
               O framework React para a web criado e mantido pela Vercel.
             </p>
             <div className="flex items-center pt-2">
               <CalendarDays className="mr-2 h-4 w-4 opacity-70" />{" "}
-              <span className="text-xs text-muted-foreground">
+              <span className="text-body-xs text-muted-foreground">
                 Entrou em Dezembro de 2021
               </span>
             </div>

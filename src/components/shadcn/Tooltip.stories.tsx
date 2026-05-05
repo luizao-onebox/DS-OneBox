@@ -29,7 +29,7 @@ export const TooltipGallery = {
   render: () => (
     <div className="space-y-6">
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Positions</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Positions</h2>
         <div className="flex gap-2 flex-wrap">
           <Tooltip>
             <TooltipTrigger asChild>

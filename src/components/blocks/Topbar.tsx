@@ -68,7 +68,7 @@ export function TopbarSelector({
   hasDropdown?: boolean 
 }) {
   return (
-    <div className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors">
+    <div className="flex items-center gap-2 text-body-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors">
       {label && <span className="hidden sm:inline-block">{label}</span>}
       <span className="font-medium">{value}</span>
       {hasDropdown && <ChevronDown className="h-4 w-4 opacity-50" />}
@@ -79,7 +79,7 @@ export function TopbarSelector({
 // --- Status/Info Text ---
 export function TopbarInfo({ text }: { text: string }) {
   return (
-    <div className="text-sm text-muted-foreground hidden md:block">
+    <div className="text-body-sm text-muted-foreground hidden md:block">
       {text}
     </div>
   )
@@ -128,7 +128,7 @@ export function TopbarProfile({
         <Button variant="ghost" className="relative h-9 rounded-full pl-2 pr-1 gap-2 flex items-center hover:bg-accent/50">
           <Avatar className="h-8 w-8 border border-primary/20">
             <AvatarImage src={src} alt={name} />
-            <AvatarFallback className="bg-primary-50 text-primary-600 text-xs font-semibold">{initials}</AvatarFallback>
+            <AvatarFallback className="bg-primary-50 text-primary-600 text-label-sm font-semibold">{initials}</AvatarFallback>
           </Avatar>
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
         </Button>
@@ -138,8 +138,8 @@ export function TopbarProfile({
           <>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                {name && <p className="text-sm font-medium leading-none">{name}</p>}
-                {email && <p className="text-xs leading-none text-muted-foreground">{email}</p>}
+                {name && <p className="text-label-md leading-none">{name}</p>}
+                {email && <p className="text-body-xs leading-none text-muted-foreground">{email}</p>}
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />

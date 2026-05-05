@@ -91,21 +91,21 @@ export const SwitchGallery = {
   render: () => (
     <div className="space-y-6 w-full max-w-md">
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Basic</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Basic</h2>
         <div className="flex items-center space-x-2">
           <Switch id="airplane-mode" />
           <Label htmlFor="airplane-mode">Airplane Mode</Label>
         </div>
       </section>
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Checked</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Checked</h2>
         <div className="flex items-center space-x-2">
           <Switch id="checked" defaultChecked />
           <Label htmlFor="checked">Checked by default</Label>
         </div>
       </section>
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Disabled</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Disabled</h2>
         <div className="flex items-center space-x-2">
           <Switch id="disabled" disabled />
           <Label htmlFor="disabled" className="opacity-50">Disabled</Label>

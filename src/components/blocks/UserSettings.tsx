@@ -66,7 +66,7 @@ export function UserSettings() {
                     Remover
                   </Button>
                 </div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-body-xs text-muted-foreground">
                   JPG, GIF ou PNG. Tamanho máximo 2MB.
                 </p>
               </div>
@@ -120,11 +120,11 @@ export function UserSettings() {
 
             {/* Toggles */}
             <div className="space-y-4">
-              <h3 className="text-sm font-medium">Preferências de Email</h3>
+              <h3 className="text-label-md">Preferências de Email</h3>
               <div className="flex items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <Label className="text-base">Notificações de Marketing</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <Label className="text-body-md">Notificações de Marketing</Label>
+                  <p className="text-body-sm text-muted-foreground">
                     Receba emails sobre novos recursos e novidades.
                   </p>
                 </div>
@@ -132,8 +132,8 @@ export function UserSettings() {
               </div>
               <div className="flex items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <Label className="text-base">Emails de Segurança</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <Label className="text-body-md">Emails de Segurança</Label>
+                  <p className="text-body-sm text-muted-foreground">
                     Receba emails sobre atividades suspeitas na conta.
                   </p>
                 </div>

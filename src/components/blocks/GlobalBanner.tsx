@@ -42,7 +42,7 @@ const GlobalBanner = React.forwardRef<HTMLDivElement, GlobalBannerProps>(
         className={cn(bannerVariants({ variant }), className)}
         {...props}
       >
-        <div className="flex flex-1 items-center justify-center gap-2 text-sm font-medium">
+        <div className="flex flex-1 items-center justify-center gap-2 text-label-md">
           {children}
         </div>
         <div className="flex items-center gap-2 shrink-0">

@@ -87,10 +87,10 @@ export const Basic: Story = {
                     className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                     href="/"
                   >
-                    <div className="mb-2 mt-4 text-lg font-medium">
+                    <div className="mb-2 mt-4 text-body-lg font-medium">
                       Design System
                     </div>
-                    <p className="text-sm leading-tight text-muted-foreground">
+                    <p className="text-body-sm leading-tight text-muted-foreground">
                       Componentes acessíveis, responsivos e maravilhosamente construídos.
                     </p>
                   </a>
@@ -149,8 +149,8 @@ const ListItem = React.forwardRef<
           )}
           {...props}
         >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+          <div className="text-label-md leading-none">{title}</div>
+          <p className="line-clamp-2 text-body-sm leading-snug text-muted-foreground">
             {children}
           </p>
         </a>

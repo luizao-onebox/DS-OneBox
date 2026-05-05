@@ -47,26 +47,26 @@ export const Default: Story = {
           <div className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
-                <p className="text-sm font-medium text-muted-foreground">CNPJ</p>
-                <p className="text-sm">00.000.000/0001-00</p>
+                <p className="text-label-md text-muted-foreground">CNPJ</p>
+                <p className="text-body-sm">00.000.000/0001-00</p>
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-medium text-muted-foreground">Data de Solicitação</p>
-                <p className="text-sm">15 de Maio, 2025</p>
+                <p className="text-label-md text-muted-foreground">Data de Solicitação</p>
+                <p className="text-body-sm">15 de Maio, 2025</p>
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-medium text-muted-foreground">Risco</p>
-                <p className="text-sm text-warning-600 font-medium">Médio Risco</p>
+                <p className="text-label-md text-muted-foreground">Risco</p>
+                <p className="text-body-sm text-warning-600 font-medium">Médio Risco</p>
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-medium text-muted-foreground">Analista Responsável</p>
-                <p className="text-sm">Não atribuído</p>
+                <p className="text-label-md text-muted-foreground">Analista Responsável</p>
+                <p className="text-body-sm">Não atribuído</p>
               </div>
             </div>
 
             <div>
-              <h4 className="text-sm font-semibold mb-2">Observações</h4>
-              <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
+              <h4 className="text-label-md font-semibold mb-2">Observações</h4>
+              <p className="text-body-sm text-muted-foreground bg-muted p-3 rounded-md">
                 Empresa solicitou aumento de limite de crédito. Análise de DRE e Balanço Patrimonial em andamento.
               </p>
             </div>
@@ -81,8 +81,8 @@ export const Default: Story = {
                     <FileText className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium">Contrato Social v{i}.pdf</p>
-                    <p className="text-xs text-muted-foreground">Enviado em 15/05/2025 • 2.4MB</p>
+                    <p className="text-label-md">Contrato Social v{i}.pdf</p>
+                    <p className="text-body-xs text-muted-foreground">Enviado em 15/05/2025 • 2.4MB</p>
                   </div>
                 </div>
                 <Button variant="ghost" size="icon">
@@ -97,15 +97,15 @@ export const Default: Story = {
             <div className="flex gap-3">
               <div className="mt-0.5"><CheckCircle2 className="h-4 w-4 text-primary" /></div>
               <div>
-                <p className="text-sm font-medium">Documentos recebidos</p>
-                <p className="text-xs text-muted-foreground">15/05/2025 às 14:30 via API</p>
+                <p className="text-label-md">Documentos recebidos</p>
+                <p className="text-body-xs text-muted-foreground">15/05/2025 às 14:30 via API</p>
               </div>
             </div>
             <div className="flex gap-3">
               <div className="mt-0.5"><CheckCircle2 className="h-4 w-4 text-primary" /></div>
               <div>
-                <p className="text-sm font-medium">Análise Automática iniciada</p>
-                <p className="text-xs text-muted-foreground">15/05/2025 às 14:31</p>
+                <p className="text-label-md">Análise Automática iniciada</p>
+                <p className="text-body-xs text-muted-foreground">15/05/2025 às 14:31</p>
               </div>
             </div>
           </div>

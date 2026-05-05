@@ -29,7 +29,7 @@ export const AccordionGallery = {
   render: () => (
     <div className="space-y-8 w-full max-w-md">
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Single Open</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Single Open</h2>
         <Accordion type="single" defaultValue="item-1" className="w-full">
           <AccordionItem value="item-1">
             <AccordionTrigger>Is it accessible?</AccordionTrigger>
@@ -52,7 +52,7 @@ export const AccordionGallery = {
         </Accordion>
       </section>
       <section>
-        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">Multiple Open</h2>
+        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Multiple Open</h2>
         <Accordion type="multiple" defaultValue={["item-1", "item-2"]} className="w-full">
           <AccordionItem value="item-1">
             <AccordionTrigger>Item 1</AccordionTrigger>

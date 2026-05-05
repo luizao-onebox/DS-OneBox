@@ -177,7 +177,7 @@ export const FullLayoutExample: Story = {
             </SidebarFooter>
           </Sidebar>
           <main className="flex-1 bg-muted/20 p-8 overflow-y-auto">
-            <h1 className="text-2xl font-bold tracking-tight mb-4">Exemplo de Layout Integrado</h1>
+            <h1 className="text-h3 tracking-tight mb-4">Exemplo de Layout Integrado</h1>
             <p className="text-muted-foreground">
               Veja como a Topbar e a Sidebar trabalham juntas para formar a estrutura 
               de um Dashboard B2B moderno.
