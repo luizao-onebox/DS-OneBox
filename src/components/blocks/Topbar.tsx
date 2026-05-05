@@ -128,7 +128,7 @@ export function TopbarProfile({
         <Button variant="ghost" className="relative h-9 rounded-full pl-2 pr-1 gap-2 flex items-center hover:bg-accent/50">
           <Avatar className="h-8 w-8 border border-primary/20">
             <AvatarImage src={src} alt={name} />
-            <AvatarFallback className="bg-blue-50 text-blue-600 text-xs font-semibold">{initials}</AvatarFallback>
+            <AvatarFallback className="bg-primary-50 text-primary-600 text-xs font-semibold">{initials}</AvatarFallback>
           </Avatar>
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
         </Button>

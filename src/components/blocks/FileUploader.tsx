@@ -157,7 +157,7 @@ export function FileUploader({
                 </div>
                 <div className="flex items-center gap-3">
                   <Progress value={fileObj.progress} className="h-1.5" />
-                  {fileObj.status === "success" && <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />}
+                  {fileObj.status === "success" && <CheckCircle className="w-4 h-4 text-success-500 shrink-0" />}
                   {fileObj.status === "error" && <AlertCircle className="w-4 h-4 text-destructive shrink-0" />}
                 </div>
               </div>

@@ -56,7 +56,7 @@ export const Default: Story = {
               </div>
               <div className="space-y-1">
                 <p className="text-sm font-medium text-muted-foreground">Risco</p>
-                <p className="text-sm text-yellow-600 font-medium">Médio Risco</p>
+                <p className="text-sm text-warning-600 font-medium">Médio Risco</p>
               </div>
               <div className="space-y-1">
                 <p className="text-sm font-medium text-muted-foreground">Analista Responsável</p>

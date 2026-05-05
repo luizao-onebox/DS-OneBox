@@ -150,10 +150,10 @@ const AppSidebar = ({ defaultCollapsed = false }: { defaultCollapsed?: boolean }
 
         <SidebarFooter>
           <SidebarFooterItem icon={<Settings />} label="Configurações" />
-          <SidebarFooterItem 
-            icon={<CircleDot className="text-emerald-500 fill-emerald-500" />} 
-            label="online: 00:00:12" 
-          />
+            <SidebarFooterItem 
+              icon={<CircleDot className="text-success-500 fill-success-500" />} 
+              label="online: 00:00:12" 
+            />
           <SidebarFooterItem icon={<Copyright />} label="2025 Onebox" />
         </SidebarFooter>
       </Sidebar>

@@ -11,9 +11,10 @@ const bannerVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground",
-        destructive: "bg-destructive text-destructive-foreground",
-        warning: "bg-yellow-500 text-black",
-        info: "bg-blue-500 text-white",
+        info: "bg-info-500 text-info-foreground",
+        warning: "bg-warning-500 text-warning-foreground",
+        destructive: "bg-destructive-500 text-destructive-foreground",
+        success: "bg-success-500 text-success-foreground",
       },
     },
     defaultVariants: {

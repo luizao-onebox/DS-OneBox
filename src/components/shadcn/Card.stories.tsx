@@ -180,9 +180,9 @@ export const CardGallery = {
         </CardHeader>
         <CardContent>
           <ul className="space-y-2 text-sm">
-            <li className="flex items-center gap-2"><Check className="h-4 w-4 text-green-500" />Unlimited projects</li>
-            <li className="flex items-center gap-2"><Check className="h-4 w-4 text-green-500" />100GB storage</li>
-            <li className="flex items-center gap-2"><Check className="h-4 w-4 text-green-500" />Priority support</li>
+            <li className="flex items-center gap-2"><Check className="h-4 w-4 text-success-500" />Unlimited projects</li>
+            <li className="flex items-center gap-2"><Check className="h-4 w-4 text-success-500" />100GB storage</li>
+            <li className="flex items-center gap-2"><Check className="h-4 w-4 text-success-500" />Priority support</li>
           </ul>
         </CardContent>
         <CardFooter>

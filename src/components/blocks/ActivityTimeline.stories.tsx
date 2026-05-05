@@ -81,21 +81,21 @@ export const CustomIcons: Story = {
         <ActivityTimeline>
           <TimelineItem
             isActive
-            icon={<FileText className="h-5 w-5 text-blue-500" />}
+            icon={<FileText className="h-5 w-5 text-info-500" />}
             title="Contrato gerado"
             time="24/05/2025 - 14:30"
             description="Contrato de Prestação de Serviços V2 gerado pelo sistema."
           />
           <TimelineItem
             isActive
-            icon={<AlertCircle className="h-5 w-5 text-destructive" />}
+            icon={<AlertCircle className="h-5 w-5 text-warning-500" />}
             title="Falha na Assinatura"
             time="24/05/2025 - 15:02"
             description="O provedor de assinatura digital (Clicksign) retornou erro 500."
           />
           <TimelineItem
             isDone
-            icon={<CheckCircle2 className="h-5 w-5" />}
+            icon={<CheckCircle2 className="h-5 w-5 text-success-500" />}
             title="Assinatura Concluída"
             time="25/05/2025 - 09:15"
             description="Todas as partes assinaram o documento."
