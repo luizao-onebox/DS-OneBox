@@ -11,8 +11,9 @@ const alertVariants = cva(
       variant: {
         default: "bg-background text-foreground",
         destructive: "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
-        success: "border-green-500/50 text-green-600 dark:border-green-500 [&>svg]:text-green-600 bg-green-50",
-        warning: "border-yellow-500/50 text-yellow-600 dark:border-yellow-500 [&>svg]:text-yellow-600 bg-yellow-50",
+        success: "border-success/50 text-success dark:border-success [&>svg]:text-success bg-success/10",
+        warning: "border-warning/50 text-warning dark:border-warning [&>svg]:text-warning bg-warning/10",
+        info: "border-info/50 text-info dark:border-info [&>svg]:text-info bg-info/10",
       },
     },
     defaultVariants: {
@@ -45,6 +46,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
       if (variant === "destructive") DefaultIcon = AlertCircle
       else if (variant === "success") DefaultIcon = CheckCircle2
       else if (variant === "warning") DefaultIcon = AlertTriangle
+      else if (variant === "info") DefaultIcon = Info
       else DefaultIcon = Info
     }
 

@@ -1,0 +1,133 @@
+import { Meta, ColorPalette, ColorItem } from '@storybook/blocks';
+
+<Meta title="Fundamentos/Cores" />
+
+# 🎨 Sistema de Cores (Tokens)
+
+O **DS-OneBox** utiliza um sistema de cores semântico moderno baseado no padrão de mercado (inspirado no Shadcn UI e Radix Colors). As cores são definidas em variáveis CSS (HSL) para facilitar o suporte automático ao **Dark Mode** e permitir sobrescritas simples.
+
+Abaixo você encontra a paleta de cores completa disponível no nosso `tailwind-preset.js`.
+
+---
+
+## Cores Base
+Estas são as cores fundamentais que estruturam as telas e superfícies.
+
+<ColorPalette>
+  <ColorItem
+    title="Background & Foreground"
+    subtitle="Fundo principal da aplicação e cor de texto base"
+    colors={{ Background: 'hsl(var(--background))', Foreground: 'hsl(var(--foreground))' }}
+  />
+  <ColorItem
+    title="Card"
+    subtitle="Fundo e texto de cartões (Cards)"
+    colors={{ Card: 'hsl(var(--card))', 'Card Foreground': 'hsl(var(--card-foreground))' }}
+  />
+  <ColorItem
+    title="Popover"
+    subtitle="Fundo e texto de menus flutuantes (Popovers, Dropdowns)"
+    colors={{ Popover: 'hsl(var(--popover))', 'Popover Foreground': 'hsl(var(--popover-foreground))' }}
+  />
+  <ColorItem
+    title="Bordas & Inputs"
+    subtitle="Cores de separadores, bordas e campos de formulário"
+    colors={{ Border: 'hsl(var(--border))', Input: 'hsl(var(--input))', Ring: 'hsl(var(--ring))' }}
+  />
+</ColorPalette>
+
+---
+
+## Cores de Marca (Brand)
+Cores utilizadas para ações principais e elementos interativos.
+
+<ColorPalette>
+  <ColorItem
+    title="Primary"
+    subtitle="Cor primária da marca (Botões principais, links)"
+    colors={{ Primary: 'hsl(var(--primary))', 'Primary Foreground': 'hsl(var(--primary-foreground))' }}
+  />
+  <ColorItem
+    title="Secondary"
+    subtitle="Ações secundárias e elementos de suporte"
+    colors={{ Secondary: 'hsl(var(--secondary))', 'Secondary Foreground': 'hsl(var(--secondary-foreground))' }}
+  />
+  <ColorItem
+    title="Muted"
+    subtitle="Fundos sutis e textos desabilitados/secundários"
+    colors={{ Muted: 'hsl(var(--muted))', 'Muted Foreground': 'hsl(var(--muted-foreground))' }}
+  />
+  <ColorItem
+    title="Accent"
+    subtitle="Estados de hover e elementos de destaque leve"
+    colors={{ Accent: 'hsl(var(--accent))', 'Accent Foreground': 'hsl(var(--accent-foreground))' }}
+  />
+</ColorPalette>
+
+---
+
+## Cores Semânticas (Estados)
+Utilizadas para comunicar feedback visual, alertas e status do sistema.
+
+<ColorPalette>
+  <ColorItem
+    title="Success"
+    subtitle="Sucesso, confirmações e status positivo"
+    colors={{ Success: 'hsl(var(--success))', 'Success Foreground': 'hsl(var(--success-foreground))' }}
+  />
+  <ColorItem
+    title="Warning"
+    subtitle="Avisos, atenção e ações que requerem cuidado"
+    colors={{ Warning: 'hsl(var(--warning))', 'Warning Foreground': 'hsl(var(--warning-foreground))' }}
+  />
+  <ColorItem
+    title="Destructive / Error"
+    subtitle="Erros, falhas e ações destrutivas (excluir)"
+    colors={{ Destructive: 'hsl(var(--destructive))', 'Destructive Foreground': 'hsl(var(--destructive-foreground))' }}
+  />
+  <ColorItem
+    title="Info"
+    subtitle="Informações neutras e dicas"
+    colors={{ Info: 'hsl(var(--info))', 'Info Foreground': 'hsl(var(--info-foreground))' }}
+  />
+</ColorPalette>
+
+---
+
+## Gráficos (Data Visualization)
+Paleta otimizada para gráficos (Recharts, Chart.js), garantindo contraste e acessibilidade.
+
+<ColorPalette>
+  <ColorItem
+    title="Charts"
+    subtitle="Sequência de cores para visualização de dados"
+    colors={{ 
+      'Chart 1': 'hsl(var(--chart-1))', 
+      'Chart 2': 'hsl(var(--chart-2))',
+      'Chart 3': 'hsl(var(--chart-3))',
+      'Chart 4': 'hsl(var(--chart-4))',
+      'Chart 5': 'hsl(var(--chart-5))'
+    }}
+  />
+</ColorPalette>
+
+---
+
+## Como utilizar no código?
+
+Como todas essas cores já estão injetadas no nosso `tailwind-preset.js`, você pode utilizá-las nativamente no Tailwind usando os prefixos padrão (`bg-`, `text-`, `border-`, `ring-`):
+
+```tsx
+// Exemplo de uso de cores semânticas
+<div className="bg-success/10 text-success border-success">
+  Operação realizada com sucesso!
+</div>
+
+// Exemplo de uso de cores informativas
+<div className="bg-info text-info-foreground p-4 rounded-md">
+  Você tem 3 novas mensagens.
+</div>
+
+// Exemplo com cores de gráfico
+<div className="bg-chart-1 w-full h-2 rounded-full" />
+```
