@@ -12,30 +12,6 @@ export default {
       },
     },
     extend: {
-      fontSize: {
-        // Display
-        'display-lg': ['4rem', { lineHeight: '4.5rem', letterSpacing: '-0.02em', fontWeight: '700' }],
-        'display-md': ['3.5rem', { lineHeight: '4rem', letterSpacing: '-0.02em', fontWeight: '700' }],
-        'display-sm': ['3rem', { lineHeight: '3.5rem', letterSpacing: '-0.02em', fontWeight: '700' }],
-        // Headings
-        'h1': ['2.5rem', { lineHeight: '3rem', letterSpacing: '-0.02em', fontWeight: '700' }],
-        'h2': ['2rem', { lineHeight: '2.5rem', letterSpacing: '-0.01em', fontWeight: '700' }],
-        'h3': ['1.75rem', { lineHeight: '2.25rem', letterSpacing: '-0.01em', fontWeight: '600' }],
-        'h4': ['1.5rem', { lineHeight: '2rem', letterSpacing: '-0.01em', fontWeight: '600' }],
-        'h5': ['1.25rem', { lineHeight: '1.75rem', letterSpacing: '0', fontWeight: '600' }],
-        'h6': ['1.125rem', { lineHeight: '1.5rem', letterSpacing: '0', fontWeight: '600' }],
-        // Body
-        'body-lg': ['1.125rem', { lineHeight: '1.75rem', letterSpacing: '0', fontWeight: '400' }],
-        'body-md': ['1rem', { lineHeight: '1.5rem', letterSpacing: '0', fontWeight: '400' }],
-        'body-sm': ['0.875rem', { lineHeight: '1.25rem', letterSpacing: '0', fontWeight: '400' }],
-        // Label / Caption
-        'label-lg': ['1rem', { lineHeight: '1.5rem', letterSpacing: '0', fontWeight: '500' }],
-        'label-md': ['0.875rem', { lineHeight: '1.25rem', letterSpacing: '0', fontWeight: '500' }],
-        'label-sm': ['0.75rem', { lineHeight: '1rem', letterSpacing: '0', fontWeight: '500' }],
-        // Code
-        'code-md': ['0.875rem', { lineHeight: '1.25rem', letterSpacing: '0', fontWeight: '400' }],
-        'code-sm': ['0.75rem', { lineHeight: '1rem', letterSpacing: '0', fontWeight: '400' }],
-      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
