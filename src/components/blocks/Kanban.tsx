@@ -58,7 +58,7 @@ function KanbanColumn({ column, onAddTask, onTaskClick }: { column: KanbanColumn
       <div className="flex items-center justify-between p-3 font-medium text-body-sm text-foreground">
         <div className="flex items-center gap-2">
           <span>{column.title}</span>
-          <Badge variant="soft" color="neutral" className="px-1.5 py-0 text-body-xs">
+          <Badge variant="soft" color="neutral" className="px-1.5 py-0">
             {column.tasks.length}
           </Badge>
         </div>

@@ -57,7 +57,7 @@ export function NotificationCenter({
           <div className="flex items-center gap-2">
             <h4 className="text-label-md font-semibold">Notificações</h4>
             {unreadCount > 0 && (
-              <Badge variant="soft" color="neutral" className="h-5 text-body-xs">
+              <Badge variant="soft" color="neutral" className="h-5">
                 {unreadCount} novas
               </Badge>
             )}
@@ -131,7 +131,7 @@ export function NotificationCenter({
           <>
             <Separator />
             <div className="p-2">
-              <Button variant="ghost" className="w-full h-8 text-body-xs justify-center">
+              <Button variant="ghost" size="sm" className="w-full h-8 justify-center">
                 Ver todas as notificações
               </Button>
             </div>

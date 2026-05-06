@@ -45,7 +45,7 @@ export const Default: Story = {
       </>
     ),
     action: (
-      <Button variant="secondary" size="sm" className="h-7 px-3 text-body-xs">
+      <Button variant="secondary" size="sm" className="h-7 px-3">
         Saiba mais
       </Button>
     )
@@ -75,7 +75,7 @@ export const Warning: Story = {
       </>
     ),
     action: (
-      <Button size="sm" className="h-7 px-3 text-body-xs bg-black text-white hover:bg-black/80">
+      <Button size="sm" className="h-7 px-3 bg-black text-white hover:bg-black/80">
         Renovar Licença
       </Button>
     )
