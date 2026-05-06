@@ -1,0 +1,48 @@
+/**
+ * DS-OneBox — Themes
+ * ===================
+ *
+ * Este diretório contém os temas disponíveis para o Design System.
+ *
+ * Estrutura:
+ * - tokens-manifest.css  → Documentação de todos os tokens disponíveis
+ * - theme-onebox.css     → Tema padrão do DS (referência)
+ * - theme-fintech.css   → Exemplo de tema para setor financeiro
+ * - theme-ecommerce.css → Exemplo de tema para e-commerce
+ *
+ * Como criar um novo tema:
+ * 1. Copie o arquivo theme-onebox.css como base
+ * 2. Renomeie e altere os tokens que deseja customizar
+ * 3. Carregue o tema no seu projeto APÓS o CSS do DS
+ *
+ * @example Uso em projeto
+ *
+ * /* 1. Importe o CSS do DS-OneBox primeiro * /
+ * @import "ds-onebox/dist/ds-onebox.css";
+ *
+ * /* 2. Importe seu tema customizado * /
+ * @import "./themes/theme-minha-marca.css";
+ *
+ * /* 3. Aplique o tema no elemento HTML * /
+ * <html data-theme="minha-marca">
+ *   ...
+ * </html>
+ *
+ * @example Suporte a dark mode no tema customizado
+ *
+ * html[data-theme="minha-marca"] {
+ *   /* seus tokens light * /
+ * }
+ *
+ * html[data-theme="minha-marca"] .dark,
+ * html[data-theme="minha-marca"].dark,
+ * .dark[data-theme="minha-marca"] {
+ *   /* seus tokens dark * /
+ * }
+ */
+
+/* Re-export todos os temas para uso fácil */
+export { default as tokensManifest } from './tokens-manifest.css'
+export { default as themeOnebox } from './theme-onebox.css'
+export { default as themeFintech } from './theme-fintech.css'
+export { default as themeEcommerce } from './theme-ecommerce.css'

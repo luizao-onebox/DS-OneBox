@@ -205,3 +205,97 @@ export function BotoesComIcone() {
   )
 }
 ```
+
+---
+
+## 9. Temas White-Label (Multi-Marca)
+
+O Design System é **nativamente preparado para multi-marca**. Cada cliente/edição pode ter seu próprio tema visual sem alterar o código dos componentes.
+
+### Como funciona
+
+O DS usa **CSS Custom Properties (tokens)** para todas as cores, tipografia e espaçamentos. Cada tema é um arquivo CSS que sobrescreve esses tokens.
+
+```
+Seu Projeto/
+├── node_modules/
+│   └── ds-onebox/           ← Design System (não alterar)
+├── themes/
+│   └── tema-minha-marca.css ← Seu tema customizado
+└── src/
+    └── App.tsx
+```
+
+### Criando um novo tema
+
+**1.** Crie um arquivo CSS em `themes/`:
+
+```css
+/* themes/tema-minha-marca.css */
+
+/* Sobrescreve os tokens que deseja customizar */
+:root[data-theme="minha-marca"] {
+  /* Cor primária da marca */
+  --primary: 262 83% 58%;
+  --primary-foreground: 0 0% 100%;
+
+  /* Fonte da marca */
+  --font-sans: "Nunito Sans", sans-serif;
+
+  /* Border radius mais arredondado */
+  --radius: 0.75rem;
+}
+
+/* Dark mode do tema */
+:root[data-theme="minha-marca"] .dark,
+:root[data-theme="minha-marca"].dark {
+  --primary: 262 83% 68%;
+  --primary-foreground: 0 0% 100%;
+}
+```
+
+**2.** No seu projeto, importe o CSS na ordem correta:
+
+```tsx
+// main.tsx ou App.tsx
+import 'ds-onebox/style.css'
+import './themes/tema-minha-marca.css'
+```
+
+**3.** Aplique o tema no elemento HTML:
+
+```tsx
+// No seu componente raiz (App.tsx ou layout.tsx)
+<html lang="pt-BR" data-theme="minha-marca">
+  <body>
+    {/* sua aplicação */}
+  </body>
+</html>
+```
+
+### Boas práticas para temas
+
+| Regra | Por quê |
+|-------|---------|
+| Sobrescreva apenas tokens semânticos | `--primary`, `--success`, `--radius` etc. |
+| Nunca use valores hardcoded | `bg-blue-500`, `text-red-600` |
+| Sempre defina light E dark | O usuário pode trocar o modo |
+| Teste contraste WCAG | Tokens do DS garantem 4.5:1, mudanças podem quebrar |
+
+### Tokens disponíveis
+
+Consulte o arquivo `tokens-manifest.css` no diretório `themes/` para ver todos os 100+ tokens que podem ser customizados.
+
+---
+
+## 10. Gerando Telas com IA
+
+O Design System foi pensado para **geração de telas por Inteligência Artificial**. Para garantir que a IA use apenas tokens válidos:
+
+1. **Forneça o `tokens-manifest.css`** como referência para a IA
+2. **Instrua a IA** a usar apenas tokens semânticos (`bg-primary`, `text-primary-foreground`)
+3. **Nunca usar** valores hardcoded como `bg-blue-500`
+
+Exemplo de prompt para IA:
+
+> "Use o DS-OneBox. Crie um dashboard com Cards, Badges e Buttons. Use exclusivamente tokens semânticos: `bg-primary`, `text-primary-foreground`, `bg-success-100`, `text-success-800`. Não use cores hardcoded."
