@@ -274,28 +274,75 @@ import { Slot } from "@radix-ui/react-slot"
 import { cn } from "../../lib/utils"
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-md border px-2.5 py-0.5 text-label-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "inline-flex items-center justify-center border text-label-sm transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
     variants: {
       variant: {
-        default: "border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80",
-        secondary: "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        destructive: "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
-        destructiveOutline: "border border-destructive text-destructive hover:bg-destructive/10",
-        outline: "text-foreground",
-        success: "border-transparent bg-success text-success-foreground shadow hover:bg-success/80",
-        warning: "border-transparent bg-warning text-warning-foreground shadow hover:bg-warning/80",
-        info: "border-transparent bg-info text-info-foreground shadow hover:bg-info/80",
+        solid: "border-transparent shadow-sm",
+        soft: "border-transparent",
+        outline: "bg-transparent",
+      },
+      color: {
+        neutral: "",
+        primary: "",
+        success: "",
+        warning: "",
+        destructive: "",
+        info: "",
+        indigo: "",
+        purple: "",
+        pink: "",
+      },
+      size: {
+        default: "px-2.5 py-0.5 rounded-md",
+        pill: "px-3 py-1 rounded-full",
+        icon: "h-6 w-6 rounded-full p-0",
       },
     },
+    compoundVariants: [
+      // Solid Variants
+      { variant: "solid", color: "neutral", className: "bg-neutral-900 text-neutral-50 hover:bg-neutral-900/80" },
+      { variant: "solid", color: "primary", className: "bg-primary-500 text-white hover:bg-primary-500/80" },
+      { variant: "solid", color: "success", className: "bg-success-500 text-white hover:bg-success-500/80" },
+      { variant: "solid", color: "warning", className: "bg-warning-500 text-white hover:bg-warning-500/80" },
+      { variant: "solid", color: "destructive", className: "bg-destructive-500 text-white hover:bg-destructive-500/80" },
+      { variant: "solid", color: "info", className: "bg-info-500 text-white hover:bg-info-500/80" },
+      { variant: "solid", color: "indigo", className: "bg-indigo-500 text-white hover:bg-indigo-500/80" },
+      { variant: "solid", color: "purple", className: "bg-purple-500 text-white hover:bg-purple-500/80" },
+      { variant: "solid", color: "pink", className: "bg-pink-500 text-white hover:bg-pink-500/80" },
+      
+      // Soft Variants (As requested by the images)
+      { variant: "soft", color: "neutral", className: "bg-neutral-100 text-neutral-800 hover:bg-neutral-200" },
+      { variant: "soft", color: "primary", className: "bg-primary-100 text-primary-800 hover:bg-primary-200" },
+      { variant: "soft", color: "success", className: "bg-success-100 text-success-800 hover:bg-success-200" },
+      { variant: "soft", color: "warning", className: "bg-warning-100 text-warning-800 hover:bg-warning-200" },
+      { variant: "soft", color: "destructive", className: "bg-destructive-100 text-destructive-800 hover:bg-destructive-200" },
+      { variant: "soft", color: "info", className: "bg-info-100 text-info-800 hover:bg-info-200" },
+      { variant: "soft", color: "indigo", className: "bg-indigo-100 text-indigo-800 hover:bg-indigo-200" },
+      { variant: "soft", color: "purple", className: "bg-purple-100 text-purple-800 hover:bg-purple-200" },
+      { variant: "soft", color: "pink", className: "bg-pink-100 text-pink-800 hover:bg-pink-200" },
+
+      // Outline Variants
+      { variant: "outline", color: "neutral", className: "border-neutral-200 text-neutral-800" },
+      { variant: "outline", color: "primary", className: "border-primary-200 text-primary-800" },
+      { variant: "outline", color: "success", className: "border-success-200 text-success-800" },
+      { variant: "outline", color: "warning", className: "border-warning-200 text-warning-800" },
+      { variant: "outline", color: "destructive", className: "border-destructive-200 text-destructive-800" },
+      { variant: "outline", color: "info", className: "border-info-200 text-info-800" },
+      { variant: "outline", color: "indigo", className: "border-indigo-200 text-indigo-800" },
+      { variant: "outline", color: "purple", className: "border-purple-200 text-purple-800" },
+      { variant: "outline", color: "pink", className: "border-pink-200 text-pink-800" },
+    ],
     defaultVariants: {
-      variant: "default",
+      variant: "solid",
+      color: "neutral",
+      size: "default",
     },
   }
 )
 
 export interface BadgeProps 
-  extends React.HTMLAttributes<HTMLDivElement>, 
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, "color">, 
     VariantProps<typeof badgeVariants> {
   /** 
    * Se true, o badge renderizará seu filho (child) como elemento principal.
@@ -314,10 +361,10 @@ export interface BadgeProps
  * - Para criar um badge clicável, use `asChild` e coloque a tag `<a>` dentro.
  */
 const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
-  ({ className, variant, asChild = false, children, ...props }, ref) => {
+  ({ className, variant, color, size, asChild = false, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "div"
     return (
-      <Comp ref={ref} className={cn(badgeVariants({ variant }), className)} {...props}>
+      <Comp ref={ref} className={cn(badgeVariants({ variant, color, size }), className)} {...props}>
         {children}
       </Comp>
     )
@@ -488,7 +535,7 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-9 px-4 py-2",
-        sm: "h-8 rounded-md px-3 text-body-xs",
+        sm: "h-8 rounded-md px-3 text-label-sm",
         lg: "h-10 rounded-md px-8",
         icon: "h-9 w-9",
         "icon-sm": "h-8 w-8",
@@ -1473,6 +1520,7 @@ import { Search } from "lucide-react"
 
 import { cn } from "../../lib/utils"
 import { Dialog, DialogContent } from "./Dialog"
+import { ScrollArea } from "./ScrollArea"
 
 export interface CommandDialogProps extends DialogProps {}
 
@@ -1534,11 +1582,13 @@ const CommandList = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>
 >(({ className, ...props }, ref) => (
-  <CommandPrimitive.List
-    ref={ref}
-    className={cn("max-h-72 overflow-y-auto overflow-x-hidden", className)}
-    {...props}
-  />
+  <ScrollArea className="max-h-72">
+    <CommandPrimitive.List
+      ref={ref}
+      className={cn("overflow-y-auto overflow-x-hidden", className)}
+      {...props}
+    />
+  </ScrollArea>
 ))
 CommandList.displayName = CommandPrimitive.List.displayName
 
@@ -1561,7 +1611,7 @@ const CommandGroup = React.forwardRef<
   <CommandPrimitive.Group
     ref={ref}
     className={cn(
-      "overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-body-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground",
+      "overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-label-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground",
       className
     )}
     {...props}
@@ -1603,7 +1653,7 @@ const CommandShortcut = ({
   return (
     <span
       className={cn(
-        "ml-auto text-body-xs tracking-widest text-muted-foreground",
+        "ml-auto text-label-xs tracking-widest text-muted-foreground",
         className
       )}
       {...props}
@@ -1981,7 +2031,7 @@ const DropdownMenuShortcut = ({
   return (
     <span
       className={cn(
-        "ml-auto text-body-xs tracking-widest opacity-60",
+        "ml-auto text-label-xs tracking-widest opacity-60",
         className
       )}
       {...props}
@@ -3900,7 +3950,7 @@ const TooltipContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        "z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-body-xs text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        "z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-label-xs text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
         className
       )}
       {...props}
@@ -4070,7 +4120,7 @@ export function AdvancedFilter({
   onClearFilters,
   title = "Filtros",
 }: AdvancedFilterProps) {
-  const activeCount = Object.values(selectedValues).reduce((acc, val) => acc + val.length, 0)
+  const activeCount = Object.values(selectedValues).reduce((acc, vals) => acc + vals.length, 0)
 
   return (
     <div className="flex items-center gap-2">
@@ -4082,18 +4132,18 @@ export function AdvancedFilter({
             {activeCount > 0 && (
               <>
                 <Separator orientation="vertical" className="mx-2 h-4" />
-                <Badge variant="secondary" className="rounded-sm px-1 font-normal lg:hidden">
+                <Badge variant="soft" color="neutral" className="rounded-sm px-1 font-normal lg:hidden">
                   {activeCount}
                 </Badge>
                 <div className="hidden space-x-1 lg:flex">
                   {activeCount > 2 ? (
-                    <Badge variant="secondary" className="rounded-sm px-1 font-normal">
+                    <Badge variant="soft" color="neutral" className="rounded-sm px-1 font-normal">
                       {activeCount} ativos
                     </Badge>
                   ) : (
                     Object.entries(selectedValues).flatMap(([cat, vals]) =>
                       vals.map(val => (
-                        <Badge key={val} variant="secondary" className="rounded-sm px-1 font-normal">
+                        <Badge key={val} variant="soft" color="neutral" className="rounded-sm px-1 font-normal">
                           {val}
                         </Badge>
                       ))
@@ -4119,7 +4169,7 @@ export function AdvancedFilter({
                         onSelect={() => onFilterChange?.(category.title, option.value, !isSelected)}
                       >
                         <div
-                          className={`mr-2 flex h-4 w-4 items-center justify-center rounded-sm border ${
+                          className={`mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary ${
                             isSelected
                               ? "bg-primary text-primary-foreground"
                               : "opacity-50 [&_svg]:invisible"
@@ -4164,7 +4214,7 @@ export function AdvancedFilter({
             return values.map(val => {
               const option = category?.options.find(o => o.value === val)
               return (
-                <Badge key={`${categoryTitle}-${val}`} variant="secondary" className="h-8 gap-1">
+                <Badge key={`${categoryTitle}-${val}`} variant="soft" color="neutral" className="h-8 gap-1">
                   <span className="text-muted-foreground mr-1">{categoryTitle}:</span>
                   {option?.label || val}
                   <button
@@ -4215,6 +4265,7 @@ import {
 } from "../shadcn/Dialog"
 import { Button } from "../shadcn/Button"
 import { Stepper } from "./Stepper"
+import { ScrollArea } from "../shadcn/ScrollArea"
 
 export interface CreationWizardProps {
   title: string
@@ -4266,9 +4317,11 @@ export function CreationWizard({
           />
         </div>
 
-        <div className="min-h-64 max-h-[50vh] overflow-y-auto pr-2 pb-4">
-          {children}
-        </div>
+        <ScrollArea className="h-[50vh]">
+          <div className="min-h-64 pr-2 pb-4">
+            {children}
+          </div>
+        </ScrollArea>
 
         <div className="flex items-center justify-between pt-4 border-t">
           <Button
@@ -4644,7 +4697,8 @@ export interface DataCardProps extends React.HTMLAttributes<HTMLDivElement> {
   initials?: string
   status?: {
     label: string
-    variant?: "default" | "secondary" | "destructive" | "outline"
+    variant?: "solid" | "soft" | "outline"
+    color?: "neutral" | "primary" | "success" | "warning" | "destructive" | "info" | "indigo" | "purple" | "pink"
   }
   tags?: string[]
   metadata?: {
@@ -4683,7 +4737,7 @@ export function DataCard({
             )}
             {status && (
               <div className="mt-1">
-                <Badge variant={status.variant || "default"}>
+                <Badge variant={status.variant || "solid"} color={status.color || "primary"}>
                   {status.label}
                 </Badge>
               </div>
@@ -4727,7 +4781,7 @@ export function DataCard({
           {tags.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {tags.map((tag) => (
-                <Badge key={tag} variant="secondary" className="font-normal">
+                <Badge key={tag} variant="soft" color="neutral" className="font-normal">
                   {tag}
                 </Badge>
               ))}
@@ -5065,7 +5119,7 @@ export function DetailDrawer({
             <div className="flex items-center justify-between">
               <SheetTitle className="text-h4 flex items-center gap-2">
                 {title}
-                {status && <Badge variant="secondary">{status}</Badge>}
+                {status && <Badge variant="soft" color="neutral">{status}</Badge>}
               </SheetTitle>
               {actions && (
                 <div className="flex items-center gap-2 pr-6">
@@ -5467,11 +5521,12 @@ import { Card, CardContent, CardHeader } from "../shadcn/Card"
 import { Badge } from "../shadcn/Badge"
 import { Avatar, AvatarFallback, AvatarImage } from "../shadcn/Avatar"
 import { Button } from "../shadcn/Button"
+import { ScrollArea } from "../shadcn/ScrollArea"
 
 export interface KanbanTask {
   id: string
   title: string
-  tag?: { label: string; variant: "default" | "secondary" | "destructive" | "outline" | "warning" | "success" }
+  tag?: { label: string; variant?: "solid" | "soft" | "outline"; color?: "neutral" | "primary" | "success" | "warning" | "destructive" | "info" | "indigo" | "purple" | "pink" }
   assignee?: { name: string; avatarUrl?: string }
   dueDate?: string
 }
@@ -5495,8 +5550,9 @@ export function KanbanBoard({ columns, onDragEnd, onAddTask, onTaskClick, classN
   // since the parent should handle the state. We expose it so the Story can hold state.
   return (
     <DragDropContext onDragEnd={onDragEnd || (() => {})}>
-      <div className={cn("flex h-full w-full gap-4 overflow-x-auto pb-4", className)}>
-        {columns.map((col) => (
+      <ScrollArea className="h-full w-full">
+        <div className={cn("flex h-full w-max gap-4 p-4", className)}>
+          {columns.map((col) => (
           <KanbanColumn
             key={col.id}
             column={col}
@@ -5504,7 +5560,8 @@ export function KanbanBoard({ columns, onDragEnd, onAddTask, onTaskClick, classN
             onTaskClick={onTaskClick ? (task) => onTaskClick(task, col.id) : undefined}
           />
         ))}
-      </div>
+        </div>
+      </ScrollArea>
     </DragDropContext>
   )
 }
@@ -5515,7 +5572,7 @@ function KanbanColumn({ column, onAddTask, onTaskClick }: { column: KanbanColumn
       <div className="flex items-center justify-between p-3 font-medium text-body-sm text-foreground">
         <div className="flex items-center gap-2">
           <span>{column.title}</span>
-          <Badge variant="secondary" className="px-1.5 py-0 text-body-xs">
+          <Badge variant="soft" color="neutral" className="px-1.5 py-0">
             {column.tasks.length}
           </Badge>
         </div>
@@ -5533,33 +5590,35 @@ function KanbanColumn({ column, onAddTask, onTaskClick }: { column: KanbanColumn
       
       <Droppable droppableId={column.id}>
         {(provided, snapshot) => (
-          <div
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-            className={cn(
-              "flex-1 px-3 pb-3 overflow-y-auto flex flex-col gap-3 transition-colors",
-              snapshot.isDraggingOver ? "bg-muted/60 rounded-b-lg" : ""
-            )}
-          >
-            {column.tasks.map((task, index) => (
-              <Draggable key={task.id} draggableId={task.id} index={index}>
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    style={{
-                      ...provided.draggableProps.style,
-                      opacity: snapshot.isDragging ? 0.8 : 1,
-                    }}
-                  >
-                    <KanbanCard task={task} onClick={onTaskClick ? () => onTaskClick(task) : undefined} />
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
+          <ScrollArea className="flex-1">
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className={cn(
+                "flex flex-col gap-3 p-3 transition-colors",
+                snapshot.isDraggingOver ? "bg-muted/60 rounded-b-lg" : ""
+              )}
+            >
+              {column.tasks.map((task, index) => (
+                <Draggable key={task.id} draggableId={task.id} index={index}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      style={{
+                        ...provided.draggableProps.style,
+                        opacity: snapshot.isDragging ? 0.8 : 1,
+                      }}
+                    >
+                      <KanbanCard task={task} onClick={onTaskClick ? () => onTaskClick(task) : undefined} />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          </ScrollArea>
         )}
       </Droppable>
     </div>
@@ -5575,7 +5634,7 @@ export function KanbanCard({ task, onClick }: { task: KanbanTask; onClick?: () =
       <CardHeader className="p-3 pb-0">
         {task.tag && (
           <div className="mb-2">
-            <Badge variant={task.tag.variant} className="text-[10px] px-1.5 py-0 h-5">
+            <Badge variant={task.tag.variant || "soft"} color={task.tag.color || "neutral"} className="text-[10px] px-1.5 py-0 h-5">
               {task.tag.label}
             </Badge>
           </div>
@@ -5696,6 +5755,189 @@ export function LoginForm({ isLoading = false, errorMessage, onSubmit }: LoginFo
 }
 
 \\n
+### Block: MarketingBanner
+\	sx
+import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "../../lib/utils"
+import { Button } from "../shadcn/Button"
+import { Badge } from "../shadcn/Badge"
+import { X } from "lucide-react"
+
+const marketingBannerVariants = cva(
+  "relative overflow-hidden flex flex-col items-start gap-4 transition-all duration-300",
+  {
+    variants: {
+      variant: {
+        hero: "bg-primary text-primary-foreground p-8 md:p-12 md:items-center text-center rounded-xl",
+        split: "bg-card text-card-foreground border md:flex-row md:justify-between p-6 md:p-8 rounded-xl shadow-sm",
+        gradient: "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white p-8 md:p-12 rounded-xl shadow-lg",
+        floating: "fixed bottom-6 left-6 right-6 md:left-auto md:right-6 md:max-w-md bg-foreground text-background p-6 rounded-xl shadow-2xl z-50",
+      },
+    },
+    defaultVariants: {
+      variant: "split",
+    },
+  }
+)
+
+export interface MarketingBannerProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof marketingBannerVariants> {
+  title: string
+  description: string
+  badge?: string
+  actionText?: string
+  onAction?: () => void
+  secondaryActionText?: string
+  onSecondaryAction?: () => void
+  imageSlot?: React.ReactNode
+  onDismiss?: () => void
+  isDismissible?: boolean
+}
+
+export function MarketingBanner({
+  className,
+  variant,
+  title,
+  description,
+  badge,
+  actionText,
+  onAction,
+  secondaryActionText,
+  onSecondaryAction,
+  imageSlot,
+  onDismiss,
+  isDismissible = false,
+  ...props
+}: MarketingBannerProps) {
+  const [isVisible, setIsVisible] = React.useState(true)
+
+  if (!isVisible) return null
+
+  const handleDismiss = () => {
+    setIsVisible(false)
+    if (onDismiss) onDismiss()
+  }
+
+  // Determine button variants based on banner variant for proper contrast
+  const getPrimaryButtonVariant = () => {
+    if (variant === "hero" || variant === "gradient") return "secondary"
+    if (variant === "floating") return "default" // It's on dark background, so default primary works well
+    return "default"
+  }
+
+  const getSecondaryButtonVariant = () => {
+    if (variant === "hero" || variant === "gradient" || variant === "floating") return "outline"
+    return "outline"
+  }
+
+  const getBadgeVariant = () => {
+    if (variant === "hero" || variant === "gradient") return "solid"
+    return "soft"
+  }
+
+  const getBadgeColor = () => {
+    if (variant === "gradient") return "neutral"
+    return "primary"
+  }
+
+  return (
+    <div
+      className={cn(marketingBannerVariants({ variant, className }))}
+      {...props}
+    >
+      {isDismissible && (
+        <button
+          onClick={handleDismiss}
+          className={cn(
+            "absolute top-4 right-4 p-1 rounded-full opacity-70 hover:opacity-100 transition-opacity",
+            variant === "floating" ? "text-background" : "text-current"
+          )}
+          aria-label="Dismiss banner"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      )}
+
+      <div className={cn("flex flex-col gap-3", variant === "hero" ? "items-center" : "items-start")}>
+        {badge && (
+          <Badge 
+            variant={getBadgeVariant()} 
+            color={getBadgeColor()} 
+            className={cn(
+              "mb-1",
+              variant === "hero" ? "bg-white/20 hover:bg-white/30 text-white border-transparent" : "",
+              variant === "gradient" ? "bg-white/20 hover:bg-white/30 text-white border-transparent" : ""
+            )}
+          >
+            {badge}
+          </Badge>
+        )}
+        
+        <h2 className={cn(
+          "text-h3 md:text-h2 font-bold tracking-tight",
+          variant === "floating" && "text-h4"
+        )}>
+          {title}
+        </h2>
+        
+        <p className={cn(
+          "text-body-md md:text-body-lg opacity-90 max-w-2xl",
+          variant === "floating" && "text-body-sm"
+        )}>
+          {description}
+        </p>
+
+        {(actionText || secondaryActionText) && (
+          <div className={cn(
+            "flex flex-wrap gap-3 mt-4",
+            variant === "hero" && "justify-center"
+          )}>
+            {actionText && (
+              <Button 
+                variant={getPrimaryButtonVariant()} 
+                onClick={onAction}
+                className={cn(
+                  variant === "floating" && "bg-primary text-primary-foreground hover:bg-primary/90",
+                  variant === "gradient" && "bg-white text-indigo-600 hover:bg-neutral-100"
+                )}
+              >
+                {actionText}
+              </Button>
+            )}
+            
+            {secondaryActionText && (
+              <Button 
+                variant={getSecondaryButtonVariant()} 
+                onClick={onSecondaryAction}
+                className={cn(
+                  (variant === "hero" || variant === "gradient") && "bg-transparent border-white text-white hover:bg-white/10",
+                  variant === "floating" && "bg-transparent border-neutral-600 text-background hover:bg-neutral-800"
+                )}
+              >
+                {secondaryActionText}
+              </Button>
+            )}
+          </div>
+        )}
+      </div>
+
+      {imageSlot && variant === "split" && (
+        <div className="hidden md:block w-1/3 shrink-0 ml-8">
+          {imageSlot}
+        </div>
+      )}
+
+      {/* Decorative elements for gradient variant */}
+      {variant === "gradient" && !imageSlot && (
+        <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl pointer-events-none" />
+      )}
+    </div>
+  )
+}
+
+\\n
 ### Block: NotificationCenter
 \	sx
 import * as React from "react"
@@ -5743,7 +5985,7 @@ export function NotificationCenter({
           <Bell className="h-4 w-4" />
           {unreadCount > 0 && (
             <Badge 
-              variant="destructive" 
+              variant="solid" color="destructive" 
               className="absolute -top-1 -right-1 h-4 min-w-4 px-1 text-[10px] flex items-center justify-center p-0 rounded-full"
             >
               {unreadCount > 99 ? "99+" : unreadCount}
@@ -5757,7 +5999,7 @@ export function NotificationCenter({
           <div className="flex items-center gap-2">
             <h4 className="text-label-md font-semibold">Notificações</h4>
             {unreadCount > 0 && (
-              <Badge variant="secondary" className="h-5 text-body-xs">
+              <Badge variant="soft" color="neutral" className="h-5">
                 {unreadCount} novas
               </Badge>
             )}
@@ -5831,7 +6073,7 @@ export function NotificationCenter({
           <>
             <Separator />
             <div className="p-2">
-              <Button variant="ghost" className="w-full h-8 text-body-xs justify-center">
+              <Button variant="ghost" size="sm" className="w-full h-8 justify-center">
                 Ver todas as notificações
               </Button>
             </div>
@@ -5944,7 +6186,7 @@ export function PricingCards() {
           }`}
         >
           Anual
-          <Badge variant="secondary" className="text-[10px] uppercase rounded-sm">
+          <Badge variant="soft" color="neutral" className="text-[10px] uppercase rounded-sm">
             Save 20%
           </Badge>
         </Label>
@@ -5965,7 +6207,7 @@ export function PricingCards() {
               <div className="flex items-center justify-between">
                 <CardTitle className="text-h3">{plan.title}</CardTitle>
                 {plan.popular && (
-                  <Badge className="uppercase text-[10px]">Mais Popular</Badge>
+                  <Badge className="uppercase text-[10px]"variant="solid" color="primary">Mais Popular</Badge>
                 )}
               </div>
               <CardDescription className="pt-1.5">
@@ -6436,6 +6678,7 @@ import {
 } from "lucide-react"
 
 import { cn } from "../../lib/utils"
+import { ScrollArea } from "../shadcn/ScrollArea"
 import { Button } from "../shadcn/Button"
 import { Separator } from "../shadcn/Separator"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../shadcn/Tooltip"
@@ -6555,9 +6798,11 @@ export function SidebarHeader({
 // --- Conteúdo (Lista de Links) ---
 export function SidebarContent({ className, children }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn("flex-1 overflow-y-auto overflow-x-hidden py-2 scrollbar-hide", className)}>
-      <nav className="flex flex-col gap-1 px-2">{children}</nav>
-    </div>
+    <ScrollArea className="flex-1">
+      <div className={cn("flex-1 py-2", className)}>
+        <nav className="flex flex-col gap-1 px-2">{children}</nav>
+      </div>
+    </ScrollArea>
   )
 }
 
@@ -6765,76 +7010,127 @@ export function Stepper({
   className,
   ...props
 }: StepperProps) {
+  if (orientation === "horizontal") {
+    return (
+      <div className={cn("w-full flex flex-col", className)} {...props}>
+        {/* Camada superior: Bolinhas e Linhas conectoras */}
+        <div className="flex items-center w-full">
+          {steps.map((step, index) => {
+            const isCompleted = index < currentStep
+            const isCurrent = index === currentStep
+
+            return (
+              <React.Fragment key={`indicator-${index}`}>
+                <div className="flex flex-col items-center relative z-10">
+                  <div
+                    className={cn(
+                      "flex h-8 w-8 items-center justify-center rounded-full border-2 font-semibold text-body-sm shrink-0 transition-colors bg-background",
+                      isCompleted
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : isCurrent
+                        ? "border-primary text-primary"
+                        : "border-muted text-muted-foreground"
+                    )}
+                  >
+                    {isCompleted ? <Check className="h-4 w-4" /> : index + 1}
+                  </div>
+                </div>
+
+                {/* Linha conectora */}
+                {index < steps.length - 1 && (
+                  <div
+                    className={cn(
+                      "flex-1 h-[2px] transition-colors mx-2",
+                      index < currentStep ? "bg-primary" : "bg-muted"
+                    )}
+                  />
+                )}
+              </React.Fragment>
+            )
+          })}
+        </div>
+
+        {/* Camada inferior: Textos alinhados sob as bolinhas */}
+        <div className="flex items-start w-full mt-3">
+          {steps.map((step, index) => {
+            const isCurrent = index === currentStep
+            
+            return (
+              <div 
+                key={`text-${index}`} 
+                className={cn(
+                  "flex flex-col items-center text-center",
+                  // Usa flex-1 e ajusta a margem para distribuir o texto embaixo dos círculos.
+                  // Se for o primeiro, alinha à esquerda. Se for o último, alinha à direita.
+                  index === 0 ? "w-1/4 items-start text-left" : 
+                  index === steps.length - 1 ? "w-1/4 items-end text-right" : "flex-1"
+                )}
+              >
+                {/* 
+                  Gambiarra elegante: forçamos o container de texto do meio a ter o mesmo centro
+                  que a bolinha. Para o primeiro e último, mantemos o alinhamento nas bordas.
+                */}
+                <div className={cn(
+                  "flex flex-col",
+                  index === 0 ? "items-start" : index === steps.length - 1 ? "items-end" : "items-center px-2"
+                )}>
+                  <span className={cn("text-label-md whitespace-nowrap", isCurrent ? "text-foreground font-semibold" : "text-muted-foreground")}>
+                    {step.title}
+                  </span>
+                  {step.description && (
+                    <span className="text-body-xs text-muted-foreground mt-0.5 hidden sm:block max-w-[120px]">
+                      {step.description}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
+
+  // Vertical orientation
   return (
-    <div
-      className={cn(
-        "flex",
-        orientation === "horizontal" ? "flex-row items-center w-full" : "flex-col space-y-4",
-        className
-      )}
-      {...props}
-    >
+    <div className={cn("flex flex-col", className)} {...props}>
       {steps.map((step, index) => {
         const isCompleted = index < currentStep
         const isCurrent = index === currentStep
 
         return (
-          <div
-            key={index}
-            className={cn(
-              "flex",
-              orientation === "horizontal" ? "flex-1 items-center" : "flex-row items-start"
-            )}
-          >
-            <div className={cn("flex flex-col", orientation === "horizontal" ? "items-center" : "items-start")}>
-              <div
-                className={cn(
-                  "flex h-8 w-8 items-center justify-center rounded-full border-2 font-semibold text-body-sm shrink-0 transition-colors",
-                  isCompleted
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : isCurrent
-                    ? "border-primary text-primary"
-                    : "border-muted text-muted-foreground"
-                )}
-              >
-                {isCompleted ? <Check className="h-4 w-4" /> : index + 1}
-              </div>
-              
-              {orientation === "horizontal" && (
-                <div className="mt-2 flex flex-col items-center text-center">
-                  <span className={cn("text-label-md", isCurrent ? "text-foreground" : "text-muted-foreground")}>
-                    {step.title}
-                  </span>
-                  {step.description && (
-                    <span className="text-body-xs text-muted-foreground mt-0.5">{step.description}</span>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {orientation === "vertical" && (
-              <div className="ml-4 mt-1 flex flex-col">
-                <span className={cn("text-label-md", isCurrent ? "text-foreground" : "text-muted-foreground")}>
-                  {step.title}
-                </span>
-                {step.description && (
-                  <span className="text-body-xs text-muted-foreground mt-0.5">{step.description}</span>
-                )}
-              </div>
-            )}
-
-            {/* Connector Line */}
+          <div key={index} className="flex relative pb-8 last:pb-0">
+            {/* Linha conectora vertical */}
             {index < steps.length - 1 && (
               <div
                 className={cn(
-                  "transition-colors",
-                  orientation === "horizontal"
-                    ? "h-0.5 flex-1 mx-4 -mt-10"
-                    : "w-0.5 h-full min-h-8 ml-4 mt-2",
+                  "absolute left-4 top-8 bottom-0 w-[2px] -ml-[1px] transition-colors",
                   index < currentStep ? "bg-primary" : "bg-muted"
                 )}
               />
             )}
+            
+            <div
+              className={cn(
+                "flex h-8 w-8 items-center justify-center rounded-full border-2 font-semibold text-body-sm shrink-0 transition-colors bg-background relative z-10",
+                isCompleted
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : isCurrent
+                  ? "border-primary text-primary"
+                  : "border-muted text-muted-foreground"
+              )}
+            >
+              {isCompleted ? <Check className="h-4 w-4" /> : index + 1}
+            </div>
+
+            <div className="ml-4 flex flex-col pt-1">
+              <span className={cn("text-label-md", isCurrent ? "text-foreground font-semibold" : "text-muted-foreground")}>
+                {step.title}
+              </span>
+              {step.description && (
+                <span className="text-body-xs text-muted-foreground mt-0.5">{step.description}</span>
+              )}
+            </div>
           </div>
         )
       })}
@@ -7023,6 +7319,7 @@ import { Separator } from "../shadcn/Separator"
 import { Switch } from "../shadcn/Switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../shadcn/Tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "../shadcn/Avatar"
+import { ScrollArea } from "../shadcn/ScrollArea"
 import {
   Select,
   SelectContent,
@@ -7035,7 +7332,23 @@ export function UserSettings() {
   return (
     <div className="flex w-full max-w-4xl flex-col md:flex-row gap-6">
       {/* Sidebar Navigation */}
-      <nav className="flex md:flex-col gap-2 md:w-52 shrink-0 overflow-x-auto md:overflow-visible">
+      <ScrollArea orientation="horizontal" className="md:hidden">
+        <nav className="flex gap-2 w-max">
+          <Button variant="secondary" className="justify-start">
+            Perfil
+          </Button>
+          <Button variant="ghost" className="justify-start">
+            Conta
+          </Button>
+          <Button variant="ghost" className="justify-start">
+            Aparência
+          </Button>
+          <Button variant="ghost" className="justify-start">
+            Notificações
+          </Button>
+        </nav>
+      </ScrollArea>
+      <nav className="hidden md:flex flex-col gap-2 md:w-52 shrink-0">
         <Button variant="secondary" className="justify-start">
           Perfil
         </Button>
