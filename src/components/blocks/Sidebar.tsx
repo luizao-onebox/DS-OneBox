@@ -16,6 +16,7 @@ import {
 } from "lucide-react"
 
 import { cn } from "../../lib/utils"
+import { ScrollArea } from "../shadcn/ScrollArea"
 import { Button } from "../shadcn/Button"
 import { Separator } from "../shadcn/Separator"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../shadcn/Tooltip"
@@ -135,9 +136,11 @@ export function SidebarHeader({
 // --- Conteúdo (Lista de Links) ---
 export function SidebarContent({ className, children }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn("flex-1 overflow-y-auto overflow-x-hidden py-2 scrollbar-hide", className)}>
-      <nav className="flex flex-col gap-1 px-2">{children}</nav>
-    </div>
+    <ScrollArea className="flex-1">
+      <div className={cn("flex-1 py-2", className)}>
+        <nav className="flex flex-col gap-1 px-2">{children}</nav>
+      </div>
+    </ScrollArea>
   )
 }
 

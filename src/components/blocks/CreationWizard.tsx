@@ -10,6 +10,7 @@ import {
 } from "../shadcn/Dialog"
 import { Button } from "../shadcn/Button"
 import { Stepper } from "./Stepper"
+import { ScrollArea } from "../shadcn/ScrollArea"
 
 export interface CreationWizardProps {
   title: string
@@ -61,9 +62,11 @@ export function CreationWizard({
           />
         </div>
 
-        <div className="min-h-64 max-h-[50vh] overflow-y-auto pr-2 pb-4">
-          {children}
-        </div>
+        <ScrollArea className="h-[50vh]">
+          <div className="min-h-64 pr-2 pb-4">
+            {children}
+          </div>
+        </ScrollArea>
 
         <div className="flex items-center justify-between pt-4 border-t">
           <Button

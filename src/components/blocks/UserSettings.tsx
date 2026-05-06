@@ -15,6 +15,7 @@ import { Separator } from "../shadcn/Separator"
 import { Switch } from "../shadcn/Switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../shadcn/Tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "../shadcn/Avatar"
+import { ScrollArea } from "../shadcn/ScrollArea"
 import {
   Select,
   SelectContent,
@@ -27,7 +28,23 @@ export function UserSettings() {
   return (
     <div className="flex w-full max-w-4xl flex-col md:flex-row gap-6">
       {/* Sidebar Navigation */}
-      <nav className="flex md:flex-col gap-2 md:w-52 shrink-0 overflow-x-auto md:overflow-visible">
+      <ScrollArea orientation="horizontal" className="md:hidden">
+        <nav className="flex gap-2 w-max">
+          <Button variant="secondary" className="justify-start">
+            Perfil
+          </Button>
+          <Button variant="ghost" className="justify-start">
+            Conta
+          </Button>
+          <Button variant="ghost" className="justify-start">
+            Aparência
+          </Button>
+          <Button variant="ghost" className="justify-start">
+            Notificações
+          </Button>
+        </nav>
+      </ScrollArea>
+      <nav className="hidden md:flex flex-col gap-2 md:w-52 shrink-0">
         <Button variant="secondary" className="justify-start">
           Perfil
         </Button>

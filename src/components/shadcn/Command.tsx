@@ -5,6 +5,7 @@ import { Search } from "lucide-react"
 
 import { cn } from "../../lib/utils"
 import { Dialog, DialogContent } from "./Dialog"
+import { ScrollArea } from "./ScrollArea"
 
 export interface CommandDialogProps extends DialogProps {}
 
@@ -66,11 +67,13 @@ const CommandList = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>
 >(({ className, ...props }, ref) => (
-  <CommandPrimitive.List
-    ref={ref}
-    className={cn("max-h-72 overflow-y-auto overflow-x-hidden", className)}
-    {...props}
-  />
+  <ScrollArea className="max-h-72">
+    <CommandPrimitive.List
+      ref={ref}
+      className={cn("overflow-y-auto overflow-x-hidden", className)}
+      {...props}
+    />
+  </ScrollArea>
 ))
 CommandList.displayName = CommandPrimitive.List.displayName
 

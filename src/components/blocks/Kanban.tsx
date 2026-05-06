@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader } from "../shadcn/Card"
 import { Badge } from "../shadcn/Badge"
 import { Avatar, AvatarFallback, AvatarImage } from "../shadcn/Avatar"
 import { Button } from "../shadcn/Button"
+import { ScrollArea } from "../shadcn/ScrollArea"
 
 export interface KanbanTask {
   id: string
@@ -35,8 +36,9 @@ export function KanbanBoard({ columns, onDragEnd, onAddTask, onTaskClick, classN
   // since the parent should handle the state. We expose it so the Story can hold state.
   return (
     <DragDropContext onDragEnd={onDragEnd || (() => {})}>
-      <div className={cn("flex h-full w-full gap-4 overflow-x-auto pb-4", className)}>
-        {columns.map((col) => (
+      <ScrollArea className="h-full w-full">
+        <div className={cn("flex h-full w-max gap-4 p-4", className)}>
+          {columns.map((col) => (
           <KanbanColumn
             key={col.id}
             column={col}
@@ -44,7 +46,8 @@ export function KanbanBoard({ columns, onDragEnd, onAddTask, onTaskClick, classN
             onTaskClick={onTaskClick ? (task) => onTaskClick(task, col.id) : undefined}
           />
         ))}
-      </div>
+        </div>
+      </ScrollArea>
     </DragDropContext>
   )
 }
@@ -73,33 +76,35 @@ function KanbanColumn({ column, onAddTask, onTaskClick }: { column: KanbanColumn
       
       <Droppable droppableId={column.id}>
         {(provided, snapshot) => (
-          <div
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-            className={cn(
-              "flex-1 px-3 pb-3 overflow-y-auto flex flex-col gap-3 transition-colors",
-              snapshot.isDraggingOver ? "bg-muted/60 rounded-b-lg" : ""
-            )}
-          >
-            {column.tasks.map((task, index) => (
-              <Draggable key={task.id} draggableId={task.id} index={index}>
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    style={{
-                      ...provided.draggableProps.style,
-                      opacity: snapshot.isDragging ? 0.8 : 1,
-                    }}
-                  >
-                    <KanbanCard task={task} onClick={onTaskClick ? () => onTaskClick(task) : undefined} />
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
+          <ScrollArea className="flex-1">
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className={cn(
+                "flex flex-col gap-3 p-3 transition-colors",
+                snapshot.isDraggingOver ? "bg-muted/60 rounded-b-lg" : ""
+              )}
+            >
+              {column.tasks.map((task, index) => (
+                <Draggable key={task.id} draggableId={task.id} index={index}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      style={{
+                        ...provided.draggableProps.style,
+                        opacity: snapshot.isDragging ? 0.8 : 1,
+                      }}
+                    >
+                      <KanbanCard task={task} onClick={onTaskClick ? () => onTaskClick(task) : undefined} />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          </ScrollArea>
         )}
       </Droppable>
     </div>
