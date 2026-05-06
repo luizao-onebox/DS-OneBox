@@ -70,14 +70,15 @@ const columns: ColumnDef<Payment>[] = [
     cell: ({ row }) => {
       const status = row.getValue("status") as string
       
-      const variantMap: Record<string, "success" | "warning" | "destructive" | "secondary"> = {
-        success: "success",
-        processing: "warning",
-        failed: "destructive",
-        pending: "secondary"
+      const variantMap: Record<string, any> = {
+        success: { variant: "soft", color: "success" },
+        processing: { variant: "soft", color: "warning" },
+        failed: { variant: "solid", color: "destructive" },
+        pending: { variant: "outline", color: "neutral" }
       }
 
-      return <Badge variant={variantMap[status] || "default"} className="capitalize">{status}</Badge>
+      const style = variantMap[status] || { variant: "solid", color: "primary" };
+      return <Badge variant={style.variant} color={style.color} className="capitalize">{status}</Badge>
     },
   },
   // 3. Coluna de Email (Com Ordenação)

@@ -19,7 +19,8 @@ export interface DataCardProps extends React.HTMLAttributes<HTMLDivElement> {
   initials?: string
   status?: {
     label: string
-    variant?: "default" | "secondary" | "destructive" | "outline"
+    variant?: "solid" | "soft" | "outline"
+    color?: "neutral" | "primary" | "success" | "warning" | "destructive" | "info" | "indigo" | "purple" | "pink"
   }
   tags?: string[]
   metadata?: {
@@ -58,7 +59,7 @@ export function DataCard({
             )}
             {status && (
               <div className="mt-1">
-                <Badge variant={status.variant || "default"}>
+                <Badge variant={status.variant || "solid"} color={status.color || "primary"}>
                   {status.label}
                 </Badge>
               </div>
@@ -102,7 +103,7 @@ export function DataCard({
           {tags.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {tags.map((tag) => (
-                <Badge key={tag} variant="secondary" className="font-normal">
+                <Badge key={tag} variant="soft" color="neutral" className="font-normal">
                   {tag}
                 </Badge>
               ))}

@@ -97,7 +97,7 @@ export function PricingCards() {
           }`}
         >
           Anual
-          <Badge variant="secondary" className="text-[10px] uppercase rounded-sm">
+          <Badge variant="soft" color="neutral" className="text-[10px] uppercase rounded-sm">
             Save 20%
           </Badge>
         </Label>
@@ -118,7 +118,7 @@ export function PricingCards() {
               <div className="flex items-center justify-between">
                 <CardTitle className="text-h3">{plan.title}</CardTitle>
                 {plan.popular && (
-                  <Badge className="uppercase text-[10px]">Mais Popular</Badge>
+                  <Badge className="uppercase text-[10px]"variant="solid" color="primary">Mais Popular</Badge>
                 )}
               </div>
               <CardDescription className="pt-1.5">

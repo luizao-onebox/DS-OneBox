@@ -41,14 +41,14 @@ const initialColumns: KanbanColumnData[] = [
       {
         id: "task-1",
         title: "Revisar especificações do módulo de IA",
-        tag: { label: "Design", variant: "outline" },
+        tag: { label: "Design", variant: "outline", color: "neutral" },
         dueDate: "12 Abr",
         assignee: { name: "Luiz" },
       },
       {
         id: "task-2",
         title: "Implementar autenticação via SSO",
-        tag: { label: "Backend", variant: "default" },
+        tag: { label: "Backend", variant: "solid", color: "primary" },
         dueDate: "15 Abr",
       },
     ],
@@ -60,7 +60,7 @@ const initialColumns: KanbanColumnData[] = [
       {
         id: "task-3",
         title: "Migrar banco de dados para a nova estrutura",
-        tag: { label: "DevOps", variant: "warning" },
+        tag: { label: "DevOps", variant: "solid", color: "warning" },
         assignee: { name: "Maria", avatarUrl: "https://github.com/shadcn.png" },
       },
     ],
@@ -72,7 +72,7 @@ const initialColumns: KanbanColumnData[] = [
       {
         id: "task-4",
         title: "Criar layout da Topbar",
-        tag: { label: "Frontend", variant: "success" },
+        tag: { label: "Frontend", variant: "solid", color: "success" },
         dueDate: "Ontem",
         assignee: { name: "Luiz" },
       },
@@ -166,7 +166,7 @@ const KanbanContainer = () => {
         const newTask: KanbanTask = {
           id: `task-${Date.now()}`,
           title: taskTitle,
-          tag: taskTag ? { label: taskTag, variant: "default" } : undefined,
+          tag: taskTag ? { label: taskTag, variant: "solid", color: "primary" } : undefined,
           dueDate: taskDate || undefined,
           assignee: taskAssignee ? { name: taskAssignee } : undefined,
         }
@@ -186,7 +186,7 @@ const KanbanContainer = () => {
                   return {
                     ...t,
                     title: taskTitle,
-                    tag: taskTag ? { label: taskTag, variant: t.tag?.variant || "default" } : undefined,
+                    tag: taskTag ? { label: taskTag, variant: t.tag?.variant || "solid", color: t.tag?.color || "primary" } : undefined,
                     dueDate: taskDate || undefined,
                     assignee: taskAssignee ? { ...t.assignee, name: taskAssignee } : undefined,
                   }

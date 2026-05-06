@@ -45,18 +45,18 @@ export function AdvancedFilter({
             {activeCount > 0 && (
               <>
                 <Separator orientation="vertical" className="mx-2 h-4" />
-                <Badge variant="secondary" className="rounded-sm px-1 font-normal lg:hidden">
+                <Badge variant="soft" color="neutral" className="rounded-sm px-1 font-normal lg:hidden">
                   {activeCount}
                 </Badge>
                 <div className="hidden space-x-1 lg:flex">
                   {activeCount > 2 ? (
-                    <Badge variant="secondary" className="rounded-sm px-1 font-normal">
+                    <Badge variant="soft" color="neutral" className="rounded-sm px-1 font-normal">
                       {activeCount} ativos
                     </Badge>
                   ) : (
                     Object.entries(selectedValues).flatMap(([cat, vals]) =>
                       vals.map(val => (
-                        <Badge key={val} variant="secondary" className="rounded-sm px-1 font-normal">
+                        <Badge key={val} variant="soft" color="neutral" className="rounded-sm px-1 font-normal">
                           {val}
                         </Badge>
                       ))
@@ -127,7 +127,7 @@ export function AdvancedFilter({
             return values.map(val => {
               const option = category?.options.find(o => o.value === val)
               return (
-                <Badge key={`${categoryTitle}-${val}`} variant="secondary" className="h-8 gap-1">
+                <Badge key={`${categoryTitle}-${val}`} variant="soft" color="neutral" className="h-8 gap-1">
                   <span className="text-muted-foreground mr-1">{categoryTitle}:</span>
                   {option?.label || val}
                   <button

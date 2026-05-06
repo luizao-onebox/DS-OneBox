@@ -43,7 +43,7 @@ export function NotificationCenter({
           <Bell className="h-4 w-4" />
           {unreadCount > 0 && (
             <Badge 
-              variant="destructive" 
+              variant="solid" color="destructive" 
               className="absolute -top-1 -right-1 h-4 min-w-4 px-1 text-[10px] flex items-center justify-center p-0 rounded-full"
             >
               {unreadCount > 99 ? "99+" : unreadCount}
@@ -57,7 +57,7 @@ export function NotificationCenter({
           <div className="flex items-center gap-2">
             <h4 className="text-label-md font-semibold">Notificações</h4>
             {unreadCount > 0 && (
-              <Badge variant="secondary" className="h-5 text-body-xs">
+              <Badge variant="soft" color="neutral" className="h-5 text-body-xs">
                 {unreadCount} novas
               </Badge>
             )}

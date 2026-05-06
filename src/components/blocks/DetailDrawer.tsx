@@ -53,7 +53,7 @@ export function DetailDrawer({
             <div className="flex items-center justify-between">
               <SheetTitle className="text-h4 flex items-center gap-2">
                 {title}
-                {status && <Badge variant="secondary">{status}</Badge>}
+                {status && <Badge variant="soft" color="neutral">{status}</Badge>}
               </SheetTitle>
               {actions && (
                 <div className="flex items-center gap-2 pr-6">

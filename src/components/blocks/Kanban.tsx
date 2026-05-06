@@ -11,7 +11,7 @@ import { Button } from "../shadcn/Button"
 export interface KanbanTask {
   id: string
   title: string
-  tag?: { label: string; variant: "default" | "secondary" | "destructive" | "outline" | "warning" | "success" }
+  tag?: { label: string; variant?: "solid" | "soft" | "outline"; color?: "neutral" | "primary" | "success" | "warning" | "destructive" | "info" | "indigo" | "purple" | "pink" }
   assignee?: { name: string; avatarUrl?: string }
   dueDate?: string
 }
@@ -55,7 +55,7 @@ function KanbanColumn({ column, onAddTask, onTaskClick }: { column: KanbanColumn
       <div className="flex items-center justify-between p-3 font-medium text-body-sm text-foreground">
         <div className="flex items-center gap-2">
           <span>{column.title}</span>
-          <Badge variant="secondary" className="px-1.5 py-0 text-body-xs">
+          <Badge variant="soft" color="neutral" className="px-1.5 py-0 text-body-xs">
             {column.tasks.length}
           </Badge>
         </div>
@@ -115,7 +115,7 @@ export function KanbanCard({ task, onClick }: { task: KanbanTask; onClick?: () =
       <CardHeader className="p-3 pb-0">
         {task.tag && (
           <div className="mb-2">
-            <Badge variant={task.tag.variant} className="text-[10px] px-1.5 py-0 h-5">
+            <Badge variant={task.tag.variant || "soft"} color={task.tag.color || "neutral"} className="text-[10px] px-1.5 py-0 h-5">
               {task.tag.label}
             </Badge>
           </div>

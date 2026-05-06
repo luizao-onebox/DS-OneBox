@@ -1,100 +1,126 @@
 import { Badge } from "./Badge"
+import { Clock, X } from "lucide-react"
 
 export default {
   title: "Components/Badge",
   component: Badge,
   parameters: {
-    layout: "centered",
-    docs: {
-      description: {
-        component: `
-
-Badges ou "Selos" são elementos não clicáveis usados para fornecer informações suplementares como status de objetos, contadores de notificação, labels e categorias.
-
-## Anatomia
-
-- **Badge (Container):** Tem forma arredondada (geralmente \`rounded-full\`) e contorna o conteúdo interno.
-- **Label:** O texto explicativo (tamanho \`text-body-xs\`, \`font-semibold\`).
-
-## Variantes (Tokens)
-
-Este componente usa a biblioteca \`cva\` para definir os estilos base e estilos por variante.
-
-- **default**: Usado para destaques afirmativos. Tem a cor de fundo \`bg-primary\` e texto \`text-primary-foreground\`.
-- **secondary**: Usado para status neutros, como "Pendente" ou "Processando". Usa fundo \`bg-secondary\`.
-- **destructive**: Usado para alertas críticos, como "Falha", "Cancelado" ou contadores vermelhos. Usa fundo \`bg-destructive\`.
-- **outline**: Não tem preenchimento. Contorna apenas o rótulo com uma borda sutil, usada para filtros e etiquetas menores (\`border-border\`).
-- **success**: Status de sucesso (ex: "Concluído", "Aprovado").
-- **warning**: Status de alerta (ex: "Pendente", "Atenção").
-- **destructiveOutline**: Estilo destructive com apenas borda (sem preenchimento).
-
-**Nota:** \`Badge\` difere visualmente de um \`Button\` pequeno porque não tem efeitos de interação (hover ou click) projetados na sua raiz.
-
-## Boas Práticas
-
-### ✅ Faça
-- Use Badges para comunicar status, não para ações.
-- Mantenha o texto curto (1-2 palavras).
-- Use cores de forma consistente: verde=sucesso, vermelho=erro, amarelo=alerta, cinza=neutro.
-- Posicione Badges próximos ao elemento que rotulam.
-
-### ❌ Não Faça
-- Não use Badges como botões — não têm estados de hover/active preparados.
-- Não use Badges para textos longos — crie um Label se precisar de mais detalhe.
-- Não abuse de Badges na mesma tela — priorize os mais importantes.
-
-## Acessibilidade
-
-- Badges são elementos decorativos e não exigem roles específicos.
-- Se o Badge indicar contagem de notificações, use \`aria-label="X notificações não lidas"\`.
-- Evite usar apenas cor para comunicar status — combine com texto descritivo.
-
-## Variants
-
-| Variant | Uso | Exemplo |
-|---------|-----|---------|
-| \`default\` | Destaque primário | "Novo", "Featured" |
-| \`secondary\` | Status neutro | "Pendente", "Draft" |
-| \`destructive\` | Erro/Alerta crítico | "Falhou", "Cancelado" |
-| \`destructiveOutline\` | Erro sem preenchimento | "Rejeitado" |
-| \`outline\` | Filtros, Tags | "Design", "Frontend" |
-| \`success\` | Sucesso | "Concluído", "Aprovado" |
-| \`warning\` | Alerta | "Pendente", "Atenção" |
-        `,
-      },
-    },
+    layout: "padded",
   },
   tags: ["autodocs"],
   argTypes: {
     variant: {
       control: "select",
-      options: ["default", "secondary", "destructive", "destructiveOutline", "outline", "success", "warning"],
+      options: ["solid", "soft", "outline"],
+    },
+    color: {
+      control: "select",
+      options: ["neutral", "primary", "success", "warning", "destructive", "info", "indigo", "purple", "pink"],
+    },
+    size: {
+      control: "select",
+      options: ["default", "pill", "icon"],
     },
   },
 }
 
+const colors = ["neutral", "destructive", "warning", "success", "info", "indigo", "purple", "pink"] as const;
+
 export const BadgePlayground = {
   args: {
     children: "Badge",
-    variant: "default",
+    variant: "soft",
+    color: "neutral",
+    size: "default",
   },
 }
 
-export const BadgeGallery = {
+export const SoftPillBadges = {
   render: () => (
-    <div className="flex flex-wrap gap-3">
-      <section className="w-full">
-        <h2 className="text-label-md font-semibold mb-3 text-muted-foreground">Variants</h2>
-        <div className="flex flex-wrap gap-2">
-          <Badge variant="default">Default</Badge>
-          <Badge variant="secondary">Secondary</Badge>
-          <Badge variant="destructive">Destructive</Badge>
-          <Badge variant="destructiveOutline">Destructive Outline</Badge>
-          <Badge variant="outline">Outline</Badge>
-          <Badge variant="success">Success</Badge>
-          <Badge variant="warning">Warning</Badge>
-        </div>
-      </section>
+    <div className="flex flex-wrap gap-4">
+      {colors.map((color) => (
+        <Badge key={color} variant="soft" color={color} size="pill">
+          <Clock className="mr-1.5 h-3.5 w-3.5" />
+          Badge
+          <X className="ml-1.5 h-3.5 w-3.5 cursor-pointer opacity-70 hover:opacity-100" />
+        </Badge>
+      ))}
+    </div>
+  ),
+}
+
+export const SoftDefaultBadges = {
+  render: () => (
+    <div className="flex flex-wrap gap-4">
+      {colors.map((color) => (
+        <Badge key={color} variant="soft" color={color} size="default">
+          <Clock className="mr-1.5 h-3.5 w-3.5" />
+          Badge
+          <X className="ml-1.5 h-3.5 w-3.5 cursor-pointer opacity-70 hover:opacity-100" />
+        </Badge>
+      ))}
+    </div>
+  ),
+}
+
+export const SolidPillBadges = {
+  render: () => (
+    <div className="flex flex-wrap gap-4">
+      {colors.map((color) => (
+        <Badge key={color} variant="solid" color={color} size="pill">
+          <Clock className="mr-1.5 h-3.5 w-3.5" />
+          Badge
+          <X className="ml-1.5 h-3.5 w-3.5 cursor-pointer opacity-70 hover:opacity-100" />
+        </Badge>
+      ))}
+    </div>
+  ),
+}
+
+export const SolidDefaultBadges = {
+  render: () => (
+    <div className="flex flex-wrap gap-4">
+      {colors.map((color) => (
+        <Badge key={color} variant="solid" color={color} size="default">
+          <Clock className="mr-1.5 h-3.5 w-3.5" />
+          Badge
+          <X className="ml-1.5 h-3.5 w-3.5 cursor-pointer opacity-70 hover:opacity-100" />
+        </Badge>
+      ))}
+    </div>
+  ),
+}
+
+export const IconBadges = {
+  render: () => (
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-wrap gap-4">
+        {colors.map((color) => (
+          <Badge key={color} variant="soft" color={color} size="icon">
+            <Clock className="h-3.5 w-3.5" />
+          </Badge>
+        ))}
+      </div>
+      <div className="flex flex-wrap gap-4">
+        {colors.map((color) => (
+          <Badge key={color} variant="soft" color={color} size="icon">
+            1
+          </Badge>
+        ))}
+      </div>
+    </div>
+  ),
+}
+
+export const OutlineBadges = {
+  render: () => (
+    <div className="flex flex-wrap gap-4">
+      {colors.map((color) => (
+        <Badge key={color} variant="outline" color={color} size="pill">
+          <Clock className="mr-1.5 h-3.5 w-3.5" />
+          Badge
+        </Badge>
+      ))}
     </div>
   ),
 }
