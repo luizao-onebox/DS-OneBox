@@ -42,15 +42,15 @@ const badgeVariants = cva(
       { variant: "solid", color: "pink", className: "bg-pink-500 text-pink-50 hover:bg-pink-500/80" },
       
       // Soft Variants (As requested by the images)
-      { variant: "soft", color: "neutral", className: "bg-neutral-100 text-neutral-800 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700" },
-      { variant: "soft", color: "primary", className: "bg-primary-100 text-primary-800 hover:bg-primary-200 dark:bg-primary-900 dark:text-primary-300 dark:hover:bg-primary-800" },
-      { variant: "soft", color: "success", className: "bg-success-100 text-success-800 hover:bg-success-200 dark:bg-success-900 dark:text-success-300 dark:hover:bg-success-800" },
-      { variant: "soft", color: "warning", className: "bg-warning-100 text-warning-800 hover:bg-warning-200 dark:bg-warning-900 dark:text-warning-300 dark:hover:bg-warning-800" },
-      { variant: "soft", color: "destructive", className: "bg-destructive-100 text-destructive-800 hover:bg-destructive-200 dark:bg-destructive-900 dark:text-destructive-300 dark:hover:bg-destructive-800" },
-      { variant: "soft", color: "info", className: "bg-info-100 text-info-800 hover:bg-info-200 dark:bg-info-900 dark:text-info-300 dark:hover:bg-info-800" },
-      { variant: "soft", color: "indigo", className: "bg-indigo-100 text-indigo-800 hover:bg-indigo-200 dark:bg-indigo-900 dark:text-indigo-300 dark:hover:bg-indigo-800" },
-      { variant: "soft", color: "purple", className: "bg-purple-100 text-purple-800 hover:bg-purple-200 dark:bg-purple-900 dark:text-purple-300 dark:hover:bg-purple-800" },
-      { variant: "soft", color: "pink", className: "bg-pink-100 text-pink-800 hover:bg-pink-200 dark:bg-pink-900 dark:text-pink-300 dark:hover:bg-pink-800" },
+      { variant: "soft", color: "neutral", className: "bg-neutral-100 text-neutral-800 hover:bg-neutral-200 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800" },
+      { variant: "soft", color: "primary", className: "bg-primary-100 text-primary-800 hover:bg-primary-200 dark:bg-primary-950 dark:text-primary-300 dark:hover:bg-primary-900" },
+      { variant: "soft", color: "success", className: "bg-success-100 text-success-800 hover:bg-success-200 dark:bg-success-950 dark:text-success-300 dark:hover:bg-success-900" },
+      { variant: "soft", color: "warning", className: "bg-warning-100 text-warning-800 hover:bg-warning-200 dark:bg-warning-950 dark:text-warning-300 dark:hover:bg-warning-900" },
+      { variant: "soft", color: "destructive", className: "bg-destructive-100 text-destructive-800 hover:bg-destructive-200 dark:bg-destructive-950 dark:text-destructive-300 dark:hover:bg-destructive-900" },
+      { variant: "soft", color: "info", className: "bg-info-100 text-info-800 hover:bg-info-200 dark:bg-info-950 dark:text-info-300 dark:hover:bg-info-900" },
+      { variant: "soft", color: "indigo", className: "bg-indigo-100 text-indigo-800 hover:bg-indigo-200 dark:bg-indigo-950 dark:text-indigo-300 dark:hover:bg-indigo-900" },
+      { variant: "soft", color: "purple", className: "bg-purple-100 text-purple-800 hover:bg-purple-200 dark:bg-purple-950 dark:text-purple-300 dark:hover:bg-purple-900" },
+      { variant: "soft", color: "pink", className: "bg-pink-100 text-pink-800 hover:bg-pink-200 dark:bg-pink-950 dark:text-pink-300 dark:hover:bg-pink-900" },
 
       // Outline Variants
       { variant: "outline", color: "neutral", className: "border-neutral-200 text-neutral-800 dark:border-neutral-800 dark:text-neutral-300" },
