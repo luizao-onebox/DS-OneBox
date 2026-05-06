@@ -249,11 +249,11 @@ export const ButtonGallery = {
         <div className="flex items-center gap-3">
           <Button icon={Bell}>
             Notifications
-            <Badge variant="secondary" className="ml-2">3</Badge>
+            <Badge variant="soft" color="neutral" className="ml-2">3</Badge>
           </Button>
           <Button icon={Heart}>
             Likes
-            <Badge variant="destructive" className="ml-2">99+</Badge>
+            <Badge variant="solid" color="destructive" className="ml-2">99+</Badge>
           </Button>
         </div>
       </section>

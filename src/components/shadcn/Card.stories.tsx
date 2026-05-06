@@ -161,8 +161,8 @@ export const CardGallery = {
         </CardHeader>
         <CardContent className="text-center">
           <div className="flex justify-center gap-2 mb-4">
-            <Badge variant="secondary">React</Badge>
-            <Badge variant="secondary">TypeScript</Badge>
+            <Badge variant="soft" color="neutral">React</Badge>
+            <Badge variant="soft" color="neutral">TypeScript</Badge>
           </div>
         </CardContent>
         <CardFooter className="flex justify-center gap-2">
