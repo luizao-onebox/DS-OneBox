@@ -62,14 +62,13 @@ export function MarketingBanner({
   }
 
   // Determine button variants based on banner variant for proper contrast
-  const getPrimaryButtonVariant = () => {
+  const getPrimaryButtonVariant = (): "secondary" | "default" => {
     if (variant === "hero" || variant === "gradient") return "secondary"
-    if (variant === "floating") return "default" // It's on dark background, so default primary works well
+    if (variant === "floating") return "default"
     return "default"
   }
 
-  const getSecondaryButtonVariant = () => {
-    if (variant === "hero" || variant === "gradient" || variant === "floating") return "outline"
+  const getSecondaryButtonVariant = (): "outline" => {
     return "outline"
   }
 

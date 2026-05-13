@@ -10,6 +10,12 @@ export default defineConfig({
       insertTypesEntry: true,
       include: ['src/**/*.ts', 'src/**/*.tsx', 'src/**/*.js', 'src/**/*.jsx'],
       exclude: ['**/*.stories.ts', '**/*.stories.tsx', '**/*.stories.js', '**/*.stories.jsx', '**/*.test.*'],
+      outDir: 'dist',
+      rollupConfig: {
+        output: {
+          preserveEntrySignatures: 'exports'
+        }
+      }
     })
   ],
   base: '/DS-OneBox/',
