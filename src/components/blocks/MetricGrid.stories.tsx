@@ -26,7 +26,7 @@ Componente de agrupamento de cards para dashboards, KPIs e métricas. O \`Metric
 
 | Prop | Tipo | Padrão | Descrição |
 |------|------|--------|-----------|
-| \`columns\` | \`object\` | \`{ xs:1, sm:2, lg:4 }\` | Número de colunas por breakpoint |
+| \`columns\` | \`"1" \\| "2" \\| "3" \\| "4" \\| "6" \\| "12"\` | \`"4"\` | Layout de colunas responsivo |
 | \`gap\` | \`"sm" \\| "md" \\| "lg"\` | \`"md"\` | Espaçamento entre cards |
 | \`className\` | \`string\` | - | Classes adicionais |
 
@@ -34,23 +34,24 @@ Componente de agrupamento de cards para dashboards, KPIs e métricas. O \`Metric
 
 | Prop | Tipo | Padrão | Descrição |
 |------|------|--------|-----------|
-| \`span\` | \`"full" \\| "half" \\| "third" \\| "twothirds"\` | - | Ocupa múltiplas colunas |
+| \`span\` | \`"auto" \\| "full" \\| "half" \\| "third" \\| "quarter" \\| "twothirds" \\| "threequarters"\` | \`"auto"\` | Ocupa múltiplas colunas |
 | \`className\` | \`string\` | - | Classes adicionais |
 
-## Breakpoints
+## Layouts de Coluna
 
-| Breakpoint | Largura |
-|------------|---------|
-| \`xs\` | < 640px |
-| \`sm\` | ≥ 640px |
-| \`md\` | ≥ 768px |
-| \`lg\` | ≥ 1024px |
-| \`xl\` | ≥ 1280px |
+| Valor | Mobile | Tablet | Desktop |
+|-------|--------|--------|---------|
+| \`"1"\` | 1 | 1 | 1 |
+| \`"2"\` | 1 | 2 | 2 |
+| \`"3"\` | 1 | 2 | 3 |
+| \`"4"\` | 1 | 2 | 4 |
+| \`"6"\` | 1 | 2 | 6 |
+| \`"12"\` | 4 | 8 | 12 |
 
 ## Exemplo de Uso
 
 \`\`\`tsx
-<MetricGrid columns={{ xs: 1, sm: 2, lg: 4 }} gap="md">
+<MetricGrid columns="4" gap="md">
   <MetricCard>
     <Card><CardContent>Receita</CardContent></Card>
   </MetricCard>
@@ -65,7 +66,10 @@ Componente de agrupamento de cards para dashboards, KPIs e métricas. O \`Metric
   },
   tags: ["autodocs"],
   argTypes: {
-    columns: { control: false },
+    columns: {
+      control: "select",
+      options: ["1", "2", "3", "4", "6", "12"],
+    },
     gap: {
       control: "select",
       options: ["sm", "md", "lg"],
@@ -118,7 +122,7 @@ export const Default: Story = {
     <div className="space-y-8">
       <section>
         <h3 className="text-label-md text-muted-foreground mb-4">4 Colunas (Desktop)</h3>
-        <MetricGrid columns={{ xs: 1, sm: 2, lg: 4 }} gap="md">
+        <MetricGrid columns="4" gap="md">
           <MetricCard>
             <MetricCardStory label="Receita Total" value="R$ 124.5K" trend="up" subtext="+12.5% vs mês anterior" icon={DollarSign} badgeText="+12.5%" />
           </MetricCard>
@@ -139,7 +143,7 @@ export const Default: Story = {
 
 export const TwoColumns: Story = {
   render: () => (
-    <MetricGrid columns={{ xs: 1, sm: 2 }} gap="md">
+    <MetricGrid columns="2" gap="md">
       <MetricCard>
         <Card className="h-full bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
           <CardHeader>
@@ -168,7 +172,7 @@ export const TwoColumns: Story = {
 
 export const MixedLayout: Story = {
   render: () => (
-    <MetricGrid columns={{ xs: 1, sm: 2, lg: 4 }} gap="md">
+    <MetricGrid columns="4" gap="md">
       <MetricCard span="half">
         <Card className="h-full bg-primary text-primary-foreground">
           <CardHeader>
@@ -195,7 +199,7 @@ export const MixedLayout: Story = {
 
 export const LargeDashboard: Story = {
   render: () => (
-    <MetricGrid columns={{ xs: 1, sm: 2, lg: 4, xl: 6 }} gap="md">
+    <MetricGrid columns="12" gap="md">
       <MetricCard span="third">
         <Card className="h-full">
           <CardHeader>

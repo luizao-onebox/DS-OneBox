@@ -1,59 +1,43 @@
 import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "../../lib/utils"
 
-export interface MetricGridProps extends React.HTMLAttributes<HTMLDivElement> {
-  columns?: {
-    xs?: number
-    sm?: number
-    md?: number
-    lg?: number
-    xl?: number
-  }
-  gap?: "sm" | "md" | "lg"
-}
+const metricGridVariants = cva("grid items-stretch", {
+  variants: {
+    columns: {
+      "1": "grid-cols-1",
+      "2": "grid-cols-1 sm:grid-cols-2",
+      "3": "grid-cols-1 sm:grid-cols-2 md:grid-cols-3",
+      "4": "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4",
+      "6": "grid-cols-1 sm:grid-cols-2 lg:grid-cols-6",
+      "12": "grid-cols-4 md:grid-cols-8 lg:grid-cols-12",
+    },
+    gap: {
+      sm: "gap-2",
+      md: "gap-4",
+      lg: "gap-6",
+    },
+  },
+  defaultVariants: {
+    columns: "4",
+    gap: "md",
+  },
+})
 
-const gapMap = {
-  sm: "gap-2",
-  md: "gap-4",
-  lg: "gap-6",
-}
+export interface MetricGridProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof metricGridVariants> {}
 
 export function MetricGrid({
   className,
-  columns = { xs: 1, sm: 2, lg: 4 },
-  gap = "md",
+  columns,
+  gap,
   children,
   ...props
 }: MetricGridProps) {
-  const colClass = React.useMemo(() => {
-    const cols = columns
-    const xs = cols.xs ?? 1
-    const sm = cols.sm ?? xs
-    const md = cols.md ?? sm
-    const lg = cols.lg ?? md
-    const xl = cols.xl ?? lg
-
-    if (xs === sm && sm === md && md === lg && lg === xl) {
-      return `grid-cols-${xs}`
-    }
-
-    const parts = []
-    if (xs !== sm) parts.push(`grid-cols-${xs}`)
-    if (sm !== md) parts.push(`sm:grid-cols-${sm}`)
-    if (md !== lg) parts.push(`md:grid-cols-${md}`)
-    if (lg !== xl) parts.push(`lg:grid-cols-${xl}`)
-
-    return parts.join(" ")
-  }, [columns])
-
   return (
     <div
-      className={cn(
-        "grid items-stretch",
-        colClass,
-        gapMap[gap],
-        className
-      )}
+      className={cn(metricGridVariants({ columns, gap, className }))}
       {...props}
     >
       {children}
@@ -61,9 +45,26 @@ export function MetricGrid({
   )
 }
 
-export interface MetricCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  span?: "full" | "half" | "third" | "quarter" | "twothirds"
-}
+const metricCardVariants = cva("flex flex-col", {
+  variants: {
+    span: {
+      auto: "",
+      full: "col-span-full",
+      half: "col-span-1 sm:col-span-2",
+      third: "col-span-1 sm:col-span-2 lg:col-span-4",
+      quarter: "col-span-1 sm:col-span-2 lg:col-span-3",
+      twothirds: "col-span-full lg:col-span-8",
+      threequarters: "col-span-full lg:col-span-9",
+    },
+  },
+  defaultVariants: {
+    span: "auto",
+  },
+})
+
+export interface MetricCardProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof metricCardVariants> {}
 
 export function MetricCard({
   className,
@@ -71,19 +72,9 @@ export function MetricCard({
   children,
   ...props
 }: MetricCardProps) {
-  const spanClass = React.useMemo(() => {
-    switch (span) {
-      case "full": return "col-span-full"
-      case "half": return "col-span-1 sm:col-span-2"
-      case "third": return "col-span-1 sm:col-span-2 lg:col-span-4"
-      case "twothirds": return "col-span-full lg:col-span-8"
-      default: return ""
-    }
-  }, [span])
-
   return (
     <div
-      className={cn("flex flex-col", spanClass, className)}
+      className={cn(metricCardVariants({ span, className }))}
       {...props}
     >
       {children}
