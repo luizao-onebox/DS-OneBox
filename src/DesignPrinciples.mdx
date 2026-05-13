@@ -1,0 +1,362 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Design System/Design Principles" />
+
+# Design Principles
+
+Guia conceitual para composição de interfaces utilizando o DS-OneBox. Este documento estabelece as **regras fundamentais** de arquitetura visual que devem guiar todas as decisões de layout.
+
+---
+
+## 1. Sistema de Espaçamento
+
+O DS-OneBox utiliza uma escala de espaçamento baseada em múltiplos de **4px**. Toda a hierarquia visual é construída sobre três níveis de espaçamento:
+
+### A Escala
+
+| Nível | Valor | Uso Recomendado |
+|-------|-------|-----------------|
+| **Tight** | `gap-4` (16px) | Elementos que pertencem ao mesmo grupo visual (ex: Badge + Label dentro de um Card) |
+| **Default** | `gap-6` (24px) | Separar seções distintas dentro de uma página (ex: PageHeader → MetricGrid) |
+| **Loose** | `gap-8` (32px) | Separar grandes blocos funcionais (ex: Sidebar → Área de conteúdo principal) |
+
+### Regra de Ouro: Proximidade Visual
+
+> **Elementos que se relacionam devem estar mais próximos. Elementos que são distintos devem ter mais espaço entre si.**
+
+```
+✅ CORRETO                           ❌ ERRADO
+PageLayout spacing="default"          PageLayout spacing="tight"
+  PageHeader                           PageHeader
+  MetricGrid (gap-6 → 24px)            MetricGrid (gap-4 → 16px)
+    MetricCard (dentro do grid)          MetricCard
+      Badge + Valor                    Badge + Valor (muito junto)
+```
+
+---
+
+## 2. Hierarquia Visual
+
+Toda tela deve seguir uma ordem de leitura clara. Use o **PageHeader** para estabelecer o contexto e o **MetricGrid** para priorizar informações.
+
+### Estrutura de Uma Página
+
+```
+┌─────────────────────────────────────────────────────┐
+│                    PageLayout                        │
+│                    spacing="default"                 │
+│                                                     │
+│  ┌───────────────────────────────────────────────┐  │
+│  │                  PageHeader                    │  │
+│  │  Título (H1)           │  Ações (Tabs/Botões) │  │
+│  │  Descrição            │                       │  │
+│  └───────────────────────────────────────────────┘  │
+│                                                     │
+│  ┌───────────────────────────────────────────────┐  │
+│  │               MetricGrid columns="4"          │  │
+│  │  ┌─────┐  ┌─────┐  ┌─────┐  ┌─────┐        │  │
+│  │  │ KPI │  │ KPI │  │ KPI │  │ KPI │        │  │
+│  │  └─────┘  └─────┘  └─────┘  └─────┘        │  │
+│  └───────────────────────────────────────────────┘  │
+│                                                     │
+│  ┌───────────────────────────────────────────────┐  │
+│  │           Seção Secundária (gap-6)            │  │
+│  │  DataTable ou Chart                            │  │
+│  └───────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────┘
+```
+
+### Regra de Primazia
+
+1. **O que o usuário precisa ver primeiro** → topo da página
+2. **Métricas agregadas (KPIs)** → antes de dados detalhados
+3. **Ações primárias** → canto superior direito
+4. **Ações secundárias** → mais próximas do conteúdo que afetam
+
+---
+
+## 3. Agrupamento de Elementos (Grouping)
+
+### Princípio da Borda Comum
+
+Elementos que pertencem ao mesmo grupo devem compartilhar uma borda visual (Card, borda, background compartilhado).
+
+```
+✅ CORRETO: Card agrupa Label + Valor + Badge
+<Card>
+  <CardHeader>
+    <CardTitle>Receita</CardTitle>       ← mesmo grupo
+  </CardHeader>
+  <CardContent>
+    <Badge>+%</Badge>                    ← mesmo grupo
+  </CardContent>
+</Card>
+
+❌ ERRADO: Elementos relacionados soltos sem borda
+<Flex gap="md">
+  <span>Receita</span>       ← sem contexto visual
+  <Badge>+%</Badge>
+</Flex>
+```
+
+### Agrupamentos por Contexto
+
+| Contexto | Componente | Exemplo |
+|----------|------------|---------|
+| Métricas relacionadas | `Card` | Receita, Despesas, Lucro agrupados |
+| Ações de um mesmo fluxo | `Flex gap="sm"` | Botões de ação num toolbar |
+| Dados tabulares | `DataTable` | Lista de transações |
+| Navegação | `Sidebar` | Menu lateral |
+| Conteúdo lógicamente separado | `Separator` | Divisor entre seções distintas |
+
+---
+
+## 4. Composição de Layouts Comuns
+
+### Dashboard (Visão Geral)
+
+```tsx
+// ✅ Estrutura recomendada
+<PageLayout spacing="default">
+  <PageHeader
+    title="Dashboard Comercial"
+    description="Visão geral das métricas"
+    actions={<Tabs><TabsList>...</TabsList></Tabs>}
+  />
+
+  {/* KPIs principais — 4 colunas em desktop */}
+  <MetricGrid columns="4">
+    <MetricCard><Card><CardContent>...</CardContent></Card></MetricCard>
+    <MetricCard><Card><CardContent>...</CardContent></Card></MetricCard>
+    <MetricCard><Card><CardContent>...</CardContent></Card></MetricCard>
+    <MetricCard><Card><CardContent>...</CardContent></Card></MetricCard>
+  </MetricGrid>
+
+  {/* Gráfico de tendência — ocupa 2/3 da largura */}
+  <MetricGrid columns="12">
+    <MetricCard span="twothirds">
+      <Card><CardContent><Chart>...</Chart></CardContent></Card>
+    </MetricCard>
+    {/* Atividade recente — 1/3 */}
+    <MetricCard>
+      <Card><CardContent><ActivityTimeline>...</ActivityTimeline></CardContent></Card>
+    </MetricCard>
+  </MetricGrid>
+</PageLayout>
+```
+
+### Lista com Filtros (Tela de Gestão)
+
+```tsx
+// ✅ Estrutura recomendada
+<PageLayout spacing="default">
+  <PageHeader
+    title="Gerenciar Usuários"
+    actions={<Button>Novo Usuário</Button>}
+  />
+
+  {/* Filtros colapsáveis */}
+  <AdvancedFilter>
+    <Select>...</Select>
+    <Input>...</Input>
+  </AdvancedFilter>
+
+  {/* Tabela principal */}
+  <Card>
+    <DataTable columns={columns} data={users} />
+  </Card>
+
+  {/* Paginação */}
+  <Pagination />
+</PageLayout>
+```
+
+### Formulário em Etapas (Wizard)
+
+```tsx
+// ✅ Estrutura recomendada
+<PageLayout spacing="default">
+  <PageHeader
+    title="Criar Nova Conta"
+    description="Preencha os dados abaixo"
+  />
+
+  {/* Stepper indica progresso */}
+  <Stepper steps={steps} currentStep={activeStep} />
+
+  {/* Área de formulário */}
+  <CreationWizard>
+    <Card>
+      <CardContent>
+        {/* Campos da etapa atual */}
+      </CardContent>
+    </Card>
+  </CreationWizard>
+
+  {/* Navegação entre etapas */}
+  <Flex justify="between">
+    <Button variant="ghost">Voltar</Button>
+    <Button>Continuar</Button>
+  </Flex>
+</PageLayout>
+```
+
+---
+
+## 5. Regras de Navegação e Hierarquia
+
+### Breadcrumbs vs Tabs
+
+| Situação | Componente | Quando Usar |
+|----------|------------|-------------|
+| Navegação hierárquica | `Breadcrumb` | Profundidade de pastas/módulos (Home > Financeiro > Contas a Pagar) |
+|切换视角 | `Tabs` | Views diferentes do mesmo dado (Mensal > Trimestral > Anual) |
+| Navegação de ações | `Sidebar` | Navegação principal da aplicação |
+
+### Posicionamento de Ações
+
+```
+┌─────────────────────────────────────────────────────┐
+│ PageHeader                                          │
+│ TÍTULO                          [Ação Primária]    │  ← Botão principal no canto
+│ Descrição                                         │
+├─────────────────────────────────────────────────────┤
+│                                                     │
+│  [Ação de Filtro]  [Search Input]                 │  ← Filtros alinhados à esquerda
+│                                                     │
+│  ┌─────────────────────────────────────────────┐   │
+│  │ DataTable                                    │   │
+│  │                                             │   │
+│  │  [Ações de Linha]                           │   │  ← Ações contextuais na linha
+│  └─────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────┘
+```
+
+---
+
+## 6. Boas Práticas de UX
+
+### Feedback Imediato
+
+Sempre forneça feedback visual para ações do usuário:
+
+```tsx
+// ✅ Correto — feedback visual
+<Button
+  onClick={handleSave}
+  disabled={isSaving}
+>
+  {isSaving ? "Salvando..." : "Salvar"}
+</Button>
+
+// ✅ Status badges para estados
+<Badge variant="soft" color={isActive ? "success" : "muted"}>
+  {isActive ? "Ativo" : "Inativo"}
+</Badge>
+```
+
+### Estados Vazios (Empty States)
+
+Sempre que uma lista/tabela puder estar vazia, forneça um EmptyState:
+
+```tsx
+// ✅ Correto
+{data.length === 0 ? (
+  <EmptyState
+    icon={FileText}
+    title="Nenhuma transação encontrada"
+    description="Tente ajustar seus filtros de busca."
+    action={<Button>Limpar Filtros</Button>}
+  />
+) : (
+  <DataTable columns={columns} data={data} />
+)}
+```
+
+### Loading States
+
+```tsx
+// ✅ Skeleton para conteúdo sendo carregado
+{isLoading ? (
+  <>
+    <Skeleton className="h-8 w-32" />
+    <Skeleton className="h-4 w-64 mt-2" />
+  </>
+) : (
+  <MetricGrid>...</MetricGrid>
+)}
+```
+
+---
+
+## 7. Responsividade
+
+### Breakpoints
+
+| Breakpoint | Largura | Comportamento |
+|------------|---------|---------------|
+| `xs` | < 640px | Stack vertical, ações abaixo do título |
+| `sm` | ≥ 640px | Grid 2 colunas para métricas |
+| `md` | ≥ 768px | Sidebar colapsável |
+| `lg` | ≥ 1024px | Layout completo com 4+ colunas |
+
+### Regras de Adaptação
+
+1. **Semantic HTML first**: Use `<header>`, `<main>`, `<aside>`, `<footer>` corretamente
+2. **Mobile: Stack vertical** — elementos que eram lado a lado viram colunas
+3. **Desktop: Grid horizontal** — maximize uso de espaço horizontal
+4. **Touch targets** — botões e áreas clicáveis devem ter no mínimo 44x44px em mobile
+
+### Exemplo Responsivo
+
+```tsx
+// ✅ Correto — desktop 4 colunas, tablet 2, mobile 1
+<MetricGrid columns="4">
+  <MetricCard><Card>...</Card></MetricCard>
+  <MetricCard><Card>...</Card></MetricCard>
+  <MetricCard><Card>...</Card></MetricCard>
+  <MetricCard><Card>...</Card></MetricCard>
+</MetricGrid>
+
+// ✅ PageHeader responsivo — ações vão para nova linha em mobile
+<PageHeader
+  title="Dashboard"
+  actions={
+    <Flex gap="sm" wrap>
+      <Button> Ação 1 </Button>
+      <Button> Ação 2 </Button>
+    </Flex>
+  }
+/>
+```
+
+---
+
+## 8. Erros Comuns a Evitar
+
+| Erro | Por que é ruim | Solução |
+|------|----------------|---------|
+| `flex flex-col gap-6` em tudo | Ignora o sistema de escala | Use `PageLayout spacing="tight/default/loose"` |
+| Cards soltos sem Card wrapper | Sem borda/sombra = sem agrupamento | Sempre wrappeie em `<Card>` |
+| `p-6` hardcoded em todo lugar | Acoplamento, difícil mudar depois | Use `flush` no PageLayout |
+| Ações espalhadas na tela | Dificulta scan | Agrupe ações relacionadas |
+| Tabela sem paginação | Performance + UX | Use `<Pagination>` para +10 registros |
+| Modais para tudo | Quebra fluxo do usuário | Prefira `Sheet` (painel lateral) ou `Dialog` para confirmações |
+| `div` ao invés de componente semântico | Acessibilidade | Use `Card`, `Button`, `Badge`, etc |
+
+---
+
+## 9. Checklist de Revisão de Layout
+
+Antes de marcar uma tela como "pronta", verifique:
+
+- [ ] Usa `<PageLayout>` como container raiz?
+- [ ] Usa `<PageHeader>` para título e ações?
+- [ ] Métricas estão em `<MetricGrid>` com `columns="4"`?
+- [ ] Grupos visuais estão dentro de `<Card>`?
+- [ ] Espaçamentos seguem a escala (tight/default/loose)?
+- [ ] Ações primárias estão no canto superior direito?
+- [ ] Empty states estão tratados?
+- [ ] Loading states têm `<Skeleton>`?
+- [ ] Tabelas com +10 linhas têm `<Pagination>`?
+- [ ] Responsividade testada em mobile?
