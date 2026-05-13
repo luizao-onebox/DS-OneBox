@@ -299,3 +299,62 @@ O Design System foi pensado para **geração de telas por Inteligência Artifici
 Exemplo de prompt para IA:
 
 > "Use o DS-OneBox. Crie um dashboard com Cards, Badges e Buttons. Use exclusivamente tokens semânticos: `bg-primary`, `text-primary-foreground`, `bg-success-100`, `text-success-800`. Não use cores hardcoded."
+
+---
+
+## 11. Solução de Problemas
+
+### Conflito de nomes com Recharts
+
+Tanto o `ds-onebox` quanto o `recharts` exportam um componente chamado `Tooltip`. Quando usar ambos no mesmo arquivo, o segundo import sobrescreve o primeiro silenciosamente.
+
+**Solução:** Use alias no import do Recharts:
+
+```tsx
+// ✅ Correto — alias para evitar conflito
+import { Tooltip, TooltipTrigger, TooltipContent } from 'ds-onebox'
+import { Tooltip as RechartsTooltip, Legend } from 'recharts'
+
+// Uso
+<RechartsTooltip formatter={(v) => formatCurrency(v)} />
+<Tooltip><TooltipTrigger>...</TooltipTrigger></Tooltip>
+```
+
+### Grid e MetricGrid com prop `columns`
+
+A prop `columns` aceita **números inteiros**, não objetos:
+
+```tsx
+// ✅ Correto — número
+<Grid columns={4} gap="md" />
+<MetricGrid columns="4" gap="md" />
+
+// ❌ Errado — objeto (não funciona)
+<Grid columns={{ xs: 1, sm: 2, lg: 4 }} />
+<MetricGrid columns={{ xs: 1, sm: 2, lg: 4 }} />
+```
+
+Para layouts responsivos customizados, use `className`:
+
+```tsx
+<Grid columns={2} gap="md" className="lg:grid-cols-3" />
+```
+
+### Props do DataTable
+
+O DataTable usa `TanStack Table` internamente. Ações (botões, links) devem ser definidas como **colunas explícitas** dentro do array de `columns`:
+
+```tsx
+// ✅ Correto — coluna de ações explícita
+{
+  id: 'acoes',
+  cell: ({ row }) => (
+    <Button variant="ghost" size="icon" onClick={() => handleView(row.original)}>
+      <Eye className="h-4 w-4" />
+    </Button>
+  ),
+}
+
+// ❌ Errado — onRowClick não existe no DataTable
+<DataTable columns={columns} data={data} onRowClick={handleView} />
+```
