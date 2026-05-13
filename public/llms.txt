@@ -7669,3 +7669,91 @@ export function UserSettings() {
 }
 
 \\n
+## 6. Design Principles & Composition Rules
+CRITICAL: When generating any page or screen, you MUST follow these composition rules.
+
+### 6.1 Spacing System (Strict Scale)
+Use ONLY these 3 spacing levels - never arbitrary pixel values:
+- Tight: gap-4 (16px) - elements within the same visual group
+- Default: gap-6 (24px) - separate distinct sections on a page
+- Loose: gap-8 (32px) - separate large functional blocks
+
+### 6.2 Page Structure (Always Use This Order)
+Every page MUST follow this hierarchy:
+1. <PageLayout spacing="default"> - root container
+2. <PageHeader> - title + description + actions (top right)
+3. Content sections - MetricGrid, DataTable, Charts, etc
+4. Navigation/Pagination if needed
+
+### 6.3 MetricGrid Usage
+- columns="4" for desktop KPI dashboards
+- columns="2" for forms or smaller grids
+- columns="12" for mixed layouts (use span="twothirds", "third")
+- ALWAYS wrap content in <MetricCard>
+
+### 6.4 Grouping Rules
+- Related items: share a Card border/shadow
+- Actions of same flow: use <Flex gap="sm">
+- Tabular data: use <DataTable>
+- Empty state: ALWAYS provide <EmptyState> when list can be empty
+
+### 6.5 Action Placement
+- Primary action (Create, Save): top-right corner in PageHeader
+- Secondary actions (Filters, Search): below PageHeader or in toolbar
+- Row actions (Edit, Delete): last column in DataTable
+
+### 6.6 Feedback & States
+- Loading: use <Skeleton> or Button with disabled+text
+- Success/Error: use <Badge variant="soft" color="success|destructive">
+- Empty: use <EmptyState> component
+- Form validation: inline error messages below inputs
+
+### 6.7 Always Use Semantic Components
+- DO NOT use <div className="flex"> - use <Flex>
+- DO NOT use <div className="grid"> - use <Grid>
+- DO NOT use <button> - use <Button>
+- DO NOT use <table> - use <DataTable>
+
+### 6.8 Layout Checklist (Verify Before Finishing)
+Before marking a screen as complete, verify:
+[ ] Uses <PageLayout> as root container
+[ ] Uses <PageHeader> for title and actions
+[ ] Metrics in <MetricGrid> with correct columns
+[ ] Visual groups wrapped in <Card>
+[ ] Spacing follows tight/default/loose scale
+[ ] Primary action in top-right corner
+[ ] Empty states handled
+[ ] Loading states with <Skeleton>
+[ ] Tables with +10 rows have <Pagination>
+[ ] Responsive tested on mobile
+
+## 7. Common Page Templates
+
+### Dashboard Template:
+<PageLayout spacing="default">
+  <PageHeader title="..." description="..." actions={...</PageHeader}>
+  <MetricGrid columns="4">...</MetricGrid>
+  <MetricGrid columns="12">
+    <MetricCard span="twothirds"><Chart />...</MetricCard>
+    <MetricCard><ActivityTimeline />...</MetricCard>
+  </MetricGrid>
+</PageLayout>
+
+### List/Management Template:
+<PageLayout spacing="default">
+  <PageHeader title="..." actions={<Button>Novo</Button>} />
+  <AdvancedFilter>...</AdvancedFilter>
+  <Card><DataTable columns={columns} data={data} /></Card>
+  <Pagination />
+</PageLayout>
+
+### Wizard/Form Template:
+<PageLayout spacing="default">
+  <PageHeader title="..." description="..." />
+  <Stepper steps={steps} currentStep={activeStep} />
+  <Card><CardContent>...form fields...</CardContent></Card>
+  <Flex justify="between"><Button variant="ghost">Voltar</Button><Button>Continuar</Button></Flex>
+</PageLayout>
+
+## 8. Full Design Principles Document
+See: src/DesignPrinciples.mdx
