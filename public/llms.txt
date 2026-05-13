@@ -6172,6 +6172,114 @@ export function NotificationCenter({
 }
 
 \\n
+### Block: PageHeader
+\	sx
+import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "../../lib/utils"
+
+const pageHeaderVariants = cva("flex flex-col gap-1", {
+  variants: {
+    align: {
+      left: "items-start",
+      center: "items-center text-center",
+      right: "items-end text-right",
+    },
+  },
+  defaultVariants: {
+    align: "left",
+  },
+})
+
+export interface PageHeaderProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof pageHeaderVariants> {
+  title: string
+  description?: string
+  actions?: React.ReactNode
+}
+
+export function PageHeader({
+  className,
+  align,
+  title,
+  description,
+  actions,
+  ...props
+}: PageHeaderProps) {
+  return (
+    <div
+      className={cn(pageHeaderVariants({ align, className }))}
+      {...props}
+    >
+      <div className="flex flex-row flex-wrap items-start justify-between gap-4 w-full">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-h1 font-bold tracking-tight text-foreground">
+            {title}
+          </h1>
+          {description && (
+            <p className="text-body-md text-muted-foreground">
+              {description}
+            </p>
+          )}
+        </div>
+        {actions && (
+          <div className="flex flex-row items-center gap-3 shrink-0">
+            {actions}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+\\n
+### Block: PageLayout
+\	sx
+import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "../../lib/utils"
+
+const pageLayoutVariants = cva("flex flex-col", {
+  variants: {
+    spacing: {
+      tight: "gap-4",
+      default: "gap-6",
+      loose: "gap-8",
+    },
+    flush: {
+      true: "px-0",
+      false: "px-6 py-6",
+    },
+  },
+  defaultVariants: {
+    spacing: "default",
+    flush: false,
+  },
+})
+
+export interface PageLayoutProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof pageLayoutVariants> {}
+
+export function PageLayout({
+  className,
+  spacing,
+  flush,
+  children,
+  ...props
+}: PageLayoutProps) {
+  return (
+    <div
+      className={cn(pageLayoutVariants({ spacing, flush, className }))}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
+\\n
 ### Block: PricingCards
 \	sx
 import * as React from "react"

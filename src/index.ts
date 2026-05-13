@@ -65,6 +65,8 @@ export * from "./components/blocks/FileUploader";
 export * from "./components/blocks/GlobalBanner";
 export * from "./components/blocks/Kanban";
 export * from "./components/blocks/MetricGrid";
+export * from "./components/blocks/PageHeader";
+export * from "./components/blocks/PageLayout";
 export * from "./components/blocks/LoginForm";
 export * from "./components/blocks/NotificationCenter";
 export * from "./components/blocks/PricingCards";
