@@ -54,6 +54,7 @@ export * from "./components/shadcn/Tooltip";
 export * from "./components/blocks/ActivityTimeline";
 export * from "./components/blocks/AdvancedFilter";
 export * from "./components/blocks/CreationWizard";
+export * from "./components/blocks/Animation";
 export * from "./components/blocks/DashboardCharts";
 export * from "./components/blocks/DashboardMetrics";
 export * from "./components/blocks/DataCard";

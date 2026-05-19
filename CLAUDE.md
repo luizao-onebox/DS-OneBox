@@ -59,5 +59,58 @@ Se a interface exigir um componente (Botão, Input, Modal, Sidebar, Kanban), ver
 3. **Geração de Docs para IA:**
    - Sempre que criar ou modificar a API de um componente, lembre o desenvolvedor de rodar o comando para atualizar o `llms.txt` na pasta `public/`.
 
+## 🎬 5. Sistema de Animações
+
+Use animações para comunicar estado, não para decorar. Animações excessivas causam fadiga visual.
+
+### Regra de Ouro: Menos é Mais
+- **Entrada de página/componente**: `animate-fade-in-up` (300ms)
+- **Hover states**: `transition` de 150ms, sem keyframes
+- **Modais/Dialogs**: `animate-scale-in` (200ms)
+- **Loaders**: `animate-pulse` ou `animate-shimmer`
+- **Notificações**: `animate-ping` (suave, não intrusivo)
+
+### Duração Padrão
+| Contexto | Duração | Classe |
+|----------|----------|--------|
+| Hover/Active | 150ms | `duration-150` |
+| Micro-interações | 200ms | `duration-200` |
+| Entrada de elementos | 300ms | `duration-300` |
+| Entrada de página | 500ms | `duration-500` |
+
+### Como Usar Animações
+
+```tsx
+// ✅ Correto — animate com componente wrapper
+<Animation animate="fade-in-up" duration="300" delay="100">
+  <Card>...</Card>
+</Animation>
+
+// ✅ Correto — lista escalonada
+<StaggeredList staggerDelay={50}>
+  <Card>Item 1</Card>
+  <Card>Item 2</Card>
+</StaggeredList>
+
+// ✅ Correto — contador animado
+<AnimatedCounter to={1245} duration={1000} prefix="R$ " />
+```
+
+```tsx
+// ❌ Errado — animação excessiva
+<Animation animate="bounce" duration="1000" repeat="infinite">
+  <Button>Carregando...</Button>
+</Animation>
+```
+
+### Tipos de Animação Disponíveis
+| Animação | Uso |
+|----------|-----|
+| `fade-in-up` | **Recomendado** — entrada de cards, listas |
+| `scale-in` | Modais, dropdowns, tooltips |
+| `slide-in-left` | Painéis que deslizam da esquerda |
+| `shimmer` | **Apenas** skeletons de loading |
+| `ping` | Notificações (pontos vermelhos) |
+
 ---
 *Lembre-se: O objetivo principal deste Design System é permitir a geração de telas por IA mantendo a identidade visual perfeita e o contraste acessível através do nosso sistema de Tokens.*
