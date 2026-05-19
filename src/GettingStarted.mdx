@@ -358,3 +358,131 @@ O DataTable usa `TanStack Table` internamente. Ações (botões, links) devem se
 // ❌ Errado — onRowClick não existe no DataTable
 <DataTable columns={columns} data={data} onRowClick={handleView} />
 ```
+
+---
+
+## 12. Compatibilidade com Tailwind CSS
+
+O DS-OneBox foi construído com **Tailwind CSS v4**. Se você está enfrentando problemas de compatibilidade, esta seção explica como resolver.
+
+### Arquitetura Atual
+
+| Arquivo | Abordagem | Versão |
+|---------|-----------|--------|
+| `src/index.css` | `@import "tailwindcss"` + `@theme {}` | v4 |
+| `tailwind-preset.js` | `theme.extend` + `plugins` | v3 |
+| `tailwind.config.js` | Importa o preset | v3 + v4 hybrid |
+
+### Problemas Comuns
+
+#### Problema: `@layer base` conflitando
+
+**Sintoma:** Estilos do DS-Onebox sobrepõem os do seu projeto, ou vice-versa.
+
+**Solução:** Não importe o CSS compilado do ds-onebox. Use apenas o preset:
+
+```tsx
+// ❌ Errado — importa CSS que pode conflitar
+import 'ds-onebox/style.css'
+
+// ✅ Correto — usa apenas o preset
+// O preset define classes Tailwind, não estilos CSS globais
+```
+
+#### Problema: `tailwind-preset.js` não funciona
+
+**Sintoma:** Classes como `bg-primary`, `text-foreground` não existem.
+
+**Causa:** O preset é um config válido para v3, mas precisa ser referenciado corretamente.
+
+**Solução:** No seu `tailwind.config.js` (v3 ou v4):
+
+```js
+// tailwind.config.js (v3)
+const dsOneboxPreset = require('ds-onebox/tailwind-preset')
+
+module.exports = {
+  presets: [dsOneboxPreset],
+  // seu config...
+}
+```
+
+```js
+// tailwind.config.js (v4)
+import dsOneboxPreset from 'ds-onebox/tailwind-preset'
+
+export default {
+  presets: [dsOneboxPreset],
+}
+```
+
+#### Problema: Variáveis CSS não definidas
+
+**Sintoma:** Cores funcionam mas espaçamento/typografia não.
+
+**Causa:** As variáveis CSS (ex: `--radius`, `--font-sans`) precisam ser definidas no CSS do projeto.
+
+**Solução:** Copie as variáveis do `src/themes/tokens-manifest.css` para o seu CSS principal:
+
+```css
+/* No seu index.css */
+@import 'ds-onebox/tokens.css';
+
+:root {
+  --radius: 0.5rem;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+```
+
+### Para Consumidores v3
+
+Se seu projeto usa Tailwind v3:
+
+```bash
+npm install ds-onebox@^1.0.0 tailwindcss@^3
+```
+
+```js
+// tailwind.config.cjs
+const dsOneboxPreset = require('ds-onebox/tailwind-preset')
+
+module.exports = {
+  content: ['./src/**/*.{js,ts,jsx,tsx}'],
+  presets: [dsOneboxPreset],
+  theme: {
+    // sobrescreva tokens aqui se precisar
+  },
+}
+```
+
+### Para Consumidores v4
+
+Se seu projeto usa Tailwind v4:
+
+```bash
+npm install ds-onebox@^1.0.0 tailwindcss@^4
+```
+
+```js
+// tailwind.config.js
+import dsOneboxPreset from 'ds-onebox/tailwind-preset'
+
+export default {
+  presets: [dsOneboxPreset],
+}
+```
+
+```css
+/* seu index.css */
+@import 'ds-onebox/tokens.css';
+@import 'tailwindcss';
+```
+
+### Checklist de Verificação
+
+- [ ] `tailwindcss` está instalado (v3 ou v4)
+- [ ] `tailwind.config.js` importa `ds-onebox/tailwind-preset`
+- [ ] Tokens CSS ( `--primary`, `--radius`, etc.) estão no CSS do projeto
+- [ ] Não há importação de `ds-onebox/style.css` (use só o preset)
+- [ ] Se usar v3: `@layer base` no CSS do DS não entra em conflito
+
