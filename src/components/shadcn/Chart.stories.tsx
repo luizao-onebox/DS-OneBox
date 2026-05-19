@@ -297,53 +297,46 @@ export const RadarChartExample: Story = {
 }
 
 export const GaugeChartExample: Story = {
-  render: () => (
-    <div className="w-full max-w-xs">
-      <h2 className="text-h4 font-bold mb-4">Gráfico de Gauge</h2>
-      <ChartContainer config={{}} className="aspect-square w-full">
-        <ComposedChart
-          data={gaugeData}
-          layout="vertical"
-          margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-        >
-          <XAxis type="number" domain={[0, 100]} hide />
-          <YAxis type="category" dataKey="name" hide />
+  render: () => {
+    const percent = 0.75
+    const data = [
+      { name: "value", value: percent * 100 },
+      { name: "remain", value: (1 - percent) * 100 },
+    ]
+
+    return (
+      <div className="w-full max-w-xs">
+        <h2 className="text-h4 font-bold mb-4">Gráfico de Gauge</h2>
+        <ChartContainer config={{}} className="aspect-square w-full">
           <PieChart>
             <Pie
-              data={[{ value: 100 }]}
-              cx="50%"
-              cy="50%"
-              innerRadius="60%"
-              outerRadius="80%"
-              dataKey="value"
-              fill="hsl(var(--muted))"
-              stroke="none"
-            />
-            <Pie
-              data={gaugeData}
+              data={data}
               cx="50%"
               cy="50%"
               startAngle={180}
               endAngle={0}
-              innerRadius="60%"
-              outerRadius="80%"
+              innerRadius="65%"
+              outerRadius="90%"
+              paddingAngle={0}
               dataKey="value"
-              fill="#2563eb"
               stroke="none"
+            >
+              <Cell fill="#2563eb" />
+              <Cell fill="hsl(var(--muted))" />
+            </Pie>
+            <ChartTooltip
+              content={<ChartTooltipContent hideIndicator hideLabel />}
+              cursor={false}
             />
           </PieChart>
-          <ChartTooltip
-            content={<ChartTooltipContent hideIndicator />}
-            cursor={false}
-          />
-        </ComposedChart>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
+        </ChartContainer>
+        <div className="-mt-36 flex flex-col items-center">
           <span className="text-h1 font-bold text-foreground">75%</span>
           <span className="text-body-sm text-muted-foreground">Velocidade</span>
         </div>
-      </ChartContainer>
-    </div>
-  ),
+      </div>
+    )
+  },
 }
 
 export const SkillBarsExample: Story = {
