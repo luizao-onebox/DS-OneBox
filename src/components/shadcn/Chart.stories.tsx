@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Meta, StoryObj } from "@storybook/react"
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, Line, LineChart, Pie, PieChart, Cell, XAxis, YAxis } from "recharts"
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, Line, LineChart, Pie, PieChart, Cell, XAxis, YAxis, Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ComposedChart, Funnel, FunnelChart, LabelList, PieChartLabelProps } from "recharts"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "./Chart"
 
 const meta = {
@@ -61,6 +61,40 @@ const pieConfig = {
   edge: { label: "Edge" },
   other: { label: "Outros" },
 } satisfies ChartConfig
+
+const radarData = [
+  { subject: "Velocidade", A: 120, B: 110, fullMark: 150 },
+  { subject: "Confiabilidade", A: 98, B: 130, fullMark: 150 },
+  { subject: "Conforto", A: 86, B: 90, fullMark: 150 },
+  { subject: "Segurança", A: 99, B: 100, fullMark: 150 },
+  { subject: "Manutenção", A: 85, B: 95, fullMark: 150 },
+  { subject: "Eficiência", A: 108, B: 105, fullMark: 150 },
+]
+
+const radarConfig = {
+  A: { label: "Carro A", color: "#2563eb" },
+  B: { label: "Carro B", color: "#10b981" },
+} satisfies ChartConfig
+
+const gaugeData = [
+  { name: "Velocidade", value: 75, total: 100 },
+]
+
+const skillData = [
+  { name: "React", level: 90, color: "#2563eb" },
+  { name: "TypeScript", level: 85, color: "#3178c6" },
+  { name: "Node.js", level: 75, color: "#10b981" },
+  { name: "Design", level: 70, color: "#f59e0b" },
+  { name: "DevOps", level: 60, color: "#8b5cf6" },
+]
+
+const funnelChartData = [
+  { name: "Visitas", value: 1000 },
+  { name: "Leads", value: 750 },
+  { name: "Oportunidades", value: 500 },
+  { name: "Propostas", value: 250 },
+  { name: "Fechamentos", value: 100 },
+]
 
 export const BarChartExample: Story = {
   render: () => (
@@ -208,7 +242,7 @@ export const DistributionBarExample: Story = {
     return (
       <div className="w-full max-w-4xl">
         <h2 className="text-h4 font-bold mb-4">Gráfico de Distribuição (Proporção)</h2>
-        
+
         {/* Barra de Proporção */}
         <div className="flex h-8 w-full overflow-hidden rounded-md mb-4">
           {distributionData.map((item) => (
@@ -241,4 +275,260 @@ export const DistributionBarExample: Story = {
       </div>
     )
   },
+}
+
+export const RadarChartExample: Story = {
+  render: () => (
+    <div className="w-full max-w-lg">
+      <h2 className="text-h4 font-bold mb-4">Gráfico Radar (Spider)</h2>
+      <ChartContainer config={radarConfig} className="min-h-72 w-full">
+        <RadarChart data={radarData}>
+          <PolarGrid stroke="hsl(var(--border))" />
+          <PolarAngleAxis dataKey="subject" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} />
+          <PolarRadiusAxis angle={30} domain={[0, 150]} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }} />
+          <Radar name="Carro A" dataKey="A" stroke="var(--color-A)" fill="var(--color-A)" fillOpacity={0.3} />
+          <Radar name="Carro B" dataKey="B" stroke="var(--color-B)" fill="var(--color-B)" fillOpacity={0.3} />
+          <ChartLegend content={<ChartLegendContent payload={[]} />} />
+          <ChartTooltip content={<ChartTooltipContent />} />
+        </RadarChart>
+      </ChartContainer>
+    </div>
+  ),
+}
+
+export const GaugeChartExample: Story = {
+  render: () => (
+    <div className="w-full max-w-xs">
+      <h2 className="text-h4 font-bold mb-4">Gráfico de Gauge</h2>
+      <ChartContainer config={{}} className="aspect-square w-full">
+        <ComposedChart
+          data={gaugeData}
+          layout="vertical"
+          margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+        >
+          <XAxis type="number" domain={[0, 100]} hide />
+          <YAxis type="category" dataKey="name" hide />
+          <PieChart>
+            <Pie
+              data={[{ value: 100 }]}
+              cx="50%"
+              cy="50%"
+              innerRadius="60%"
+              outerRadius="80%"
+              dataKey="value"
+              fill="hsl(var(--muted))"
+              stroke="none"
+            />
+            <Pie
+              data={gaugeData}
+              cx="50%"
+              cy="50%"
+              startAngle={180}
+              endAngle={0}
+              innerRadius="60%"
+              outerRadius="80%"
+              dataKey="value"
+              fill="#2563eb"
+              stroke="none"
+            />
+          </PieChart>
+          <ChartTooltip
+            content={<ChartTooltipContent hideIndicator />}
+            cursor={false}
+          />
+        </ComposedChart>
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <span className="text-h1 font-bold text-foreground">75%</span>
+          <span className="text-body-sm text-muted-foreground">Velocidade</span>
+        </div>
+      </ChartContainer>
+    </div>
+  ),
+}
+
+export const SkillBarsExample: Story = {
+  render: () => (
+    <div className="w-full max-w-lg">
+      <h2 className="text-h4 font-bold mb-4">Gráfico de Habilidades</h2>
+      <div className="space-y-4">
+        {skillData.map((skill) => (
+          <div key={skill.name} className="space-y-2">
+            <div className="flex justify-between text-body-sm">
+              <span className="font-medium">{skill.name}</span>
+              <span className="text-muted-foreground">{skill.level}%</span>
+            </div>
+            <div className="h-3 w-full overflow-hidden rounded-full bg-muted">
+              <div
+                className="h-full rounded-full transition-all duration-500 ease-out"
+                style={{
+                  width: `${skill.level}%`,
+                  backgroundColor: skill.color,
+                }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  ),
+}
+
+export const StackedAreaExample: Story = {
+  render: () => (
+    <div className="w-full max-w-lg">
+      <h2 className="text-h4 font-bold mb-4">Gráfico de Área Empilhada</h2>
+      <ChartContainer config={chartConfig} className="min-h-64 w-full">
+        <AreaChart accessibilityLayer data={chartData} margin={{ left: 12, right: 12 }}>
+          <defs>
+            <linearGradient id="colorDesktop" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="var(--color-desktop)" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="var(--color-desktop)" stopOpacity={0.1} />
+            </linearGradient>
+            <linearGradient id="colorMobile" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="var(--color-mobile)" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="var(--color-mobile)" stopOpacity={0.1} />
+            </linearGradient>
+            <linearGradient id="colorTablet" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="var(--color-tablet)" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="var(--color-tablet)" stopOpacity={0.1} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="month"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+          />
+          <YAxis tickLine={false} axisLine={false} tickMargin={8} />
+          <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+          <ChartLegend content={<ChartLegendContent payload={[]} />} />
+          <Area
+            dataKey="desktop"
+            type="monotone"
+            fill="url(#colorDesktop)"
+            stroke="var(--color-desktop)"
+            strokeWidth={2}
+          />
+          <Area
+            dataKey="mobile"
+            type="monotone"
+            fill="url(#colorMobile)"
+            stroke="var(--color-mobile)"
+            strokeWidth={2}
+          />
+          <Area
+            dataKey="tablet"
+            type="monotone"
+            fill="url(#colorTablet)"
+            stroke="var(--color-tablet)"
+            strokeWidth={2}
+          />
+        </AreaChart>
+      </ChartContainer>
+    </div>
+  ),
+}
+
+export const FunnelChartExample: Story = {
+  render: () => (
+    <div className="w-full max-w-lg">
+      <h2 className="text-h4 font-bold mb-4">Gráfico de Funil</h2>
+      <ChartContainer config={{}} className="min-h-64 w-full">
+        <FunnelChart>
+          <ChartTooltip content={<ChartTooltipContent />} />
+          <Funnel
+            dataKey="value"
+            data={funnelChartData}
+            isAnimationActive
+          >
+            <LabelList
+              position="right"
+              fill="hsl(var(--foreground))"
+              stroke="none"
+              dataKey="name"
+              className="text-body-sm"
+            />
+            <LabelList
+              position="center"
+              fill="#fff"
+              stroke="none"
+              dataKey="value"
+              className="text-body-md font-bold"
+            />
+          </Funnel>
+        </FunnelChart>
+      </ChartContainer>
+    </div>
+  ),
+}
+
+export const PieChartWithLabels: Story = {
+  render: () => (
+    <div className="w-full max-w-lg">
+      <h2 className="text-h4 font-bold mb-4">Gráfico de Pizza com Labels</h2>
+      <ChartContainer config={pieConfig} className="mx-auto aspect-square max-h-80">
+        <PieChart>
+          <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+          <Pie
+            data={pieData}
+            dataKey="visitors"
+            nameKey="browser"
+            cx="50%"
+            cy="50%"
+            outerRadius={80}
+            strokeWidth={2}
+            stroke="hsl(var(--background))"
+          >
+            {pieData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={entry.fill} />
+            ))}
+          </Pie>
+        </PieChart>
+      </ChartContainer>
+      <div className="mt-4 flex flex-wrap justify-center gap-4">
+        {pieData.map((item) => (
+          <div key={item.browser} className="flex items-center gap-2">
+            <div className="h-3 w-3 rounded-full" style={{ backgroundColor: item.fill }} />
+            <span className="text-body-sm text-muted-foreground">{item.browser}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  ),
+}
+
+export const LineChartWithArea: Story = {
+  render: () => (
+    <div className="w-full max-w-lg">
+      <h2 className="text-h4 font-bold mb-4">Linha com Área de Fundo</h2>
+      <ChartContainer config={chartConfig} className="min-h-64 w-full">
+        <AreaChart accessibilityLayer data={chartData} margin={{ left: 12, right: 12 }}>
+          <defs>
+            <linearGradient id="colorDesktopFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="var(--color-desktop)" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="var(--color-desktop)" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="month"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+          />
+          <YAxis tickLine={false} axisLine={false} tickMargin={8} />
+          <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+          <ChartLegend content={<ChartLegendContent payload={[]} />} />
+          <Area
+            dataKey="desktop"
+            type="monotone"
+            fill="url(#colorDesktopFill)"
+            stroke="var(--color-desktop)"
+            strokeWidth={2}
+          />
+        </AreaChart>
+      </ChartContainer>
+    </div>
+  ),
 }
