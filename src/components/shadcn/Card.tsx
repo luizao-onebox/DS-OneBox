@@ -25,7 +25,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       <Comp
         ref={ref}
         className={cn(
-          "rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-200",
+          "rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-200 transform",
           isPressable 
             ? "cursor-pointer hover:shadow-md hover:-translate-y-0.5 hover:border-primary/50 hover:bg-accent/10 active:scale-[0.98]"
             : "hover:shadow-md hover:-translate-y-0.5",
