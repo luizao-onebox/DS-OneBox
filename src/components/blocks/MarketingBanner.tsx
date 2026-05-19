@@ -83,7 +83,7 @@ export function MarketingBanner({
   }
 
   return (
-    <div
+    <aside
       className={cn(marketingBannerVariants({ variant, className }))}
       {...props}
     >
@@ -91,7 +91,7 @@ export function MarketingBanner({
         <button
           onClick={handleDismiss}
           className={cn(
-            "absolute top-4 right-4 p-1 rounded-full opacity-70 hover:opacity-100 transition-opacity",
+            "absolute top-4 right-4 p-1 rounded-full opacity-70 hover:opacity-100 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
             variant === "floating" ? "text-background" : "text-current"
           )}
           aria-label="Dismiss banner"
@@ -173,6 +173,6 @@ export function MarketingBanner({
       {variant === "gradient" && !imageSlot && (
         <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl pointer-events-none" />
       )}
-    </div>
+    </aside>
   )
 }

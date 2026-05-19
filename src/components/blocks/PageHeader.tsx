@@ -16,7 +16,7 @@ const pageHeaderVariants = cva("flex flex-col gap-1", {
 })
 
 export interface PageHeaderProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends React.HTMLAttributes<HTMLElement>,
     VariantProps<typeof pageHeaderVariants> {
   title: string
   description?: string
@@ -32,7 +32,7 @@ export function PageHeader({
   ...props
 }: PageHeaderProps) {
   return (
-    <div
+    <header
       className={cn(pageHeaderVariants({ align, className }))}
       {...props}
     >
@@ -53,6 +53,6 @@ export function PageHeader({
           </div>
         )}
       </div>
-    </div>
+    </header>
   )
 }

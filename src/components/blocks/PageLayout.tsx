@@ -21,7 +21,7 @@ const pageLayoutVariants = cva("flex flex-col", {
 })
 
 export interface PageLayoutProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends React.HTMLAttributes<HTMLElement>,
     VariantProps<typeof pageLayoutVariants> {}
 
 export function PageLayout({
@@ -32,11 +32,11 @@ export function PageLayout({
   ...props
 }: PageLayoutProps) {
   return (
-    <div
+    <main
       className={cn(pageLayoutVariants({ spacing, flush, className }))}
       {...props}
     >
       {children}
-    </div>
+    </main>
   )
 }
