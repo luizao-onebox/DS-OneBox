@@ -67,13 +67,13 @@ const AccordionTrigger = React.forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        "flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
+        "flex flex-1 items-center justify-between py-4 font-medium transition-all duration-200 hover:text-primary [&[data-state=open]>svg]:rotate-180",
         className
       )}
       {...props}
     >
       {children}
-      <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+      <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-300 ease-out" />
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ))
@@ -85,7 +85,7 @@ const AccordionContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <AccordionPrimitive.Content
     ref={ref}
-    className="overflow-hidden text-body-sm transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
+    className="overflow-hidden text-body-sm transition-all duration-300 ease-out data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
     {...props}
   >
     <div className={cn("pb-4 pt-0", className)}>{children}</div>
@@ -274,7 +274,7 @@ import { Slot } from "@radix-ui/react-slot"
 import { cn } from "../../lib/utils"
 
 const badgeVariants = cva(
-  "inline-flex items-center justify-center border text-label-sm transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "inline-flex items-center justify-center border text-label-sm",
   {
     variants: {
       variant: {
@@ -301,26 +301,26 @@ const badgeVariants = cva(
     },
     compoundVariants: [
       // Solid Variants
-      { variant: "solid", color: "neutral", className: "bg-neutral-900 text-neutral-50 hover:bg-neutral-900/80" },
-      { variant: "solid", color: "primary", className: "bg-primary-500 text-white hover:bg-primary-500/80" },
-      { variant: "solid", color: "success", className: "bg-success-500 text-white hover:bg-success-500/80" },
-      { variant: "solid", color: "warning", className: "bg-warning-500 text-white hover:bg-warning-500/80" },
-      { variant: "solid", color: "destructive", className: "bg-destructive-500 text-white hover:bg-destructive-500/80" },
-      { variant: "solid", color: "info", className: "bg-info-500 text-white hover:bg-info-500/80" },
-      { variant: "solid", color: "indigo", className: "bg-indigo-500 text-white hover:bg-indigo-500/80" },
-      { variant: "solid", color: "purple", className: "bg-purple-500 text-white hover:bg-purple-500/80" },
-      { variant: "solid", color: "pink", className: "bg-pink-500 text-white hover:bg-pink-500/80" },
-      
-      // Soft Variants (As requested by the images)
-      { variant: "soft", color: "neutral", className: "bg-neutral-100 text-neutral-800 hover:bg-neutral-200" },
-      { variant: "soft", color: "primary", className: "bg-primary-100 text-primary-800 hover:bg-primary-200" },
-      { variant: "soft", color: "success", className: "bg-success-100 text-success-800 hover:bg-success-200" },
-      { variant: "soft", color: "warning", className: "bg-warning-100 text-warning-800 hover:bg-warning-200" },
-      { variant: "soft", color: "destructive", className: "bg-destructive-100 text-destructive-800 hover:bg-destructive-200" },
-      { variant: "soft", color: "info", className: "bg-info-100 text-info-800 hover:bg-info-200" },
-      { variant: "soft", color: "indigo", className: "bg-indigo-100 text-indigo-800 hover:bg-indigo-200" },
-      { variant: "soft", color: "purple", className: "bg-purple-100 text-purple-800 hover:bg-purple-200" },
-      { variant: "soft", color: "pink", className: "bg-pink-100 text-pink-800 hover:bg-pink-200" },
+      { variant: "solid", color: "neutral", className: "bg-neutral-900 text-neutral-50" },
+      { variant: "solid", color: "primary", className: "bg-primary-500 text-white" },
+      { variant: "solid", color: "success", className: "bg-success-500 text-white" },
+      { variant: "solid", color: "warning", className: "bg-warning-500 text-white" },
+      { variant: "solid", color: "destructive", className: "bg-destructive-500 text-white" },
+      { variant: "solid", color: "info", className: "bg-info-500 text-white" },
+      { variant: "solid", color: "indigo", className: "bg-indigo-500 text-white" },
+      { variant: "solid", color: "purple", className: "bg-purple-500 text-white" },
+      { variant: "solid", color: "pink", className: "bg-pink-500 text-white" },
+
+      // Soft Variants
+      { variant: "soft", color: "neutral", className: "bg-neutral-100 text-neutral-800" },
+      { variant: "soft", color: "primary", className: "bg-primary-100 text-primary-800" },
+      { variant: "soft", color: "success", className: "bg-success-100 text-success-800" },
+      { variant: "soft", color: "warning", className: "bg-warning-100 text-warning-800" },
+      { variant: "soft", color: "destructive", className: "bg-destructive-100 text-destructive-800" },
+      { variant: "soft", color: "info", className: "bg-info-100 text-info-800" },
+      { variant: "soft", color: "indigo", className: "bg-indigo-100 text-indigo-800" },
+      { variant: "soft", color: "purple", className: "bg-purple-100 text-purple-800" },
+      { variant: "soft", color: "pink", className: "bg-pink-100 text-pink-800" },
 
       // Outline Variants
       { variant: "outline", color: "neutral", className: "border-neutral-200 text-neutral-800" },
@@ -515,21 +515,21 @@ import { Loader2 } from "lucide-react"
 import { cn } from "../../lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-label-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ring-offset-background",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-label-md transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ring-offset-background hover:scale-105 active:scale-95",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+        default: "bg-primary text-primary-foreground shadow hover:shadow-md hover:bg-primary/90",
         destructive:
-          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
-        destructiveOutline: 
-          "border border-destructive text-destructive hover:bg-destructive/10",
+          "bg-destructive text-destructive-foreground shadow hover:shadow-md hover:bg-destructive/90",
+        destructiveOutline:
+          "border border-destructive text-destructive shadow-sm hover:shadow hover:bg-destructive/10",
         success:
-          "bg-success text-success-foreground shadow-sm hover:bg-success/90",
+          "bg-success text-success-foreground shadow hover:shadow-md hover:bg-success/90",
         outline:
-          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+          "border border-input bg-background shadow-sm hover:shadow hover:bg-accent hover:text-accent-foreground",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+          "bg-secondary text-secondary-foreground shadow-sm hover:shadow hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
       },
@@ -778,8 +778,10 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       <Comp
         ref={ref}
         className={cn(
-          "rounded-lg border bg-card text-card-foreground shadow-sm transition-all",
-          isPressable && "cursor-pointer hover:shadow-md hover:border-primary/50 hover:bg-accent/10 active:scale-[0.98]",
+          "rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-200",
+          isPressable 
+            ? "cursor-pointer hover:shadow-md hover:-translate-y-0.5 hover:border-primary/50 hover:bg-accent/10 active:scale-[0.98]"
+            : "hover:shadow-md hover:-translate-y-0.5",
           className
         )}
         {...props}
@@ -1486,13 +1488,13 @@ const Checkbox = React.forwardRef<
   <CheckboxPrimitive.Root
     ref={ref}
     className={cn(
-      "peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground",
+      "peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=checked]:text-primary-foreground data-[state=checked]:scale-105 hover:data-[state=unchecked]:border-primary/50 hover:data-[state=unchecked]:bg-accent/30",
       className
     )}
     {...props}
   >
     <CheckboxPrimitive.Indicator
-      className={cn("flex items-center justify-center text-current")}
+      className={cn("flex items-center justify-center text-current transition-transform duration-200 data-[state=checked]:animate-checkbox-bounce")}
     >
       <Check className="h-4 w-4" />
     </CheckboxPrimitive.Indicator>
@@ -1719,6 +1721,327 @@ export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
   }
 )
 Container.displayName = "Container"
+
+\\n
+### Component: ContextMenu
+\	sx
+import * as React from "react"
+import * as ContextMenuPrimitive from "@radix-ui/react-context-menu"
+import { Check, ChevronRight, Circle } from "lucide-react"
+
+import { cn } from "../../lib/utils"
+
+const ContextMenu = ContextMenuPrimitive.Root
+
+const ContextMenuTrigger = ContextMenuPrimitive.Trigger
+
+const ContextMenuGroup = ContextMenuPrimitive.Group
+
+const ContextMenuPortal = ContextMenuPrimitive.Portal
+
+const ContextMenuSub = ContextMenuPrimitive.Sub
+
+const ContextMenuRadioGroup = ContextMenuPrimitive.RadioGroup
+
+const ContextMenuSubTrigger = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.SubTrigger>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.SubTrigger> & {
+    inset?: boolean
+  }
+>(({ className, inset, children, ...props }, ref) => (
+  <ContextMenuPrimitive.SubTrigger
+    ref={ref}
+    className={cn(
+      "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-body-sm outline-none focus:bg-accent data-[state=open]:bg-accent transition-colors duration-150",
+      inset && "pl-8",
+      className
+    )}
+    {...props}
+  >
+    {children}
+    <ChevronRight className="ml-auto h-4 w-4" />
+  </ContextMenuPrimitive.SubTrigger>
+))
+ContextMenuSubTrigger.displayName = ContextMenuPrimitive.SubTrigger.displayName
+
+const ContextMenuSubContent = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.SubContent>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.SubContent>
+>(({ className, ...props }, ref) => (
+  <ContextMenuPrimitive.SubContent
+    ref={ref}
+    className={cn(
+      "z-50 min-w-32 overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg data-[state=open]:animate-scale-in data-[state=closed]:animate-fade-out transition-all duration-200 ease-out",
+      className
+    )}
+    {...props}
+  />
+))
+ContextMenuSubContent.displayName = ContextMenuPrimitive.SubContent.displayName
+
+const ContextMenuContent = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <ContextMenuPrimitive.Portal>
+    <ContextMenuPrimitive.Content
+      ref={ref}
+      className={cn(
+        "z-50 min-w-32 overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg data-[state=open]:animate-scale-in data-[state=closed]:animate-fade-out transition-all duration-200 ease-out",
+        className
+      )}
+      {...props}
+    />
+  </ContextMenuPrimitive.Portal>
+))
+ContextMenuContent.displayName = ContextMenuPrimitive.Content.displayName
+
+const ContextMenuItem = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Item> & {
+    inset?: boolean
+  }
+>(({ className, inset, ...props }, ref) => (
+  <ContextMenuPrimitive.Item
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-body-sm outline-none transition-colors duration-150 focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      inset && "pl-8",
+      className
+    )}
+    {...props}
+  />
+))
+ContextMenuItem.displayName = ContextMenuPrimitive.Item.displayName
+
+const ContextMenuCheckboxItem = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.CheckboxItem>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.CheckboxItem>
+>(({ className, children, checked, ...props }, ref) => (
+  <ContextMenuPrimitive.CheckboxItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-body-sm outline-none transition-colors duration-150 focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      className
+    )}
+    checked={checked}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <ContextMenuPrimitive.ItemIndicator>
+        <Check className="h-4 w-4" />
+      </ContextMenuPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </ContextMenuPrimitive.CheckboxItem>
+))
+ContextMenuCheckboxItem.displayName =
+  ContextMenuPrimitive.CheckboxItem.displayName
+
+const ContextMenuRadioItem = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.RadioItem>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.RadioItem>
+>(({ className, children, ...props }, ref) => (
+  <ContextMenuPrimitive.RadioItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-body-sm outline-none transition-colors duration-150 focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      className
+    )}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <ContextMenuPrimitive.ItemIndicator>
+        <Circle className="h-2 w-2 fill-current" />
+      </ContextMenuPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </ContextMenuPrimitive.RadioItem>
+))
+ContextMenuRadioItem.displayName = ContextMenuPrimitive.RadioItem.displayName
+
+const ContextMenuLabel = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.Label>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Label> & {
+    inset?: boolean
+  }
+>(({ className, inset, ...props }, ref) => (
+  <ContextMenuPrimitive.Label
+    ref={ref}
+    className={cn(
+      "px-2 py-1.5 text-label-md font-semibold",
+      inset && "pl-8",
+      className
+    )}
+    {...props}
+  />
+))
+ContextMenuLabel.displayName = ContextMenuPrimitive.Label.displayName
+
+const ContextMenuSeparator = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.Separator>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Separator>
+>(({ className, ...props }, ref) => (
+  <ContextMenuPrimitive.Separator
+    ref={ref}
+    className={cn("-mx-1 my-1 h-px bg-muted", className)}
+    {...props}
+  />
+))
+ContextMenuSeparator.displayName = ContextMenuPrimitive.Separator.displayName
+
+const ContextMenuShortcut = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLSpanElement>) => {
+  return (
+    <span
+      className={cn(
+        "ml-auto text-label-xs tracking-widest opacity-60",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+ContextMenuShortcut.displayName = "ContextMenuShortcut"
+
+/**
+ * @description
+ * Menu de contexto acionado por clique direito do mouse.
+ *
+ * **REGRAS PARA A IA:**
+ * - Use em elementos de tabela, arquivos, ou qualquer item que precise de ações rápidas via clique direito.
+ * - Mantenha as ações consistentes com o DropdownMenu para padrões de UI uniformes.
+ * - Use `<ContextMenuShortcut>` para exibir atalhos de teclado (ex: ⌘+C para Copiar).
+ */
+export {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuCheckboxItem,
+  ContextMenuRadioItem,
+  ContextMenuLabel,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuGroup,
+  ContextMenuPortal,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuRadioGroup,
+}
+
+\\n
+### Component: DatePicker
+\	sx
+import * as React from "react"
+import { Calendar as CalendarIcon } from "lucide-react"
+import { format, Locale } from "date-fns"
+import { enUS } from "date-fns/locale/en-US"
+import { ptBR } from "date-fns/locale/pt-BR"
+
+import { cn } from "../../lib/utils"
+import { Button } from "./Button"
+import { Calendar } from "./Calendar"
+import { Popover, PopoverContent, PopoverTrigger } from "./Popover"
+
+export { enUS, ptBR }
+
+export interface DatePickerProps {
+  date?: Date
+  onDateChange?: (date: Date | undefined) => void
+  placeholder?: string
+  disabled?: boolean
+  className?: string
+  fromDate?: Date
+  toDate?: Date
+  fromYear?: number
+  toYear?: number
+  locale?: Locale
+  format?: string
+}
+
+const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
+  (
+    {
+      date,
+      onDateChange,
+      placeholder = "Pick a date",
+      disabled = false,
+      className,
+      fromDate,
+      toDate,
+      fromYear,
+      toYear,
+      locale = enUS,
+      format: dateFormat = "PPP",
+      ...props
+    },
+    ref
+  ) => {
+    const [isOpen, setIsOpen] = React.useState(false)
+
+    const handleDateSelect = (selectedDate: Date | undefined) => {
+      onDateChange?.(selectedDate)
+      if (selectedDate) {
+        setIsOpen(false)
+      }
+    }
+
+    return (
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            ref={ref}
+            variant="outline"
+            role="combobox"
+            aria-expanded={isOpen}
+            disabled={disabled}
+            className={cn(
+              "w-full justify-start text-left font-normal transition-all duration-200 hover:border-primary/50",
+              !date && "text-muted-foreground",
+              className
+            )}
+            {...props}
+          >
+            <CalendarIcon className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+            {date ? format(date, dateFormat, { locale }) : placeholder}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start">
+          <Calendar
+            mode="single"
+            selected={date}
+            onSelect={handleDateSelect}
+            disabled={[
+              { from: new Date(1900, 0, 1), to: fromDate ? new Date(fromDate.getTime() - 86400000) : undefined },
+              { from: toDate ? new Date(toDate.getTime() + 86400000) : new Date(2100, 0, 1), to: new Date(2100, 0, 1) },
+            ]}
+            fromYear={fromYear}
+            toYear={toYear}
+            locale={locale}
+            initialFocus
+          />
+        </PopoverContent>
+      </Popover>
+    )
+  }
+)
+DatePicker.displayName = "DatePicker"
+
+export { DatePicker }
+
+/**
+ * @description
+ * Seletor de data com calendário visual.
+ *
+ * **REGRAS PARA A IA:**
+ * - Use para收集 datas de forma visual (nascimento, agendamento, reservas).
+ * - Suporta限制 de intervalo com `fromDate` e `toDate`.
+ * - Formata a data com date-fns (padrão: "PPP" = "Jan 1, 2024").
+ */
 
 \\n
 ### Component: Dialog
@@ -2144,6 +2467,200 @@ export const Flex = React.forwardRef<HTMLDivElement, FlexProps>(
 Flex.displayName = "Flex"
 
 \\n
+### Component: Form
+\	sx
+import * as React from "react"
+import type * as LabelPrimitive from "@radix-ui/react-label"
+import type { ControllerProps, FieldPath, FieldValues } from "react-hook-form"
+import { Controller, FormProvider, useFormContext } from "react-hook-form"
+
+import { cn } from "../../lib/utils"
+import { Label } from "./Label"
+
+const Form = FormProvider
+
+type FormFieldContextValue<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+> = {
+  name: TName
+}
+
+const FormFieldContext = React.createContext<FormFieldContextValue>(
+  {} as FormFieldContextValue
+)
+
+const FormField = <
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  ...props
+}: ControllerProps<TFieldValues, TName>) => {
+  return (
+    <FormFieldContext.Provider value={{ name: props.name }}>
+      <Controller {...props} />
+    </FormFieldContext.Provider>
+  )
+}
+
+const useFormField = () => {
+  const fieldContext = React.useContext(FormFieldContext)
+  const { getFieldState, formState } = useFormContext()
+
+  if (!fieldContext) {
+    throw new Error("useFormField must be used within FormField")
+  }
+
+  const fieldState = getFieldState(fieldContext.name, formState)
+
+  return {
+    ...fieldState,
+    name: fieldContext.name,
+    formItemId: `${fieldContext.name}-form-item`,
+    formDescriptionId: `${fieldContext.name}-form-item-description`,
+    formMessageId: `${fieldContext.name}-form-item-message`,
+  }
+}
+
+interface FormItemProps
+  extends React.HTMLAttributes<HTMLDivElement> {}
+
+const FormItem = React.forwardRef<HTMLDivElement, FormItemProps>(
+  ({ className, ...props }, ref) => {
+    const { id } = React.useId()
+
+    return (
+      <div
+        ref={ref}
+        className={cn("space-y-2", className)}
+        {...props}
+      />
+    )
+  }
+)
+FormItem.displayName = "FormItem"
+
+interface FormLabelProps
+  extends React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> {
+  required?: boolean
+}
+
+const FormLabel = React.forwardRef<
+  React.ElementRef<typeof LabelPrimitive.Root>,
+  FormLabelProps
+>(({ className, required, children, ...props }, ref) => {
+  const { error, formItemId } = useFormField()
+
+  return (
+    <Label
+      ref={ref}
+      className={cn(
+        error && "text-destructive",
+        className
+      )}
+      htmlFor={formItemId}
+      {...props}
+    >
+      {children}
+      {required && <span className="text-destructive ml-1">*</span>}
+    </Label>
+  )
+})
+FormLabel.displayName = "FormLabel"
+
+interface FormControlProps
+  extends React.HTMLAttributes<HTMLDivElement> {}
+
+const FormControl = React.forwardRef<HTMLDivElement, FormControlProps>(
+  ({ className, ...props }, ref) => {
+    const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
+
+    return (
+      <div
+        ref={ref}
+        id={formItemId}
+        aria-describedby={
+          !error
+            ? `${formDescriptionId}`
+            : `${formDescriptionId} ${formMessageId}`
+        }
+        aria-invalid={!!error}
+        className={cn(className)}
+        {...props}
+      />
+    )
+  }
+)
+FormControl.displayName = "FormControl"
+
+interface FormDescriptionProps
+  extends React.HTMLAttributes<HTMLParagraphElement> {}
+
+const FormDescription = React.forwardRef<
+  HTMLParagraphElement,
+  FormDescriptionProps
+>(({ className, ...props }, ref) => {
+  const { formDescriptionId } = useFormField()
+
+  return (
+    <p
+      ref={ref}
+      id={formDescriptionId}
+      className={cn("text-body-sm text-muted-foreground", className)}
+      {...props}
+    />
+  )
+})
+FormDescription.displayName = "FormDescription"
+
+interface FormMessageProps
+  extends React.HTMLAttributes<HTMLParagraphElement> {}
+
+const FormMessage = React.forwardRef<
+  HTMLParagraphElement,
+  FormMessageProps
+>(({ className, children, ...props }, ref) => {
+  const { error, formMessageId } = useFormField()
+  const body = error ? String(error?.message) : children
+
+  if (!body) {
+    return null
+  }
+
+  return (
+    <p
+      ref={ref}
+      id={formMessageId}
+      className={cn("text-body-sm text-destructive animate-fade-in", className)}
+      {...props}
+    >
+      {body}
+    </p>
+  )
+})
+FormMessage.displayName = "FormMessage"
+
+/**
+ * @description
+ * Sistema de formulários com validação Zod e React Hook Form.
+ *
+ * **REGRAS PARA A IA:**
+ * - Sempre use `<Form>` como wrapper do formulário.
+ * - Use `<FormField>` para cada campo com `name` correspondendo ao schema Zod.
+ * - Use `<FormItem>`, `<FormLabel>`, `<FormControl>`, `<FormDescription>`, `<FormMessage>` dentro do Field.
+ * - Para validação customizada, use `setError` do `useForm` ou schema Zod.
+ */
+export {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+}
+
+\\n
 ### Component: Grid
 \	sx
 import * as React from "react"
@@ -2277,12 +2794,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <input
             type={type}
             className={cn(
-              "flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-body-sm transition-colors file:border-0 file:bg-transparent file:text-body-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50",
+              "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-body-sm transition-all duration-200 file:border-0 file:bg-transparent file:text-body-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50",
               leftIcon ? "pl-9" : "",
               rightIcon || hasError ? "pr-9" : "",
-              hasError 
-                ? "border-destructive ring-destructive focus-visible:ring-destructive" 
-                : "border-input focus-visible:ring-ring",
+              hasError
+                ? "border-destructive focus-visible:ring-destructive/50"
+                : "focus-visible:ring-primary/30",
               className
             )}
             ref={ref}
@@ -2849,12 +3366,12 @@ const RadioGroupItem = React.forwardRef<
     <RadioGroupPrimitive.Item
       ref={ref}
       className={cn(
-        "aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        "aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 hover:border-primary/70 hover:bg-accent/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground data-[state=checked]:scale-105",
         className
       )}
       {...props}
     >
-      <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
+      <RadioGroupPrimitive.Indicator className="flex items-center justify-center transition-transform duration-200 data-[state=checked]:animate-radio-bounce">
         <Circle className="h-2.5 w-2.5 fill-current text-current" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
@@ -2999,14 +3516,14 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-body-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+      "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-body-sm ring-offset-background placeholder:text-muted-foreground transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 hover:border-primary/50 [&>span]:line-clamp-1",
       className
     )}
     {...props}
   >
     {children}
     <SelectPrimitive.Icon asChild>
-      <ChevronDown className="h-4 w-4 opacity-50" />
+      <ChevronDown className="h-4 w-4 opacity-50 transition-transform duration-200" />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ))
@@ -3055,7 +3572,7 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        "relative z-50 max-h-96 min-w-32 overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        "relative z-50 max-h-96 min-w-32 overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-lg transition-all duration-200 ease-out data-[state=open]:animate-scale-in data-[state=closed]:animate-fade-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-center",
         position === "popper" &&
           "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
         className
@@ -3098,7 +3615,7 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-body-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-body-sm outline-none transition-colors duration-150 focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 hover:bg-accent/50",
       className
     )}
     {...props}
@@ -3354,7 +3871,10 @@ const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("animate-pulse rounded-md bg-muted", className)}
+      className={cn(
+        "animate-shimmer rounded-md bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%]",
+        className
+      )}
       {...props}
     />
   )
@@ -3451,7 +3971,7 @@ const Switch = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SwitchPrimitives.Root
     className={cn(
-      "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",
+      "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input hover:data-[state=checked]:bg-primary/90 hover:data-[state=unchecked]:bg-input/80",
       className
     )}
     {...props}
@@ -3459,7 +3979,7 @@ const Switch = React.forwardRef<
   >
     <SwitchPrimitives.Thumb
       className={cn(
-        "pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
+        "pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-all duration-200 ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0 data-[state=checked]:shadow-primary/30 data-[state=checked]:shadow-lg"
       )}
     />
   </SwitchPrimitives.Root>
@@ -3625,7 +4145,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground",
+      "inline-flex h-10 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground relative",
       className
     )}
     {...props}
@@ -3640,7 +4160,7 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-label-md ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow",
+      "inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 py-1.5 text-label-md ring-offset-background transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm data-[state=active]:relative hover:text-foreground z-10",
       className
     )}
     {...props}
@@ -3655,7 +4175,7 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+      "mt-2 ring-offset-background transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=active]:animate-fade-in-up",
       className
     )}
     {...props}
@@ -3752,7 +4272,7 @@ const ToastViewport = React.forwardRef<
   <ToastPrimitives.Viewport
     ref={ref}
     className={cn(
-      "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-full max-w-md",
+      "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-full max-w-md gap-2",
       className
     )}
     {...props}
@@ -3761,7 +4281,7 @@ const ToastViewport = React.forwardRef<
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName
 
 const toastVariants = cva(
-  "group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",
+  "group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all duration-300 ease-out data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full data-[state=open]:sm:scale-in-95 data-[state=open]:sm:animate-scale-in",
   {
     variants: {
       variant: {
@@ -4247,6 +4767,209 @@ function Check({ className }: { className?: string }) {
     >
       <polyline points="20 6 9 17 4 12" />
     </svg>
+  )
+}
+
+\\n
+### Block: Animation
+\	sx
+import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "../../lib/utils"
+
+const animationVariants = cva("", {
+  variants: {
+    animate: {
+      none: "animate-none",
+      spin: "animate-spin",
+      pulse: "animate-pulse",
+      bounce: "animate-bounce",
+      "fade-in": "animate-fade-in",
+      "fade-in-up": "animate-fade-in-up",
+      "fade-in-down": "animate-fade-in-down",
+      "scale-in": "animate-scale-in",
+      "slide-in-left": "animate-slide-in-left",
+      "slide-in-right": "animate-slide-in-right",
+      "slide-in-up": "animate-slide-in-up",
+      "slide-in-down": "animate-slide-in-down",
+      "accordion-down": "animate-accordion-down",
+      "accordion-up": "animate-accordion-up",
+      "progress-indeterminate": "animate-progress-indeterminate",
+      "shimmer": "animate-shimmer",
+      "ping": "animate-ping",
+      "ripple": "animate-ripple",
+    },
+    duration: {
+      "0": "duration-0",
+      "75": "duration-75",
+      "100": "duration-100",
+      "150": "duration-150",
+      "200": "duration-200",
+      "300": "duration-300",
+      "500": "duration-500",
+      "700": "duration-700",
+      "1000": "duration-1000",
+    },
+    easing: {
+      linear: "ease-linear",
+      in: "ease-in",
+      out: "ease-out",
+      "in-out": "ease-in-out",
+      "spring": "ease-spring",
+    },
+    delay: {
+      "0": "delay-0",
+      "75": "delay-75",
+      "100": "delay-100",
+      "150": "delay-150",
+      "200": "delay-200",
+      "300": "delay-300",
+      "500": "delay-500",
+    },
+  },
+  defaultVariants: {
+    animate: "none",
+    duration: "300",
+    easing: "out",
+    delay: "0",
+  },
+})
+
+export interface AnimationProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof animationVariants> {
+  repeat?: "once" | "infinite" | number
+}
+
+export function Animation({
+  className,
+  animate,
+  duration,
+  easing,
+  delay,
+  repeat,
+  children,
+  ...props
+}: AnimationProps) {
+  const repeatClass = React.useMemo(() => {
+    if (repeat === "once" || repeat === undefined) return ""
+    if (repeat === "infinite") return "repeat-infinite"
+    return `repeat-${repeat}`
+  }, [repeat])
+
+  return (
+    <div
+      className={cn(
+        animationVariants({ animate, duration, easing, delay }),
+        repeatClass,
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
+export interface StaggeredListProps extends React.HTMLAttributes<HTMLDivElement> {
+  staggerDelay?: number
+  initialDelay?: number
+  animate?: boolean
+}
+
+export function StaggeredList({
+  className,
+  staggerDelay = 50,
+  initialDelay = 0,
+  animate = true,
+  children,
+  ...props
+}: StaggeredListProps) {
+  const childrenArray = React.Children.toArray(children)
+
+  return (
+    <div className={cn("flex flex-col", className)} {...props}>
+      {childrenArray.map((child, index) => (
+        <div
+          key={index}
+          className={cn(
+            animate && "animate-fade-in-up",
+            animate && "origin-top"
+          )}
+          style={
+            animate
+              ? {
+                  animationDelay: `${initialDelay + index * staggerDelay}ms`,
+                  animationFillMode: "both",
+                }
+              : undefined
+          }
+        >
+          {child}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+export interface AnimatedCounterProps extends React.HTMLAttributes<HTMLSpanElement> {
+  from?: number
+  to: number
+  duration?: number
+  easing?: "linear" | "ease-out" | "ease-in"
+  prefix?: string
+  suffix?: string
+  decimals?: number
+}
+
+export function AnimatedCounter({
+  className,
+  from = 0,
+  to,
+  duration = 1000,
+  easing = "ease-out",
+  prefix = "",
+  suffix = "",
+  decimals = 0,
+  ...props
+}: AnimatedCounterProps) {
+  const [value, setValue] = React.useState(from)
+  const rafRef = React.useRef<number>()
+
+  React.useEffect(() => {
+    const startTime = performance.now()
+    const startValue = from
+
+    const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
+    const linear = (t: number) => t
+
+    const tick = (currentTime: number) => {
+      const elapsed = currentTime - startTime
+      const progress = Math.min(elapsed / duration, 1)
+
+      const easedProgress = easing === "linear" ? linear(progress) : easeOut(progress)
+      const currentValue = startValue + (to - startValue) * easedProgress
+
+      setValue(currentValue)
+
+      if (progress < 1) {
+        rafRef.current = requestAnimationFrame(tick)
+      }
+    }
+
+    rafRef.current = requestAnimationFrame(tick)
+
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    }
+  }, [from, to, duration, easing])
+
+  return (
+    <span className={cn("tabular-nums", className)} {...props}>
+      {prefix}
+      {value.toFixed(decimals)}
+      {suffix}
+    </span>
   )
 }
 
@@ -5821,14 +6544,13 @@ export function MarketingBanner({
   }
 
   // Determine button variants based on banner variant for proper contrast
-  const getPrimaryButtonVariant = () => {
+  const getPrimaryButtonVariant = (): "secondary" | "default" => {
     if (variant === "hero" || variant === "gradient") return "secondary"
-    if (variant === "floating") return "default" // It's on dark background, so default primary works well
+    if (variant === "floating") return "default"
     return "default"
   }
 
-  const getSecondaryButtonVariant = () => {
-    if (variant === "hero" || variant === "gradient" || variant === "floating") return "outline"
+  const getSecondaryButtonVariant = (): "outline" => {
     return "outline"
   }
 

@@ -18,38 +18,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Typography Font Override**: Inter font family with full semantic scale via Tailwind V4 `@utility`
 
 #### Components (Shadcn)
-- **Accordion**: Collapsible content sections with Radix UI
+- **Accordion**: Collapsible content sections with Radix UI (now with smooth expansion animation)
 - **Alert**: Informational, success, warning, destructive, and default variants
 - **Avatar**: User profile images with fallback initials
-- **Badge**: Solid, soft, outline variants across 9 color options (primary, secondary, destructive, success, warning, info, neutral, indigo, purple, pink)
+- **Badge**: Solid, soft, outline variants across 9 color options (static indicator without hover states to avoid button confusion)
 - **Breadcrumb**: Navigation path indicator with auto-generated separators
-- **Button**: Variants (default, destructive, destructiveOutline, success, outline, secondary, ghost, link) and sizes (default, sm, lg, icon, icon-sm, icon-lg)
+- **Button**: Variants and sizes (now with micro-interactions: scale up on hover, scale down on press, shadow elevation)
 - **Calendar**: Date selection powered by react-day-picker v9
-- **Card**: Flexible content containers
+- **Card**: Flexible content containers (now with lift effect on hover)
 - **Carousel**: Image/content slider using Embla Carousel
-- **Checkbox**: Form control with Radix UI
+- **Chart**: 10+ Recharts-based visualizations including Radar, Gauge (space-optimized 2:1), Area, Funnel, and Skill Bars
+- **Checkbox**: Form control with Radix UI (now with bounce check animation)
 - **Command**: Searchable command menu palette (KBar-style)
+- **ContextMenu**: Right-click context menus with submenus and keyboard shortcuts
 - **DataTable**: Advanced table with sorting, filtering, column visibility
 - **DatePicker**: Calendar-based date selection
 - **Dialog**: Modal overlays with Radix UI
 - **DropdownMenu**: Context menus and button dropdowns
+- **Form**: Full integration with react-hook-form and Zod schemas
 - **HoverCard**: Preview cards on hover (HoverCard pattern)
-- **Input**: Text input fields with label and helper text
+- **Input**: Text input fields with label and helper text (now with softer opacity-based focus ring)
 - **Label**: Accessible form labels
 - **NavigationMenu**: Full navigation system with dropdowns
 - **Pagination**: Table/page navigation
 - **Popover**: Floating content panels
 - **Progress**: Task completion indicator with gradient variant for risk levels
-- **RadioGroup**: Exclusive option selection
+- **RadioGroup**: Exclusive option selection (now with bounce animation)
 - **ScrollArea**: Custom styled scrollbars (horizontal and vertical)
-- **Select**: Dropdown selection with Radix UI
+- **Select**: Dropdown selection with Radix UI (now with scale-in animation)
 - **Separator**: Visual dividers (horizontal and vertical)
 - **Sheet**: Slide-in panels (top, bottom, left, right)
-- **Skeleton**: Loading state placeholders
+- **Skeleton**: Loading state placeholders (now with shimmer gradient animation)
 - **Slider**: Range selection controls
-- **Switch**: Toggle controls
-- **Tabs**: Panel navigation
+- **Switch**: Toggle controls (now with slide transition and thumb shadow)
+- **Tabs**: Panel navigation (now with fade-in-up animation on content)
 - **Textarea**: Multi-line text input
+- **Toast**: Toast notifications with Sonner (now with scale-in entry animation)
 - **Toggle**: Binary on/off buttons
 - **Tooltip**: Hover information tooltips
 
