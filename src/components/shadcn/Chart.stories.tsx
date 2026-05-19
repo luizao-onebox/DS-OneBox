@@ -307,32 +307,36 @@ export const GaugeChartExample: Story = {
     return (
       <div className="w-full max-w-xs">
         <h2 className="text-h4 font-bold mb-4">Gráfico de Gauge</h2>
-        <ChartContainer config={{}} className="aspect-square w-full">
-          <PieChart>
-            <Pie
-              data={data}
-              cx="50%"
-              cy="50%"
-              startAngle={180}
-              endAngle={0}
-              innerRadius="65%"
-              outerRadius="90%"
-              paddingAngle={0}
-              dataKey="value"
-              stroke="none"
-            >
-              <Cell fill="#2563eb" />
-              <Cell fill="hsl(var(--muted))" />
-            </Pie>
-            <ChartTooltip
-              content={<ChartTooltipContent hideIndicator hideLabel />}
-              cursor={false}
-            />
-          </PieChart>
-        </ChartContainer>
-        <div className="-mt-36 flex flex-col items-center">
-          <span className="text-h1 font-bold text-foreground">75%</span>
-          <span className="text-body-sm text-muted-foreground">Velocidade</span>
+        <div className="relative w-full aspect-[2/1] overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-[200%]">
+            <ChartContainer config={{}} className="aspect-square h-full w-full">
+              <PieChart>
+                <Pie
+                  data={data}
+                  cx="50%"
+                  cy="50%"
+                  startAngle={180}
+                  endAngle={0}
+                  innerRadius="75%"
+                  outerRadius="100%"
+                  paddingAngle={0}
+                  dataKey="value"
+                  stroke="none"
+                >
+                  <Cell fill="#2563eb" />
+                  <Cell fill="hsl(var(--muted))" />
+                </Pie>
+                <ChartTooltip
+                  content={<ChartTooltipContent hideIndicator hideLabel />}
+                  cursor={false}
+                />
+              </PieChart>
+            </ChartContainer>
+          </div>
+          <div className="absolute bottom-0 left-1/2 flex -translate-x-1/2 flex-col items-center pb-2">
+            <span className="text-h1 font-bold text-foreground leading-none">75%</span>
+            <span className="text-body-sm text-muted-foreground mt-1">Velocidade</span>
+          </div>
         </div>
       </div>
     )
