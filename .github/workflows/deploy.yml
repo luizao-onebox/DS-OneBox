@@ -33,6 +33,8 @@ jobs:
 
       - name: Build Storybook
         run: npx storybook build -o storybook-static
+        env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
