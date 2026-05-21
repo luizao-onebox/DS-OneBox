@@ -67,7 +67,7 @@ const AccordionTrigger = React.forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        "flex flex-1 items-center justify-between py-4 font-medium transition-all duration-200 hover:text-primary [&[data-state=open]>svg]:rotate-180",
+        "flex flex-1 items-center justify-between py-4 font-medium transition-all duration-200 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md [&[data-state=open]>svg]:rotate-180",
         className
       )}
       {...props}
@@ -198,6 +198,38 @@ AlertDescription.displayName = "AlertDescription"
 export { Alert, AlertTitle, AlertDescription }
 
 \\n
+### Component: AspectRatio
+\	sx
+import * as React from "react"
+import { cn } from "../../lib/utils"
+
+interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
+  ratio?: number | string
+}
+
+const AspectRatio = React.forwardRef<HTMLDivElement, AspectRatioProps>(
+  ({ className, ratio = 16 / 9, ...props }, ref) => {
+    const paddingTop = typeof ratio === "number" ? `${(1 / ratio) * 100}%` : ratio
+
+    return (
+      <div
+        ref={ref}
+        className={cn("relative w-full overflow-hidden", className)}
+        style={{ paddingTop }}
+        {...props}
+      >
+        <div className="absolute inset-0">
+          {props.children}
+        </div>
+      </div>
+    )
+  }
+)
+AspectRatio.displayName = "AspectRatio"
+
+export { AspectRatio }
+
+\\n
 ### Component: Avatar
 \	sx
 import * as React from "react"
@@ -264,6 +296,58 @@ const AvatarFallback = React.forwardRef<HTMLDivElement, AvatarFallbackProps>(
 AvatarFallback.displayName = "AvatarFallback"
 
 export { Avatar, AvatarImage, AvatarFallback }
+
+\\n
+### Component: AvatarGroup
+\	sx
+import * as React from "react"
+import { cn } from "../../lib/utils"
+
+interface AvatarGroupProps extends React.HTMLAttributes<HTMLDivElement> {
+  max?: number
+  size?: "sm" | "md" | "lg"
+}
+
+function AvatarGroup({ className, children, max = 4, size = "md", ...props }: AvatarGroupProps) {
+  const avatars = React.Children.toArray(children)
+  const visibleAvatars = avatars.slice(0, max)
+  const remainingCount = avatars.length - max
+
+  const sizeClasses = {
+    sm: "h-8 w-8 text-body-xs",
+    md: "h-10 w-10 text-body-sm",
+    lg: "h-12 w-12 text-body-md",
+  }
+
+  return (
+    <div className={cn("flex -space-x-2", className)} {...props}>
+      {visibleAvatars.map((avatar, index) => (
+        <div
+          key={index}
+          className="ring-2 ring-background rounded-full hover:z-10 transition-transform hover:scale-110"
+        >
+          {React.isValidElement(avatar)
+            ? React.cloneElement(avatar as React.ReactElement<Record<string, unknown>>, {
+                className: cn((avatar as React.ReactElement<Record<string, unknown>>).props.className, "rounded-full"),
+              })
+            : avatar}
+        </div>
+      ))}
+      {remainingCount > 0 && (
+        <div
+          className={cn(
+            "ring-2 ring-background rounded-full bg-muted flex items-center justify-center font-medium text-muted-foreground",
+            sizeClasses[size]
+          )}
+        >
+          +{remainingCount}
+        </div>
+      )}
+    </div>
+  )
+}
+
+export { AvatarGroup }
 
 \\n
 ### Component: Badge
@@ -515,7 +599,7 @@ import { Loader2 } from "lucide-react"
 import { cn } from "../../lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-label-md transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ring-offset-background hover:scale-105 active:scale-95",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-label-md transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ring-offset-background transform hover:scale-105 active:scale-95",
   {
     variants: {
       variant: {
@@ -778,7 +862,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       <Comp
         ref={ref}
         className={cn(
-          "rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-200",
+          "rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-200 transform",
           isPressable 
             ? "cursor-pointer hover:shadow-md hover:-translate-y-0.5 hover:border-primary/50 hover:bg-accent/10 active:scale-[0.98]"
             : "hover:shadow-md hover:-translate-y-0.5",
@@ -1513,6 +1597,198 @@ Checkbox.displayName = CheckboxPrimitive.Root.displayName
 export { Checkbox }
 
 \\n
+### Component: Combobox
+\	sx
+import * as React from "react"
+import { cn } from "../../lib/utils"
+import { ChevronDown, Check, Search, X } from "lucide-react"
+
+interface ComboboxOption {
+  value: string
+  label: string
+  group?: string
+  disabled?: boolean
+}
+
+interface ComboboxProps {
+  options: ComboboxOption[]
+  value?: string
+  onValueChange?: (value: string) => void
+  placeholder?: string
+  searchPlaceholder?: string
+  emptyMessage?: string
+  disabled?: boolean
+  className?: string
+  creatable?: boolean
+  onCreate?: (value: string) => void
+}
+
+const Combobox = React.forwardRef<HTMLDivElement, ComboboxProps>(
+  ({
+    options,
+    value,
+    onValueChange,
+    placeholder = "Selecione...",
+    searchPlaceholder = "Buscar...",
+    emptyMessage = "Nenhum resultado encontrado",
+    disabled = false,
+    className,
+    creatable = false,
+    onCreate,
+  }, ref) => {
+    const [open, setOpen] = React.useState(false)
+    const [search, setSearch] = React.useState("")
+    const containerRef = React.useRef<HTMLDivElement>(null)
+    const inputRef = React.useRef<HTMLInputElement>(null)
+
+    const selectedOption = options.find((opt) => opt.value === value)
+
+    const filteredOptions = options.filter((opt) =>
+      opt.label.toLowerCase().includes(search.toLowerCase())
+    )
+
+    const groupedOptions = React.useMemo(() => {
+      const groups: Record<string, ComboboxOption[]> = {}
+      filteredOptions.forEach((opt) => {
+        const group = opt.group || ""
+        if (!groups[group]) groups[group] = []
+        groups[group].push(opt)
+      })
+      return groups
+    }, [filteredOptions])
+
+    React.useEffect(() => {
+      const handleClickOutside = (e: MouseEvent) => {
+        if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+          setOpen(false)
+          setSearch("")
+        }
+      }
+      document.addEventListener("mousedown", handleClickOutside)
+      return () => document.removeEventListener("mousedown", handleClickOutside)
+    }, [])
+
+    const handleSelect = (optValue: string) => {
+      onValueChange?.(optValue)
+      setOpen(false)
+      setSearch("")
+    }
+
+    const handleCreate = () => {
+      if (search.trim() && onCreate) {
+        onCreate(search.trim())
+        setSearch("")
+        setOpen(false)
+      }
+    }
+
+    return (
+      <div ref={containerRef} className={cn("relative", className)}>
+        <button
+          type="button"
+          onClick={() => {
+            if (!disabled) {
+              setOpen(!open)
+              if (!open) inputRef.current?.focus()
+            }
+          }}
+          disabled={disabled}
+          className={cn(
+            "flex h-10 w-full items-center justify-between rounded-md border border-input bg-transparent px-3 py-2 text-body-sm ring-offset-background",
+            "placeholder:text-muted-foreground",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+            "disabled:cursor-not-allowed disabled:opacity-50",
+            "hover:border-primary/50 transition-colors"
+          )}
+        >
+          <span className={selectedOption ? "text-foreground" : "text-muted-foreground"}>
+            {selectedOption?.label || placeholder}
+          </span>
+          <ChevronDown className={cn("h-4 w-4 text-muted-foreground transition-transform", open && "rotate-180")} />
+        </button>
+
+        {open && (
+          <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover p-1 shadow-lg animate-scale-in origin-top">
+            <div className="flex items-center gap-2 border-b px-2 pb-2">
+              <Search className="h-4 w-4 text-muted-foreground shrink-0" />
+              <input
+                ref={inputRef}
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={searchPlaceholder}
+                className="flex-1 bg-transparent text-body-sm outline-none placeholder:text-muted-foreground"
+              />
+              {search && (
+                <button onClick={() => setSearch("")} className="text-muted-foreground hover:text-foreground">
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+
+            <div className="max-h-60 overflow-y-auto py-1">
+              {Object.entries(groupedOptions).map(([group, groupOptions]) => (
+                <div key={group}>
+                  {group && (
+                    <div className="px-2 py-1.5 text-body-xs font-semibold text-muted-foreground">
+                      {group}
+                    </div>
+                  )}
+                  {groupOptions.map((opt) => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => !opt.disabled && handleSelect(opt.value)}
+                      disabled={opt.disabled}
+                      className={cn(
+                        "relative flex w-full items-center rounded-sm px-2 py-1.5 text-body-sm outline-none",
+                        "cursor-pointer transition-colors",
+                        opt.value === value && "bg-accent text-accent-foreground",
+                        opt.disabled && "opacity-50 cursor-not-allowed",
+                        !opt.disabled && "hover:bg-accent hover:text-accent-foreground"
+                      )}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4 shrink-0",
+                          opt.value === value ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              ))}
+
+              {filteredOptions.length === 0 && !creatable && (
+                <div className="px-2 py-4 text-center text-body-sm text-muted-foreground">
+                  {emptyMessage}
+                </div>
+              )}
+
+              {creatable && search.trim() && !options.some((o) => o.label.toLowerCase() === search.toLowerCase()) && (
+                <button
+                  type="button"
+                  onClick={handleCreate}
+                  className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-body-sm text-primary hover:bg-accent transition-colors"
+                >
+                  <span className="text-muted-foreground">Criar:</span>
+                  <span className="font-medium">"{search.trim()}"</span>
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+)
+Combobox.displayName = "Combobox"
+
+export { Combobox }
+export type { ComboboxOption }
+
+\\n
 ### Component: Command
 \	sx
 import * as React from "react"
@@ -1675,6 +1951,220 @@ export {
   CommandShortcut,
   CommandSeparator,
 }
+
+\\n
+### Component: CommandPalette
+\	sx
+import * as React from "react"
+import { cn } from "../../lib/utils"
+import { Search, Command, CornerDownLeft, ArrowUp, ArrowDown } from "lucide-react"
+
+interface CommandItem {
+  id: string
+  label: string
+  icon?: React.ReactNode
+  shortcut?: string[]
+  action?: () => void
+  disabled?: boolean
+  group?: string
+}
+
+interface CommandPaletteProps {
+  items: CommandItem[]
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  placeholder?: string
+  className?: string
+}
+
+const CommandPalette = React.forwardRef<HTMLDivElement, CommandPaletteProps>(
+  ({
+    items,
+    open: controlledOpen,
+    onOpenChange,
+    placeholder = "Type a command or search...",
+    className,
+  }, ref) => {
+    const [open, setOpen] = React.useState(false)
+    const [search, setSearch] = React.useState("")
+    const [selectedIndex, setSelectedIndex] = React.useState(0)
+    const inputRef = React.useRef<HTMLInputElement>(null)
+    const listRef = React.useRef<HTMLDivElement>(null)
+
+    const isOpen = controlledOpen !== undefined ? controlledOpen : open
+
+    React.useEffect(() => {
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+          e.preventDefault()
+          const newOpen = !isOpen
+          setOpen(newOpen)
+          onOpenChange?.(newOpen)
+          if (newOpen) {
+            setSearch("")
+            setSelectedIndex(0)
+          }
+        }
+        if (e.key === "Escape" && isOpen) {
+          setOpen(false)
+          onOpenChange?.(false)
+        }
+      }
+      document.addEventListener("keydown", handleKeyDown)
+      return () => document.removeEventListener("keydown", handleKeyDown)
+    }, [isOpen, onOpenChange])
+
+    React.useEffect(() => {
+      if (isOpen) {
+        inputRef.current?.focus()
+      }
+    }, [isOpen])
+
+    React.useEffect(() => {
+      setSelectedIndex(0)
+    }, [search])
+
+    const filteredItems = items.filter((item) =>
+      item.label.toLowerCase().includes(search.toLowerCase())
+    )
+
+    const groupedItems = React.useMemo(() => {
+      const groups: Record<string, CommandItem[]> = {}
+      filteredItems.forEach((item) => {
+        const group = item.group || "Commands"
+        if (!groups[group]) groups[group] = []
+        groups[group].push(item)
+      })
+      return groups
+    }, [filteredItems])
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+      if (e.key === "ArrowDown") {
+        e.preventDefault()
+        setSelectedIndex((i) => Math.min(i + 1, filteredItems.length - 1))
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault()
+        setSelectedIndex((i) => Math.max(i - 1, 0))
+      } else if (e.key === "Enter") {
+        e.preventDefault()
+        const item = filteredItems[selectedIndex]
+        if (item && !item.disabled) {
+          item.action?.()
+          setOpen(false)
+          onOpenChange?.(false)
+        }
+      }
+    }
+
+    React.useEffect(() => {
+      if (listRef.current) {
+        const selected = listRef.current.querySelector(`[data-index="${selectedIndex}"]`)
+        selected?.scrollIntoView({ block: "nearest" })
+      }
+    }, [selectedIndex])
+
+    if (!isOpen) return null
+
+    let globalIndex = -1
+
+    return (
+      <div className="fixed inset-0 z-50 bg-black/50 animate-fade-in" onClick={() => { setOpen(false); onOpenChange?.(false) }}>
+        <div
+          className={cn(
+            "fixed top-[20%] left-1/2 -translate-x-1/2 w-full max-w-xl",
+            "bg-popover border rounded-lg shadow-2xl overflow-hidden animate-scale-in",
+            className
+          )}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center gap-3 border-b px-4 py-3">
+            <Search className="h-5 w-5 text-muted-foreground shrink-0" />
+            <input
+              ref={inputRef}
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={placeholder}
+              className="flex-1 bg-transparent text-body-md outline-none placeholder:text-muted-foreground"
+            />
+            <kbd className="hidden sm:inline-flex h-5 items-center gap-1 rounded border bg-muted px-1.5 text-body-xs font-medium text-muted-foreground">
+              <CornerDownLeft className="h-3 w-3" />
+            </kbd>
+          </div>
+
+          <div ref={listRef} className="max-h-80 overflow-y-auto py-2">
+            {Object.entries(groupedItems).map(([group, groupItems]) => (
+              <div key={group}>
+                <div className="px-3 py-1.5 text-body-xs font-semibold text-muted-foreground">
+                  {group}
+                </div>
+                {groupItems.map((item) => {
+                  globalIndex++
+                  const currentIndex = globalIndex
+                  const isSelected = currentIndex === selectedIndex
+                  return (
+                    <button
+                      key={item.id}
+                      data-index={currentIndex}
+                      onClick={() => {
+                        if (!item.disabled) {
+                          item.action?.()
+                          setOpen(false)
+                          onOpenChange?.(false)
+                        }
+                      }}
+                      disabled={item.disabled}
+                      className={cn(
+                        "flex w-full items-center gap-3 px-3 py-2 text-body-sm transition-colors",
+                        isSelected && "bg-accent text-accent-foreground",
+                        item.disabled && "opacity-50 cursor-not-allowed"
+                      )}
+                    >
+                      {item.icon && <span className="shrink-0">{item.icon}</span>}
+                      <span className="flex-1 text-left">{item.label}</span>
+                      {item.shortcut && (
+                        <div className="flex gap-1 shrink-0">
+                          {item.shortcut.map((key) => (
+                            <kbd key={key} className="rounded bg-muted px-1.5 py-0.5 text-body-xs font-medium">
+                              {key}
+                            </kbd>
+                          ))}
+                        </div>
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
+            ))}
+
+            {filteredItems.length === 0 && (
+              <div className="px-3 py-6 text-center text-body-sm text-muted-foreground">
+                Nenhum resultado encontrado
+              </div>
+            )}
+          </div>
+
+          <div className="border-t px-3 py-2 flex items-center gap-4 text-body-xs text-muted-foreground">
+            <span className="flex items-center gap-1">
+              <ArrowUp className="h-3 w-3" /> <ArrowDown className="h-3 w-3" /> navegar
+            </span>
+            <span className="flex items-center gap-1">
+              <CornerDownLeft className="h-3 w-3" /> selecionar
+            </span>
+            <span className="flex items-center gap-1">
+              <kbd className="rounded bg-muted px-1">esc</kbd> fechar
+            </span>
+          </div>
+        </div>
+      </div>
+    )
+  }
+)
+CommandPalette.displayName = "CommandPalette"
+
+export { CommandPalette }
+export type { CommandItem }
 
 \\n
 ### Component: Container
@@ -2090,7 +2580,7 @@ const DialogContent = React.forwardRef<
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
         <X className="h-4 w-4" />
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
@@ -2175,6 +2665,221 @@ export {
   DialogTitle,
   DialogDescription,
 }
+
+\\n
+### Component: DragDrop
+\	sx
+import * as React from "react"
+import { cn } from "../../lib/utils"
+import { GripVertical, ChevronRight, ChevronDown } from "lucide-react"
+
+interface DragItem {
+  id: string
+  [key: string]: unknown
+}
+
+interface DragDropContextValue {
+  draggedId: string | null
+  dragOverId: string | null
+  handleDragStart: (e: React.DragEvent, id: string) => void
+  handleDragOver: (e: React.DragEvent, id: string) => void
+  handleDragEnd: () => void
+  handleDrop: (e: React.DragEvent, targetId: string) => void
+  registerDraggedId: (id: string) => void
+  unregisterDraggedId: (id: string) => void
+}
+
+const DragDropContext = React.createContext<DragDropContextValue | null>(null)
+
+function useDragDrop() {
+  const context = React.useContext(DragDropContext)
+  if (!context) throw new Error("useDragDrop must be used within DragDropProvider")
+  return context
+}
+
+interface DragDropProviderProps {
+  children: React.ReactNode
+  onReorder?: (fromId: string, toId: string) => void
+}
+
+function DragDropProvider({ children, onReorder }: DragDropProviderProps) {
+  const [draggedId, setDraggedId] = React.useState<string | null>(null)
+  const [dragOverId, setDragOverId] = React.useState<string | null>(null)
+  const draggedIdRef = React.useRef<string | null>(null)
+
+  const handleDragStart = (e: React.DragEvent, id: string) => {
+    setDraggedId(id)
+    draggedIdRef.current = id
+    e.dataTransfer.effectAllowed = "move"
+    e.dataTransfer.setData("text/plain", id)
+  }
+
+  const handleDragOver = (e: React.DragEvent, id: string) => {
+    e.preventDefault()
+    if (draggedIdRef.current !== id) {
+      setDragOverId(id)
+    }
+  }
+
+  const handleDragEnd = () => {
+    setDraggedId(null)
+    setDragOverId(null)
+    draggedIdRef.current = null
+  }
+
+  const handleDrop = (e: React.DragEvent, targetId: string) => {
+    e.preventDefault()
+    const fromId = e.dataTransfer.getData("text/plain") || draggedIdRef.current
+    if (fromId && fromId !== targetId && onReorder) {
+      onReorder(fromId, targetId)
+    }
+    handleDragEnd()
+  }
+
+  const registerDraggedId = (id: string) => {}
+  const unregisterDraggedId = (id: string) => {}
+
+  return (
+    <DragDropContext.Provider
+      value={{
+        draggedId,
+        dragOverId,
+        handleDragStart,
+        handleDragOver,
+        handleDragEnd,
+        handleDrop,
+        registerDraggedId,
+        unregisterDraggedId,
+      }}
+    >
+      {children}
+    </DragDropContext.Provider>
+  )
+}
+
+interface DraggableProps extends React.HTMLAttributes<HTMLDivElement> {
+  id: string
+  children: React.ReactNode
+}
+
+function Draggable({ id, children, className, ...props }: DraggableProps) {
+  const { handleDragStart, handleDragOver, handleDragEnd, handleDrop, draggedId, dragOverId } = useDragDrop()
+  const isDragging = draggedId === id
+  const isDragOver = dragOverId === id
+
+  return (
+    <div
+      draggable
+      onDragStart={(e) => handleDragStart(e, id)}
+      onDragOver={(e) => handleDragOver(e, id)}
+      onDragEnd={handleDragEnd}
+      onDrop={(e) => handleDrop(e, id)}
+      className={cn(
+        "transition-all duration-150",
+        isDragging && "opacity-50 scale-[0.98]",
+        isDragOver && "ring-2 ring-primary ring-offset-2 rounded-md",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
+interface DroppableProps extends React.HTMLAttributes<HTMLDivElement> {
+  id: string
+  children: React.ReactNode
+}
+
+function Droppable({ id, children, className, ...props }: DroppableProps) {
+  const { dragOverId } = useDragDrop()
+  const isDragOver = dragOverId === id
+
+  return (
+    <div
+      className={cn(
+        "transition-all duration-150",
+        isDragOver && "bg-primary/5 rounded-md",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
+interface SortableItem {
+  id: string
+  content: React.ReactNode
+  icon?: React.ReactNode
+  disabled?: boolean
+}
+
+interface SortableListProps extends React.HTMLAttributes<HTMLDivElement> {
+  items: SortableItem[]
+  onReorder?: (fromIndex: number, toIndex: number) => void
+}
+
+function SortableList({ items, onReorder, className, ...props }: SortableListProps) {
+  const [draggedIndex, setDraggedIndex] = React.useState<number | null>(null)
+  const [overIndex, setOverIndex] = React.useState<number | null>(null)
+
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index)
+    e.dataTransfer.effectAllowed = "move"
+  }
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault()
+    setOverIndex(index)
+  }
+
+  const handleDrop = (e: React.DragEvent, targetIndex: number) => {
+    e.preventDefault()
+    if (draggedIndex !== null && draggedIndex !== targetIndex && onReorder) {
+      onReorder(draggedIndex, targetIndex)
+    }
+    setDraggedIndex(null)
+    setOverIndex(null)
+  }
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null)
+    setOverIndex(null)
+  }
+
+  return (
+    <div ref={null} className={cn("space-y-1", className)} {...props}>
+      {items.map((item, index) => (
+        <div
+          key={item.id}
+          draggable={!item.disabled}
+          onDragStart={(e) => !item.disabled && handleDragStart(e, index)}
+          onDragOver={(e) => handleDragOver(e, index)}
+          onDrop={(e) => handleDrop(e, index)}
+          onDragEnd={handleDragEnd}
+          className={cn(
+            "flex items-center gap-3 p-3 rounded-md border bg-card",
+            "transition-all duration-150 cursor-grab active:cursor-grabbing",
+            item.disabled && "opacity-50 cursor-not-allowed",
+            draggedIndex === index && "opacity-50 scale-[0.98]",
+            overIndex === index && draggedIndex !== null && draggedIndex !== index && "border-primary bg-primary/5"
+          )}
+        >
+          <GripVertical className="h-4 w-4 text-muted-foreground shrink-0" />
+          {item.icon && <span className="shrink-0">{item.icon}</span>}
+          <span className="flex-1 text-body-sm">{item.content}</span>
+          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+        </div>
+      ))}
+    </div>
+  )
+}
+
+export { DragDropProvider, Draggable, Droppable, SortableList }
+export type { DragItem, SortableItem }
 
 \\n
 ### Component: DropdownMenu
@@ -2527,7 +3232,7 @@ interface FormItemProps
 
 const FormItem = React.forwardRef<HTMLDivElement, FormItemProps>(
   ({ className, ...props }, ref) => {
-    const { id } = React.useId()
+    const id = React.useId()
 
     return (
       <div
@@ -2826,7 +3531,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <input
         type={type}
         className={cn(
-          "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-body-sm transition-colors file:border-0 file:bg-transparent file:text-body-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+          "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-body-sm transition-all duration-200 file:border-0 file:bg-transparent file:text-body-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50",
           className
         )}
         ref={ref}
@@ -3089,6 +3794,95 @@ export {
   NavigationMenuViewport,
 }
 \\n
+### Component: OTPInput
+\	sx
+import * as React from "react"
+import { cn } from "../../lib/utils"
+
+interface OTPInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
+  length?: number
+  onChange?: (value: string) => void
+  error?: boolean
+}
+
+const OTPInput = React.forwardRef<HTMLDivElement, OTPInputProps>(
+  ({ className, length = 6, onChange, error = false, disabled, ...props }, ref) => {
+    const [otp, setOtp] = React.useState<string[]>(Array(length).fill(""))
+    const inputRefs = React.useRef<(HTMLInputElement | null)[]>([])
+
+    const handleChange = (value: string, index: number) => {
+      if (!/^\d*$/.test(value)) return
+
+      const newOtp = [...otp]
+      newOtp[index] = value.slice(-1)
+      setOtp(newOtp)
+      onChange?.(newOtp.join(""))
+
+      if (value && index < length - 1) {
+        inputRefs.current[index + 1]?.focus()
+      }
+    }
+
+    const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
+      if (e.key === "Backspace" && !otp[index] && index > 0) {
+        inputRefs.current[index - 1]?.focus()
+      }
+      if (e.key === "ArrowLeft" && index > 0) {
+        inputRefs.current[index - 1]?.focus()
+      }
+      if (e.key === "ArrowRight" && index < length - 1) {
+        inputRefs.current[index + 1]?.focus()
+      }
+    }
+
+    const handlePaste = (e: React.ClipboardEvent) => {
+      e.preventDefault()
+      const pastedData = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, length)
+      const newOtp = [...otp]
+      pastedData.split("").forEach((char, i) => {
+        if (i < length) newOtp[i] = char
+      })
+      setOtp(newOtp)
+      onChange?.(newOtp.join(""))
+      const lastFilledIndex = Math.min(pastedData.length, length) - 1
+      inputRefs.current[lastFilledIndex]?.focus()
+    }
+
+    return (
+      <div ref={ref} className={cn("flex gap-2", className)}>
+        {Array.from({ length }).map((_, index) => (
+          <input
+            key={index}
+            ref={(el) => { inputRefs.current[index] = el }}
+            type="text"
+            inputMode="numeric"
+            maxLength={1}
+            value={otp[index]}
+            onChange={(e) => handleChange(e.target.value, index)}
+            onKeyDown={(e) => handleKeyDown(e, index)}
+            onPaste={handlePaste}
+            disabled={disabled}
+            className={cn(
+              "h-12 w-10 rounded-md border text-center text-body-lg font-semibold transition-all duration-200",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+              "disabled:cursor-not-allowed disabled:opacity-50",
+              error
+                ? "border-destructive focus-visible:ring-destructive/50"
+                : "border-input bg-background hover:border-primary/50",
+              otp[index] && !error && "border-primary bg-primary/5"
+            )}
+            {...props}
+          />
+        ))}
+      </div>
+    )
+  }
+)
+OTPInput.displayName = "OTPInput"
+
+export { OTPInput }
+
+\\n
 ### Component: Pagination
 \	sx
 import * as React from "react"
@@ -3211,6 +4005,134 @@ export {
   PaginationNext,
   PaginationPrevious,
 }
+
+\\n
+### Component: PasswordStrength
+\	sx
+import * as React from "react"
+import { cn } from "../../lib/utils"
+import { Check, X } from "lucide-react"
+
+interface PasswordRequirement {
+  label: string
+  test: (password: string) => boolean
+}
+
+const defaultRequirements: PasswordRequirement[] = [
+  { label: "Mínimo 8 caracteres", test: (p) => p.length >= 8 },
+  { label: "Uma letra maiúscula", test: (p) => /[A-Z]/.test(p) },
+  { label: "Uma letra minúscula", test: (p) => /[a-z]/.test(p) },
+  { label: "Um número", test: (p) => /\d/.test(p) },
+  { label: "Um caractere especial", test: (p) => /[!@#$%^&*(),.?":{}|<>]/.test(p) },
+]
+
+interface PasswordStrengthProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
+  password?: string
+  requirements?: PasswordRequirement[]
+  showRequirements?: boolean
+  onStrengthChange?: (strength: number) => void
+}
+
+function getStrengthScore(password: string, requirements: PasswordRequirement[]): number {
+  if (!password) return 0
+  const passed = requirements.filter((req) => req.test(password)).length
+  return Math.round((passed / requirements.length) * 100)
+}
+
+function getStrengthColor(score: number): string {
+  if (score < 40) return "bg-destructive"
+  if (score < 60) return "bg-warning"
+  if (score < 80) return "bg-info"
+  return "bg-success"
+}
+
+function getStrengthLabel(score: number): string {
+  if (score < 40) return "Fraca"
+  if (score < 60) return "Razoável"
+  if (score < 80) return "Boa"
+  return "Forte"
+}
+
+const PasswordStrength = React.forwardRef<HTMLDivElement, PasswordStrengthProps>(
+  ({
+    className,
+    password = "",
+    requirements = defaultRequirements,
+    showRequirements = true,
+    onStrengthChange,
+    ...props
+  }, ref) => {
+    const score = getStrengthScore(password, requirements)
+
+    React.useEffect(() => {
+      onStrengthChange?.(score)
+    }, [score, onStrengthChange])
+
+    const passedRequirements = requirements.filter((req) => req.test(password))
+
+    return (
+      <div ref={ref} className={cn("space-y-3", className)} {...props}>
+        <div className="flex gap-1">
+          {[25, 50, 75, 100].map((threshold, index) => (
+            <div
+              key={index}
+              className={cn(
+                "h-1.5 flex-1 rounded-full transition-all duration-300",
+                score >= threshold ? getStrengthColor(score) : "bg-muted"
+              )}
+            />
+          ))}
+        </div>
+
+        {password && (
+          <div className="flex items-center justify-between">
+            <span className={cn(
+              "text-body-sm font-medium",
+              score < 40 && "text-destructive",
+              score >= 40 && score < 60 && "text-warning",
+              score >= 60 && score < 80 && "text-info",
+              score >= 80 && "text-success"
+            )}>
+              {getStrengthLabel(score)}
+            </span>
+            <span className="text-body-xs text-muted-foreground">
+              {passedRequirements.length}/{requirements.length} requisitos
+            </span>
+          </div>
+        )}
+
+        {showRequirements && (
+          <ul className="space-y-1.5">
+            {requirements.map((req, index) => {
+              const passed = req.test(password)
+              return (
+                <li
+                  key={index}
+                  className={cn(
+                    "flex items-center gap-2 text-body-sm transition-colors",
+                    passed ? "text-success" : "text-muted-foreground"
+                  )}
+                >
+                  {passed ? (
+                    <Check className="h-4 w-4 shrink-0" />
+                  ) : (
+                    <X className="h-4 w-4 shrink-0" />
+                  )}
+                  <span className={passed ? "font-medium" : ""}>
+                    {req.label}
+                  </span>
+                </li>
+              )
+            })}
+          </ul>
+        )}
+      </div>
+    )
+  }
+)
+PasswordStrength.displayName = "PasswordStrength"
+
+export { PasswordStrength }
 
 \\n
 ### Component: Popover
@@ -3391,6 +4313,121 @@ RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName
 export { RadioGroup, RadioGroupItem }
 
 \\n
+### Component: Resizable
+\	sx
+import * as React from "react"
+import { cn } from "../../lib/utils"
+
+interface ResizablePanelGroupProps extends React.HTMLAttributes<HTMLDivElement> {
+  direction?: "horizontal" | "vertical"
+}
+
+interface ResizablePanelProps extends React.HTMLAttributes<HTMLDivElement> {
+  defaultSize?: number
+  minSize?: number
+  maxSize?: number
+}
+
+interface ResizableHandleProps extends React.HTMLAttributes<HTMLDivElement> {
+  withHandle?: boolean
+}
+
+const ResizablePanelGroup = React.forwardRef<HTMLDivElement, ResizablePanelGroupProps>(
+  ({ className, direction = "horizontal", children, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "flex",
+          direction === "horizontal" ? "flex-row" : "flex-col",
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </div>
+    )
+  }
+)
+ResizablePanelGroup.displayName = "ResizablePanelGroup"
+
+function ResizablePanel({ children, className, defaultSize = 50, minSize = 20, maxSize = 80, style, ...props }: ResizablePanelProps) {
+  return (
+    <div
+      className={cn("overflow-hidden", className)}
+      style={{ ...style }}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
+const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleProps>(
+  ({ className, withHandle = false, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "group relative flex items-center justify-center bg-border transition-colors hover:bg-primary/30",
+          "w-1 cursor-col-resize",
+          withHandle && "w-4 rounded-md",
+          className
+        )}
+        onMouseDown={(e) => {
+          e.preventDefault()
+          const startX = e.clientX
+          const parent = e.currentTarget.parentElement
+          if (!parent) return
+
+          const panels = parent.querySelectorAll("[data-panel]")
+          if (panels.length < 2) return
+
+          const currentPanel = panels[0] as HTMLElement
+          const nextPanel = panels[1] as HTMLElement
+          const currentWidth = currentPanel.offsetWidth
+          const nextWidth = nextPanel.offsetWidth
+          const totalWidth = currentWidth + nextWidth
+
+          const handleMouseMove = (moveEvent: MouseEvent) => {
+            const delta = moveEvent.clientX - startX
+            const deltaPercent = (delta / totalWidth) * 100
+            const newCurrentWidth = Math.max(20, Math.min(80, (currentWidth / totalWidth) * 100 + deltaPercent))
+            
+            currentPanel.style.width = `${newCurrentWidth}%`
+            nextPanel.style.width = `${100 - newCurrentWidth}%`
+          }
+
+          const handleMouseUp = () => {
+            document.removeEventListener("mousemove", handleMouseMove)
+            document.removeEventListener("mouseup", handleMouseUp)
+            document.body.style.cursor = ""
+            document.body.style.userSelect = ""
+          }
+
+          document.addEventListener("mousemove", handleMouseMove)
+          document.addEventListener("mouseup", handleMouseUp)
+          document.body.style.cursor = "col-resize"
+          document.body.style.userSelect = "none"
+        }}
+        {...props}
+      >
+        {withHandle && (
+          <div className="z-10 flex h-8 w-3 flex-col items-center justify-center gap-1 rounded bg-border group-hover:bg-primary/20">
+            <div className="h-0.5 w-1 rounded-full bg-muted-foreground/50" />
+            <div className="h-0.5 w-1 rounded-full bg-muted-foreground/50" />
+            <div className="h-0.5 w-1 rounded-full bg-muted-foreground/50" />
+          </div>
+        )}
+      </div>
+    )
+  }
+)
+ResizableHandle.displayName = "ResizableHandle"
+
+export { ResizablePanelGroup, ResizablePanel, ResizableHandle }
+
+\\n
 ### Component: ScrollArea
 \	sx
 import * as React from "react"
@@ -3516,7 +4553,7 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-body-sm ring-offset-background placeholder:text-muted-foreground transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 hover:border-primary/50 [&>span]:line-clamp-1",
+      "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-body-sm ring-offset-background placeholder:text-muted-foreground transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 hover:border-primary/50 [&>span]:line-clamp-1",
       className
     )}
     {...props}
@@ -3767,7 +4804,7 @@ const SheetContent = React.forwardRef<
       {...props}
     >
       {children}
-      <SheetPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+      <SheetPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
         <X className="h-4 w-4" />
         <span className="sr-only">Close</span>
       </SheetPrimitive.Close>
@@ -4001,6 +5038,331 @@ export { Switch }
 \	sx
 import * as React from "react"
 import { cn } from "../../lib/utils"
+import { ChevronDown, ChevronUp, ChevronsUpDown, MoreHorizontal, Check } from "lucide-react"
+import { Button } from "./Button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./DropdownMenu"
+
+export interface Column<T> {
+  key: string
+  header: string
+  accessor: (row: T) => React.ReactNode
+  sortable?: boolean
+  filterable?: boolean
+  filterType?: "text" | "select" | "date"
+  filterOptions?: { label: string; value: string }[]
+  width?: string
+  align?: "left" | "center" | "right"
+}
+
+export interface TableProps<T> extends React.HTMLAttributes<HTMLTableElement> {
+  columns: Column<T>[]
+  data: T[]
+  selectable?: boolean
+  selectedRows?: Set<string>
+  onSelectionChange?: (selected: Set<string>) => void
+  onRowClick?: (row: T) => void
+  sortable?: boolean
+  filterable?: boolean
+  paginated?: boolean
+  pageSize?: number
+  emptyMessage?: string
+  loading?: boolean
+}
+
+type SortDirection = "asc" | "desc" | null
+
+function SortIcon({ direction }: { direction: SortDirection }) {
+  if (!direction) return <ChevronsUpDown className="h-4 w-4 text-muted-foreground" />
+  if (direction === "asc") return <ChevronUp className="h-4 w-4" />
+  return <ChevronDown className="h-4 w-4" />
+}
+
+function DataGrid<T extends { id?: string }>({
+  columns,
+  data,
+  selectable = false,
+  selectedRows = new Set(),
+  onSelectionChange,
+  onRowClick,
+  sortable = false,
+  filterable = false,
+  paginated = false,
+  pageSize = 10,
+  emptyMessage = "Nenhum dado encontrado",
+  loading = false,
+  className,
+  ...props
+}: TableProps<T>) {
+  const [sortKey, setSortKey] = React.useState<string | null>(null)
+  const [sortDirection, setSortDirection] = React.useState<SortDirection>(null)
+  const [filters, setFilters] = React.useState<Record<string, string>>({})
+  const [currentPage, setCurrentPage] = React.useState(1)
+
+  const handleSort = (key: string) => {
+    if (!sortable) return
+    if (sortKey === key) {
+      if (sortDirection === "asc") {
+        setSortDirection("desc")
+      } else if (sortDirection === "desc") {
+        setSortDirection(null)
+        setSortKey(null)
+      }
+    } else {
+      setSortKey(key)
+      setSortDirection("asc")
+    }
+  }
+
+  const handleSelectAll = () => {
+    if (!selectable || !onSelectionChange) return
+    if (selectedRows.size === data.length) {
+      onSelectionChange(new Set())
+    } else {
+      onSelectionChange(new Set(data.map((row) => row.id || JSON.stringify(row))))
+    }
+  }
+
+  const handleSelectRow = (id: string) => {
+    if (!selectable || !onSelectionChange) return
+    const newSelected = new Set(selectedRows)
+    if (newSelected.has(id)) {
+      newSelected.delete(id)
+    } else {
+      newSelected.add(id)
+    }
+    onSelectionChange(newSelected)
+  }
+
+  let filteredData = data
+  if (filterable) {
+    filteredData = filteredData.filter((row) => {
+      return Object.entries(filters).every(([key, filterValue]) => {
+        if (!filterValue) return true
+        const column = columns.find((col) => col.key === key)
+        if (!column) return true
+        const cellValue = String(column.accessor(row)).toLowerCase()
+        return cellValue.includes(filterValue.toLowerCase())
+      })
+    })
+  }
+
+  let sortedData = filteredData
+  if (sortKey && sortDirection) {
+    sortedData = [...filteredData].sort((a, b) => {
+      const column = columns.find((col) => col.key === sortKey)
+      if (!column) return 0
+      const aVal = column.accessor(a)
+      const bVal = column.accessor(b)
+      const comparison = String(aVal).localeCompare(String(bVal))
+      return sortDirection === "asc" ? comparison : -comparison
+    })
+  }
+
+  const totalPages = Math.ceil(sortedData.length / pageSize)
+  let paginatedData = sortedData
+  if (paginated) {
+    const start = (currentPage - 1) * pageSize
+    paginatedData = sortedData.slice(start, start + pageSize)
+  }
+
+  return (
+    <div className="w-full">
+      {filterable && (
+        <div className="flex gap-2 mb-4 p-3 bg-muted/30 rounded-md">
+          {columns
+            .filter((col) => col.filterable)
+            .map((col) => (
+              <input
+                key={col.key}
+                type="text"
+                placeholder={`Filtrar ${col.header}...`}
+                value={filters[col.key] || ""}
+                onChange={(e) =>
+                  setFilters((prev) => ({ ...prev, [col.key]: e.target.value }))
+                }
+                className="flex h-8 rounded-md border border-input bg-transparent px-3 py-1 text-body-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+              />
+            ))}
+        </div>
+      )}
+
+      <div className="rounded-md border bg-card">
+        <div className="overflow-x-auto">
+          <table className={cn("w-full caption-bottom text-body-sm", className)} {...props}>
+            <thead>
+              <tr className="border-b bg-muted/50 transition-colors hover:bg-muted/30">
+                {selectable && (
+                  <th className="h-10 w-10 px-3">
+                    <input
+                      type="checkbox"
+                      checked={paginatedData.length > 0 && selectedRows.size === data.length}
+                      onChange={handleSelectAll}
+                      className="h-4 w-4 rounded border-input text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    />
+                  </th>
+                )}
+                {columns.map((column) => (
+                  <th
+                    key={column.key}
+                    className={cn(
+                      "h-10 px-3 text-left align-middle font-medium text-muted-foreground",
+                      column.sortable && sortable && "cursor-pointer select-none hover:bg-muted/30",
+                      column.align === "center" && "text-center",
+                      column.align === "right" && "text-right"
+                    )}
+                    style={{ width: column.width }}
+                    onClick={() => column.sortable && handleSort(column.key)}
+                  >
+                    <div className={cn("flex items-center gap-1", column.align === "center" && "justify-center", column.align === "right" && "justify-end")}>
+                      {column.header}
+                      {column.sortable && sortable && (
+                        <SortIcon
+                          direction={sortKey === column.key ? sortDirection : null}
+                        />
+                      )}
+                    </div>
+                  </th>
+                ))}
+                <th className="h-10 w-10" />
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                Array.from({ length: 3 }).map((_, i) => (
+                  <tr key={i} className="border-b">
+                    {selectable && <td className="h-12 w-10 px-3"><div className="h-4 w-4 rounded bg-muted animate-shimmer" /></td>}
+                    {columns.map((col) => (
+                      <td key={col.key} className="h-12 px-3">
+                        <div className="h-4 w-full rounded bg-muted animate-shimmer" />
+                      </td>
+                    ))}
+                    <td className="h-12 w-10 px-3"><div className="h-4 w-4 rounded bg-muted animate-shimmer" /></td>
+                  </tr>
+                ))
+              ) : paginatedData.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={columns.length + (selectable ? 2 : 1)}
+                    className="h-24 text-center text-muted-foreground py-8"
+                  >
+                    {emptyMessage}
+                  </td>
+                </tr>
+              ) : (
+                paginatedData.map((row, rowIndex) => {
+                  const rowId = row.id || JSON.stringify(row)
+                  const isSelected = selectedRows.has(rowId)
+                  return (
+                    <tr
+                      key={rowId}
+                      data-selected={isSelected}
+                      className={cn(
+                        "border-b transition-colors",
+                        isSelected && "bg-primary/5",
+                        onRowClick && "cursor-pointer hover:bg-muted/30"
+                      )}
+                      onClick={() => onRowClick?.(row)}
+                    >
+                      {selectable && (
+                        <td className="w-10 px-3" onClick={(e) => e.stopPropagation()}>
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => handleSelectRow(rowId)}
+                            className="h-4 w-4 rounded border-input text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                          />
+                        </td>
+                      )}
+                      {columns.map((column) => (
+                        <td
+                          key={column.key}
+                          className={cn(
+                            "px-3 py-2 align-middle",
+                            column.align === "center" && "text-center",
+                            column.align === "right" && "text-right"
+                          )}
+                        >
+                          {column.accessor(row)}
+                        </td>
+                      ))}
+                      <td className="w-10 px-3" onClick={(e) => e.stopPropagation()}>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon-sm" className="h-8 w-8">
+                              <MoreHorizontal className="h-4 w-4" />
+                              <span className="sr-only">Abrir menu</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem>Editar</DropdownMenuItem>
+                            <DropdownMenuItem>Duplicar</DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className="text-destructive">Excluir</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </td>
+                    </tr>
+                  )
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {paginated && totalPages > 1 && (
+        <div className="flex items-center justify-between px-2 py-3">
+          <span className="text-body-sm text-muted-foreground">
+            Página {currentPage} de {totalPages} — {sortedData.length} resultados
+          </span>
+          <div className="flex gap-1">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+            >
+              Anterior
+            </Button>
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              let pageNum = i + 1
+              if (totalPages > 5) {
+                if (currentPage > 3) pageNum = currentPage - 2 + i
+                if (currentPage > totalPages - 2) pageNum = totalPages - 4 + i
+              }
+              return (
+                <Button
+                  key={pageNum}
+                  variant={currentPage === pageNum ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setCurrentPage(pageNum)}
+                >
+                  {pageNum}
+                </Button>
+              )
+            })}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+            >
+              Próxima
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export { DataGrid }
 
 const Table = React.forwardRef<
   HTMLTableElement,
@@ -4009,7 +5371,7 @@ const Table = React.forwardRef<
   <div className="relative w-full overflow-auto">
     <table
       ref={ref}
-      className={cn("w-full caption-bottom text-body-sm", className)}
+      className={cn("w-full caption-bottom text-sm", className)}
       {...props}
     />
   </div>
@@ -4102,21 +5464,12 @@ const TableCaption = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <caption
     ref={ref}
-    className={cn("mt-4 text-body-sm text-muted-foreground", className)}
+    className={cn("mt-4 text-sm text-muted-foreground", className)}
     {...props}
   />
 ))
 TableCaption.displayName = "TableCaption"
 
-/**
- * @description
- * Tabela de dados responsiva.
- * 
- * **REGRAS PARA A IA:**
- * - Sempre envolva linhas em `<TableHeader>` e `<TableBody>`.
- * - Use `<TableHead>` para os cabeçalhos das colunas, `<TableCell>` para os dados.
- * - Para exibir o total no fim, use `<TableFooter>`.
- */
 export {
   Table,
   TableHeader,
@@ -4223,7 +5576,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         <div className="relative w-full">
           <textarea
             className={cn(
-              "flex min-min-h-16 w-full rounded-md border bg-transparent px-3 py-2 pr-9 text-body-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50",
+              "flex min-min-h-16 w-full rounded-md border bg-transparent px-3 py-2 pr-9 text-body-sm transition-all duration-200 placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50",
               "border-destructive ring-destructive focus-visible:ring-destructive",
               className
             )}
@@ -4240,7 +5593,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <textarea
         className={cn(
-          "flex min-min-h-16 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+          "flex min-min-h-16 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm transition-all duration-200 placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50",
           className
         )}
         ref={ref}
@@ -4252,6 +5605,111 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 Textarea.displayName = "Textarea"
 
 export { Textarea }
+
+\\n
+### Component: Timeline
+\	sx
+import * as React from "react"
+import { cn } from "../../lib/utils"
+import { Check, Circle, Clock } from "lucide-react"
+
+interface TimelineItem {
+  id: string
+  title: string
+  description?: string
+  date?: string
+  status: "completed" | "current" | "pending"
+  icon?: React.ReactNode
+}
+
+interface TimelineProps extends React.HTMLAttributes<HTMLDivElement> {
+  items: TimelineItem[]
+  direction?: "vertical" | "horizontal"
+}
+
+const Timeline = React.forwardRef<HTMLDivElement, TimelineProps>(
+  ({ className, items, direction = "vertical", ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "flex",
+          direction === "vertical" ? "flex-col" : "flex-row",
+          className
+        )}
+        {...props}
+      >
+        {items.map((item, index) => (
+          <div
+            key={item.id}
+            className={cn(
+              "relative flex",
+              direction === "vertical" ? "flex-row" : "flex-col",
+              index !== items.length - 1 && direction === "vertical" && "pb-8",
+              index !== items.length - 1 && direction === "horizontal" && "pr-8",
+              "group"
+            )}
+          >
+            {direction === "vertical" && index !== items.length - 1 && (
+              <div className="absolute left-[19px] top-10 h-[calc(100%-40px)] w-0.5 bg-border group-hover:bg-primary/30 transition-colors" />
+            )}
+            {direction === "horizontal" && index !== items.length - 1 && (
+              <div className="absolute left-10 top-[19px] h-0.5 w-[calc(100%-40px)] bg-border group-hover:bg-primary/30 transition-colors" />
+            )}
+
+            <div
+              className={cn(
+                "relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-200",
+                item.status === "completed" && "border-success bg-success text-success-foreground scale-105",
+                item.status === "current" && "border-primary bg-background text-primary scale-110 shadow-md shadow-primary/20",
+                item.status === "pending" && "border-muted bg-muted text-muted-foreground"
+              )}
+            >
+              {item.status === "completed" ? (
+                item.icon || <Check className="h-5 w-5" />
+              ) : item.status === "current" ? (
+                item.icon || <Circle className="h-3 w-3 fill-current" />
+              ) : (
+                item.icon || <Clock className="h-4 w-4" />
+              )}
+            </div>
+
+            <div
+              className={cn(
+                "flex-1 pt-1",
+                direction === "horizontal" && "pt-0 pl-1 text-center min-w-[120px]"
+              )}
+            >
+              <h4 className={cn(
+                "text-body-md font-semibold",
+                item.status === "pending" && "text-muted-foreground"
+              )}>
+                {item.title}
+              </h4>
+              {item.description && (
+                <p className={cn(
+                  "mt-1 text-body-sm",
+                  item.status === "pending" ? "text-muted-foreground/60" : "text-muted-foreground"
+                )}>
+                  {item.description}
+                </p>
+              )}
+              {item.date && (
+                <p className="mt-1 text-body-xs text-muted-foreground">
+                  {item.date}
+                </p>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+)
+Timeline.displayName = "Timeline"
+
+export { Timeline }
+export type { TimelineItem }
 
 \\n
 ### Component: Toast
@@ -4321,7 +5779,7 @@ const ToastAction = React.forwardRef<
   <ToastPrimitives.Action
     ref={ref}
     className={cn(
-      "inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-label-md ring-offset-background transition-colors hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-muted/40 group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground group-[.destructive]:focus:ring-destructive",
+      "inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-label-md ring-offset-background transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-muted/40 group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground group-[.destructive]:focus-visible:ring-destructive",
       className
     )}
     {...props}
@@ -4336,7 +5794,7 @@ const ToastClose = React.forwardRef<
   <ToastPrimitives.Close
     ref={ref}
     className={cn(
-      "absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-destructive-300 group-[.destructive]:hover:text-destructive-50 group-[.destructive]:focus:ring-destructive-400 group-[.destructive]:focus:ring-offset-destructive-600",
+      "absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 group-hover:opacity-100 group-[.destructive]:text-destructive-300 group-[.destructive]:hover:text-destructive-50 group-[.destructive]:focus-visible:ring-destructive-400 group-[.destructive]:focus-visible:ring-offset-destructive-600",
       className
     )}
     toast-close=""
@@ -4388,6 +5846,152 @@ export {
   ToastClose,
   ToastAction,
 }
+
+\\n
+### Component: ToastMultiPosition
+\	sx
+import * as React from "react"
+import { cn } from "../../lib/utils"
+import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from "lucide-react"
+
+type ToastPosition = "top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right"
+
+interface Toast {
+  id: string
+  title?: string
+  description?: string
+  variant?: "default" | "success" | "error" | "warning" | "info"
+  position?: ToastPosition
+  duration?: number
+}
+
+interface ToastContextValue {
+  toasts: Toast[]
+  addToast: (toast: Omit<Toast, "id">) => void
+  removeToast: (id: string) => void
+}
+
+const ToastContext = React.createContext<ToastContextValue | null>(null)
+
+function useToast() {
+  const context = React.useContext(ToastContext)
+  if (!context) {
+    throw new Error("useToast must be used within a ToastProvider")
+  }
+  return context
+}
+
+interface ToastProviderProps extends React.HTMLAttributes<HTMLDivElement> {
+  position?: ToastPosition
+}
+
+const ToastProvider = React.forwardRef<HTMLDivElement, ToastProviderProps>(
+  ({ className, position = "bottom-right", children, ...props }, ref) => {
+    const [toasts, setToasts] = React.useState<Toast[]>([])
+
+    const addToast = React.useCallback((toast: Omit<Toast, "id">) => {
+      const id = Math.random().toString(36).slice(2)
+      const newToast = { ...toast, id }
+      setToasts((prev) => [...prev, newToast])
+
+      if (toast.duration !== 0) {
+        setTimeout(() => {
+          setToasts((prev) => prev.filter((t) => t.id !== id))
+        }, toast.duration || 5000)
+      }
+    }, [])
+
+    const removeToast = React.useCallback((id: string) => {
+      setToasts((prev) => prev.filter((t) => t.id !== id))
+    }, [])
+
+    const groupedToasts = React.useMemo(() => {
+      const groups: Record<ToastPosition, Toast[]> = {
+        "top-left": [], "top-center": [], "top-right": [],
+        "bottom-left": [], "bottom-center": [], "bottom-right": [],
+      }
+      toasts.forEach((toast) => {
+        const pos = toast.position || position
+        groups[pos].push(toast)
+      })
+      return groups
+    }, [toasts, position])
+
+    return (
+      <ToastContext.Provider value={{ toasts, addToast, removeToast }}>
+        {children}
+        <div className="fixed inset-0 pointer-events-none z-50">
+          {Object.entries(groupedToasts).map(([pos, positionToasts]) => {
+            if (positionToasts.length === 0) return null
+            const [vPos, hPos] = pos.split("-") as [string, string]
+            return (
+              <div
+                key={pos}
+                className={cn(
+                  "fixed flex flex-col gap-2 pointer-events-auto",
+                  vPos === "top" ? "top-4" : "bottom-4",
+                  hPos === "left" && "left-4",
+                  hPos === "center" && "left-1/2 -translate-x-1/2",
+                  hPos === "right" && "right-4"
+                )}
+              >
+                {positionToasts.map((toast) => (
+                  <ToastItem
+                    key={toast.id}
+                    toast={toast}
+                    onClose={() => removeToast(toast.id)}
+                  />
+                ))}
+              </div>
+            )
+          })}
+        </div>
+      </ToastContext.Provider>
+    )
+  }
+)
+ToastProvider.displayName = "ToastProvider"
+
+function ToastItem({ toast, onClose }: { toast: Toast; onClose: () => void }) {
+  const icons = {
+    default: null,
+    success: <CheckCircle className="h-5 w-5 text-success" />,
+    error: <AlertCircle className="h-5 w-5 text-destructive" />,
+    warning: <AlertTriangle className="h-5 w-5 text-warning" />,
+    info: <Info className="h-5 w-5 text-info" />,
+  }
+
+  return (
+    <div
+      className={cn(
+        "pointer-events-auto flex w-80 items-start gap-3 rounded-lg border bg-background p-4 shadow-lg animate-scale-in",
+        "transition-all duration-200 hover:shadow-xl"
+      )}
+    >
+      {toast.variant && toast.variant !== "default" && icons[toast.variant]}
+      <div className="flex-1 space-y-1">
+        {toast.title && <p className="text-body-sm font-semibold">{toast.title}</p>}
+        {toast.description && (
+          <p className="text-body-xs text-muted-foreground">{toast.description}</p>
+        )}
+      </div>
+      <button
+        onClick={onClose}
+        className="rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <X className="h-4 w-4" />
+      </button>
+    </div>
+  )
+}
+
+function toast(options: Omit<Toast, "id">) {
+  // This is a simplified version - in real usage, use the hook from context
+  console.warn("Toast called outside provider. Use ToastProvider or useToast hook.")
+}
+
+export { ToastProvider, useToast, toast }
+export type { Toast, ToastPosition }
 
 \\n
 ### Component: Toggle
@@ -4492,6 +6096,96 @@ TooltipContent.displayName = TooltipPrimitive.Content.displayName
  * - A estrutura é: `<Tooltip><TooltipTrigger>Icon</TooltipTrigger><TooltipContent>Label</TooltipContent></Tooltip>`.
  */
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider }
+
+\\n
+### Component: VirtualList
+\	sx
+import * as React from "react"
+import { cn } from "../../lib/utils"
+
+interface VirtualListProps<T> extends React.HTMLAttributes<HTMLDivElement> {
+  items: T[]
+  itemHeight?: number
+  overscan?: number
+  renderItem: (item: T, index: number) => React.ReactNode
+  keyExtractor: (item: T, index: number) => string
+}
+
+function VirtualList<T>({
+  items,
+  itemHeight = 48,
+  overscan = 5,
+  renderItem,
+  keyExtractor,
+  className,
+  ...props
+}: VirtualListProps<T>) {
+  const [scrollTop, setScrollTop] = React.useState(0)
+  const containerRef = React.useRef<HTMLDivElement>(null)
+  const [containerHeight, setContainerHeight] = React.useState(0)
+
+  React.useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setContainerHeight(entry.contentRect.height)
+      }
+    })
+    resizeObserver.observe(container)
+    return () => resizeObserver.disconnect()
+  }, [])
+
+  const totalHeight = items.length * itemHeight
+
+  const startIndex = Math.max(0, Math.floor(scrollTop / itemHeight) - overscan)
+  const endIndex = Math.min(
+    items.length - 1,
+    Math.ceil((scrollTop + containerHeight) / itemHeight) + overscan
+  )
+
+  const visibleItems = React.useMemo(() => {
+    const result: { item: T; index: number; style: React.CSSProperties }[] = []
+    for (let i = startIndex; i <= endIndex; i++) {
+      result.push({
+        item: items[i],
+        index: i,
+        style: {
+          position: "absolute",
+          top: `${i * itemHeight}px`,
+          left: 0,
+          right: 0,
+          height: `${itemHeight}px`,
+        },
+      })
+    }
+    return result
+  }, [items, startIndex, endIndex, itemHeight])
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    setScrollTop(e.currentTarget.scrollTop)
+  }
+
+  return (
+    <div
+      ref={containerRef}
+      onScroll={handleScroll}
+      className={cn("overflow-auto relative", className)}
+      {...props}
+    >
+      <div style={{ height: totalHeight, position: "relative" }}>
+        {visibleItems.map(({ item, index, style }) => (
+          <div key={keyExtractor(item, index)} style={style}>
+            {renderItem(item, index)}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export { VirtualList }
 
 \\n
 ## 5. Blocks Source Code (Complex Layouts)
@@ -5086,7 +6780,15 @@ import {
   PieChart,
   XAxis,
   YAxis,
-  Cell
+  Cell,
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Funnel,
+  FunnelChart,
+  LabelList,
 } from "recharts"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../shadcn/Card"
@@ -5099,7 +6801,6 @@ import {
   ChartTooltipContent,
 } from "../shadcn/Chart"
 
-// -- DADOS MOCKADOS --
 const chartData = [
   { month: "Jan", desktop: 186, mobile: 80 },
   { month: "Fev", desktop: 305, mobile: 200 },
@@ -5117,15 +6818,34 @@ const pieData = [
   { browser: "other", visitors: 90, fill: "#ec4899" },
 ]
 
+const radarData = [
+  { subject: "Velocidade", A: 120, B: 110, fullMark: 150 },
+  { subject: "Confiabilidade", A: 98, B: 130, fullMark: 150 },
+  { subject: "Conforto", A: 86, B: 90, fullMark: 150 },
+  { subject: "Segurança", A: 99, B: 100, fullMark: 150 },
+  { subject: "Manutenção", A: 85, B: 95, fullMark: 150 },
+  { subject: "Eficiência", A: 108, B: 105, fullMark: 150 },
+]
+
+const funnelData = [
+  { name: "Visitas", value: 1000 },
+  { name: "Leads", value: 750 },
+  { name: "Oportunidades", value: 500 },
+  { name: "Propostas", value: 250 },
+  { name: "Fechamentos", value: 100 },
+]
+
+const skillData = [
+  { name: "React", level: 90, color: "#2563eb" },
+  { name: "TypeScript", level: 85, color: "#3178c6" },
+  { name: "Node.js", level: 75, color: "#10b981" },
+  { name: "Design", level: 70, color: "#f59e0b" },
+  { name: "DevOps", level: 60, color: "#8b5cf6" },
+]
+
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "#2563eb", // Azul
-  },
-  mobile: {
-    label: "Mobile",
-    color: "#10b981", // Verde
-  },
+  desktop: { label: "Desktop", color: "#2563eb" },
+  mobile: { label: "Mobile", color: "#10b981" },
 } satisfies ChartConfig
 
 const pieConfig = {
@@ -5137,18 +6857,14 @@ const pieConfig = {
   other: { label: "Outros" },
 } satisfies ChartConfig
 
-/**
- * @description
- * Bloco de exemplo exibindo vários tipos de Gráficos usando a biblioteca Recharts e o container do Shadcn.
- * 
- * **REGRAS PARA A IA:**
- * - Sempre que precisar de um gráfico (Pizza, Linha, Barra), baseie-se nesta estrutura.
- * - Use o `ChartContainer` com uma `config` para injetar cores compatíveis com o tema.
- */
+const radarConfig = {
+  A: { label: "Produto A", color: "#2563eb" },
+  B: { label: "Produto B", color: "#10b981" },
+} satisfies ChartConfig
+
 export function DashboardCharts() {
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
-      
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {/* 1. Bar Chart (Vertical) */}
       <Card>
         <CardHeader>
@@ -5159,41 +6875,7 @@ export function DashboardCharts() {
           <ChartContainer config={chartConfig}>
             <BarChart accessibilityLayer data={chartData}>
               <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="month"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-                tickFormatter={(value) => value.slice(0, 3)}
-              />
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <ChartLegend content={<ChartLegendContent payload={[]} />} />
-              <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-              <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-            </BarChart>
-          </ChartContainer>
-        </CardContent>
-      </Card>
-
-      {/* 1.5. Bar Chart (Horizontal) */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Gráfico de Barras Horizontal</CardTitle>
-          <CardDescription>Acessos Jan - Jun 2026</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ChartContainer config={chartConfig}>
-            <BarChart accessibilityLayer data={chartData} layout="vertical" margin={{ left: -20 }}>
-              <CartesianGrid horizontal={false} vertical={true} />
-              <XAxis type="number" hide />
-              <YAxis
-                dataKey="month"
-                type="category"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-                tickFormatter={(value) => value.slice(0, 3)}
-              />
+              <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} tickFormatter={(value) => value.slice(0, 3)} />
               <ChartTooltip content={<ChartTooltipContent />} />
               <ChartLegend content={<ChartLegendContent payload={[]} />} />
               <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
@@ -5211,40 +6893,18 @@ export function DashboardCharts() {
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig}>
-            <LineChart
-              accessibilityLayer
-              data={chartData}
-              margin={{ left: 12, right: 12 }}
-            >
+            <LineChart accessibilityLayer data={chartData} margin={{ left: 12, right: 12 }}>
               <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="month"
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-                tickFormatter={(value) => value.slice(0, 3)}
-              />
+              <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(value) => value.slice(0, 3)} />
               <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-              <Line
-                dataKey="desktop"
-                type="monotone"
-                stroke="var(--color-desktop)"
-                strokeWidth={2}
-                dot={false}
-              />
-              <Line
-                dataKey="mobile"
-                type="monotone"
-                stroke="var(--color-mobile)"
-                strokeWidth={2}
-                dot={false}
-              />
+              <Line dataKey="desktop" type="monotone" stroke="var(--color-desktop)" strokeWidth={2} dot={false} />
+              <Line dataKey="mobile" type="monotone" stroke="var(--color-mobile)" strokeWidth={2} dot={false} />
             </LineChart>
           </ChartContainer>
         </CardContent>
       </Card>
 
-      {/* 3. Area Chart */}
+      {/* 3. Area Chart Stacked */}
       <Card>
         <CardHeader>
           <CardTitle>Gráfico de Área (Stacked)</CardTitle>
@@ -5252,36 +6912,12 @@ export function DashboardCharts() {
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig}>
-            <AreaChart
-              accessibilityLayer
-              data={chartData}
-              margin={{ left: 12, right: 12 }}
-            >
+            <AreaChart accessibilityLayer data={chartData} margin={{ left: 12, right: 12 }}>
               <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="month"
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-                tickFormatter={(value) => value.slice(0, 3)}
-              />
+              <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(value) => value.slice(0, 3)} />
               <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-              <Area
-                dataKey="mobile"
-                type="natural"
-                fill="var(--color-mobile)"
-                fillOpacity={0.4}
-                stroke="var(--color-mobile)"
-                stackId="a"
-              />
-              <Area
-                dataKey="desktop"
-                type="natural"
-                fill="var(--color-desktop)"
-                fillOpacity={0.4}
-                stroke="var(--color-desktop)"
-                stackId="a"
-              />
+              <Area dataKey="mobile" type="natural" fill="var(--color-mobile)" fillOpacity={0.4} stroke="var(--color-mobile)" stackId="a" />
+              <Area dataKey="desktop" type="natural" fill="var(--color-desktop)" fillOpacity={0.4} stroke="var(--color-desktop)" stackId="a" />
             </AreaChart>
           </ChartContainer>
         </CardContent>
@@ -5294,22 +6930,10 @@ export function DashboardCharts() {
           <CardDescription>Distribuição de Navegadores</CardDescription>
         </CardHeader>
         <CardContent className="flex-1 pb-0">
-          <ChartContainer
-            config={pieConfig}
-            className="mx-auto aspect-square max-h-64"
-          >
+          <ChartContainer config={pieConfig} className="mx-auto aspect-square max-h-64">
             <PieChart>
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent hideLabel />}
-              />
-              <Pie
-                data={pieData}
-                dataKey="visitors"
-                nameKey="browser"
-                innerRadius={60}
-                strokeWidth={5}
-              >
+              <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+              <Pie data={pieData} dataKey="visitors" nameKey="browser" innerRadius={60} strokeWidth={5}>
                 {pieData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.fill} />
                 ))}
@@ -5319,6 +6943,165 @@ export function DashboardCharts() {
         </CardContent>
       </Card>
 
+      {/* 5. Radar Chart (Spider) */}
+      <Card className="flex flex-col">
+        <CardHeader className="items-center pb-0">
+          <CardTitle>Gráfico Radar (Spider)</CardTitle>
+          <CardDescription>Comparativo de Produtos</CardDescription>
+        </CardHeader>
+        <CardContent className="flex-1 pb-0">
+          <ChartContainer config={radarConfig} className="mx-auto aspect-square max-h-64">
+            <RadarChart data={radarData}>
+              <PolarGrid stroke="hsl(var(--border))" />
+              <PolarAngleAxis dataKey="subject" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} />
+              <PolarRadiusAxis angle={30} domain={[0, 150]} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }} />
+              <Radar name="Produto A" dataKey="A" stroke="var(--color-A)" fill="var(--color-A)" fillOpacity={0.3} />
+              <Radar name="Produto B" dataKey="B" stroke="var(--color-B)" fill="var(--color-B)" fillOpacity={0.3} />
+              <ChartLegend content={<ChartLegendContent payload={[]} />} />
+              <ChartTooltip content={<ChartTooltipContent />} />
+            </RadarChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+
+      {/* 6. Gauge Chart */}
+      <Card className="flex flex-col">
+        <CardHeader className="items-center pb-0">
+          <CardTitle>Gráfico de Gauge</CardTitle>
+          <CardDescription>Indicador de Performance</CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col items-center justify-center pb-6">
+          <div className="relative w-full max-w-xs aspect-[2/1] overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-[200%]">
+              <ChartContainer config={{}} className="aspect-square h-full w-full">
+                <PieChart>
+                  <Pie
+                    data={[{ name: "value", value: 75 }, { name: "remain", value: 25 }]}
+                    cx="50%"
+                    cy="50%"
+                    startAngle={180}
+                    endAngle={0}
+                    innerRadius="75%"
+                    outerRadius="100%"
+                    paddingAngle={0}
+                    dataKey="value"
+                    stroke="none"
+                  >
+                    <Cell fill="#2563eb" />
+                    <Cell fill="hsl(var(--muted))" />
+                  </Pie>
+                  <ChartTooltip content={<ChartTooltipContent hideIndicator hideLabel />} cursor={false} />
+                </PieChart>
+              </ChartContainer>
+            </div>
+            <div className="absolute bottom-0 left-1/2 flex -translate-x-1/2 flex-col items-center pb-2">
+              <span className="text-h1 font-bold text-foreground leading-none">75%</span>
+              <span className="text-body-sm text-muted-foreground mt-1">Velocidade</span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* 7. Skill Bars */}
+      <Card className="flex flex-col">
+        <CardHeader>
+          <CardTitle>Gráfico de Habilidades</CardTitle>
+          <CardDescription>Níveis de Competência</CardDescription>
+        </CardHeader>
+        <CardContent className="flex-1">
+          <div className="space-y-4">
+            {skillData.map((skill) => (
+              <div key={skill.name} className="space-y-2">
+                <div className="flex justify-between text-body-sm">
+                  <span className="font-medium">{skill.name}</span>
+                  <span className="text-muted-foreground">{skill.level}%</span>
+                </div>
+                <div className="h-3 w-full overflow-hidden rounded-full bg-muted">
+                  <div
+                    className="h-full rounded-full transition-all duration-500 ease-out"
+                    style={{ width: `${skill.level}%`, backgroundColor: skill.color }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* 8. Funnel Chart */}
+      <Card className="flex flex-col">
+        <CardHeader className="items-center pb-0">
+          <CardTitle>Gráfico de Funil</CardTitle>
+          <CardDescription>Conversão de Pipeline</CardDescription>
+        </CardHeader>
+        <CardContent className="flex-1 pb-0">
+          <ChartContainer config={{}} className="mx-auto aspect-square max-h-64">
+            <FunnelChart>
+              <ChartTooltip content={<ChartTooltipContent />} />
+              <Funnel dataKey="value" data={funnelData} isAnimationActive>
+                <LabelList position="right" fill="hsl(var(--foreground))" stroke="none" dataKey="name" className="text-body-sm" />
+                <LabelList position="center" fill="#fff" stroke="none" dataKey="value" className="text-body-md font-bold" />
+              </Funnel>
+            </FunnelChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+
+      {/* 9. Line Chart with Area Fill */}
+      <Card className="flex flex-col">
+        <CardHeader className="items-center pb-0">
+          <CardTitle>Linha com Área</CardTitle>
+          <CardDescription>Tendência com Destaque</CardDescription>
+        </CardHeader>
+        <CardContent className="flex-1 pb-0">
+          <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-64">
+            <AreaChart accessibilityLayer data={chartData} margin={{ left: 12, right: 12 }}>
+              <defs>
+                <linearGradient id="colorDesktopFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="var(--color-desktop)" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="var(--color-desktop)" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid vertical={false} />
+              <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(value) => value.slice(0, 3)} />
+              <YAxis tickLine={false} axisLine={false} tickMargin={8} />
+              <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+              <Area dataKey="desktop" type="monotone" fill="url(#colorDesktopFill)" stroke="var(--color-desktop)" strokeWidth={2} />
+            </AreaChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+
+      {/* 10. Stacked Area with Gradients */}
+      <Card className="flex flex-col md:col-span-2 lg:col-span-3">
+        <CardHeader>
+          <CardTitle>Área Empilhada com Gradientes</CardTitle>
+          <CardDescription>Volume por Canal ao Longo do Tempo</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ChartContainer config={chartConfig}>
+            <AreaChart accessibilityLayer data={chartData} margin={{ left: 12, right: 12 }}>
+              <defs>
+                <linearGradient id="colorDesktopGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="var(--color-desktop)" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="var(--color-desktop)" stopOpacity={0.1} />
+                </linearGradient>
+                <linearGradient id="colorMobileGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="var(--color-mobile)" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="var(--color-mobile)" stopOpacity={0.1} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid vertical={false} />
+              <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
+              <YAxis tickLine={false} axisLine={false} tickMargin={8} />
+              <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+              <ChartLegend content={<ChartLegendContent payload={[]} />} />
+              <Area dataKey="desktop" type="monotone" fill="url(#colorDesktopGrad)" stroke="var(--color-desktop)" strokeWidth={2} />
+              <Area dataKey="mobile" type="monotone" fill="url(#colorMobileGrad)" stroke="var(--color-mobile)" strokeWidth={2} />
+            </AreaChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
     </div>
   )
 }
@@ -6565,7 +8348,7 @@ export function MarketingBanner({
   }
 
   return (
-    <div
+    <aside
       className={cn(marketingBannerVariants({ variant, className }))}
       {...props}
     >
@@ -6573,7 +8356,7 @@ export function MarketingBanner({
         <button
           onClick={handleDismiss}
           className={cn(
-            "absolute top-4 right-4 p-1 rounded-full opacity-70 hover:opacity-100 transition-opacity",
+            "absolute top-4 right-4 p-1 rounded-full opacity-70 hover:opacity-100 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
             variant === "floating" ? "text-background" : "text-current"
           )}
           aria-label="Dismiss banner"
@@ -6655,7 +8438,7 @@ export function MarketingBanner({
       {variant === "gradient" && !imageSlot && (
         <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl pointer-events-none" />
       )}
-    </div>
+    </aside>
   )
 }
 
@@ -6914,7 +8697,7 @@ const pageHeaderVariants = cva("flex flex-col gap-1", {
 })
 
 export interface PageHeaderProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends React.HTMLAttributes<HTMLElement>,
     VariantProps<typeof pageHeaderVariants> {
   title: string
   description?: string
@@ -6930,7 +8713,7 @@ export function PageHeader({
   ...props
 }: PageHeaderProps) {
   return (
-    <div
+    <header
       className={cn(pageHeaderVariants({ align, className }))}
       {...props}
     >
@@ -6951,7 +8734,7 @@ export function PageHeader({
           </div>
         )}
       </div>
-    </div>
+    </header>
   )
 }
 
@@ -6981,7 +8764,7 @@ const pageLayoutVariants = cva("flex flex-col", {
 })
 
 export interface PageLayoutProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends React.HTMLAttributes<HTMLElement>,
     VariantProps<typeof pageLayoutVariants> {}
 
 export function PageLayout({
@@ -6992,12 +8775,12 @@ export function PageLayout({
   ...props
 }: PageLayoutProps) {
   return (
-    <div
+    <main
       className={cn(pageLayoutVariants({ spacing, flush, className }))}
       {...props}
     >
       {children}
-    </div>
+    </main>
   )
 }
 
@@ -8391,91 +10174,3 @@ export function UserSettings() {
 }
 
 \\n
-## 6. Design Principles & Composition Rules
-CRITICAL: When generating any page or screen, you MUST follow these composition rules.
-
-### 6.1 Spacing System (Strict Scale)
-Use ONLY these 3 spacing levels - never arbitrary pixel values:
-- Tight: gap-4 (16px) - elements within the same visual group
-- Default: gap-6 (24px) - separate distinct sections on a page
-- Loose: gap-8 (32px) - separate large functional blocks
-
-### 6.2 Page Structure (Always Use This Order)
-Every page MUST follow this hierarchy:
-1. <PageLayout spacing="default"> - root container
-2. <PageHeader> - title + description + actions (top right)
-3. Content sections - MetricGrid, DataTable, Charts, etc
-4. Navigation/Pagination if needed
-
-### 6.3 MetricGrid Usage
-- columns="4" for desktop KPI dashboards
-- columns="2" for forms or smaller grids
-- columns="12" for mixed layouts (use span="twothirds", "third")
-- ALWAYS wrap content in <MetricCard>
-
-### 6.4 Grouping Rules
-- Related items: share a Card border/shadow
-- Actions of same flow: use <Flex gap="sm">
-- Tabular data: use <DataTable>
-- Empty state: ALWAYS provide <EmptyState> when list can be empty
-
-### 6.5 Action Placement
-- Primary action (Create, Save): top-right corner in PageHeader
-- Secondary actions (Filters, Search): below PageHeader or in toolbar
-- Row actions (Edit, Delete): last column in DataTable
-
-### 6.6 Feedback & States
-- Loading: use <Skeleton> or Button with disabled+text
-- Success/Error: use <Badge variant="soft" color="success|destructive">
-- Empty: use <EmptyState> component
-- Form validation: inline error messages below inputs
-
-### 6.7 Always Use Semantic Components
-- DO NOT use <div className="flex"> - use <Flex>
-- DO NOT use <div className="grid"> - use <Grid>
-- DO NOT use <button> - use <Button>
-- DO NOT use <table> - use <DataTable>
-
-### 6.8 Layout Checklist (Verify Before Finishing)
-Before marking a screen as complete, verify:
-[ ] Uses <PageLayout> as root container
-[ ] Uses <PageHeader> for title and actions
-[ ] Metrics in <MetricGrid> with correct columns
-[ ] Visual groups wrapped in <Card>
-[ ] Spacing follows tight/default/loose scale
-[ ] Primary action in top-right corner
-[ ] Empty states handled
-[ ] Loading states with <Skeleton>
-[ ] Tables with +10 rows have <Pagination>
-[ ] Responsive tested on mobile
-
-## 7. Common Page Templates
-
-### Dashboard Template:
-<PageLayout spacing="default">
-  <PageHeader title="..." description="..." actions={...</PageHeader}>
-  <MetricGrid columns="4">...</MetricGrid>
-  <MetricGrid columns="12">
-    <MetricCard span="twothirds"><Chart />...</MetricCard>
-    <MetricCard><ActivityTimeline />...</MetricCard>
-  </MetricGrid>
-</PageLayout>
-
-### List/Management Template:
-<PageLayout spacing="default">
-  <PageHeader title="..." actions={<Button>Novo</Button>} />
-  <AdvancedFilter>...</AdvancedFilter>
-  <Card><DataTable columns={columns} data={data} /></Card>
-  <Pagination />
-</PageLayout>
-
-### Wizard/Form Template:
-<PageLayout spacing="default">
-  <PageHeader title="..." description="..." />
-  <Stepper steps={steps} currentStep={activeStep} />
-  <Card><CardContent>...form fields...</CardContent></Card>
-  <Flex justify="between"><Button variant="ghost">Voltar</Button><Button>Continuar</Button></Flex>
-</PageLayout>
-
-## 8. Full Design Principles Document
-See: src/DesignPrinciples.mdx
