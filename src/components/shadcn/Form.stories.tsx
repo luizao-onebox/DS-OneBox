@@ -15,7 +15,7 @@ import {
 import { registerSchema, type RegisterFormData } from "./schemas"
 
 const meta = {
-  title: "shadcn/Form",
+  title: "Components/Form",
   component: Form,
   tags: ["autodocs"],
   argTypes: {},

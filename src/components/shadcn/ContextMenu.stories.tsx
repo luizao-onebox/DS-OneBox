@@ -3,7 +3,7 @@ import { Copy, Scissors, ClipboardPaste, Edit, Trash2, User, Settings, Save, Dow
 import { ContextMenu, ContextMenuTrigger, ContextMenuContent, ContextMenuItem, ContextMenuLabel, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubTrigger, ContextMenuSubContent, ContextMenuCheckboxItem, ContextMenuRadioGroup, ContextMenuRadioItem } from "./ContextMenu"
 
 const meta = {
-  title: "shadcn/ContextMenu",
+  title: "Components/ContextMenu",
   component: ContextMenu,
   tags: ["autodocs"],
   argTypes: {},

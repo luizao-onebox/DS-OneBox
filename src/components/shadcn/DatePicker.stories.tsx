@@ -3,7 +3,7 @@ import { useState } from "react"
 import { DatePicker, ptBR } from "./DatePicker"
 
 const meta = {
-  title: "shadcn/DatePicker",
+  title: "Components/DatePicker",
   component: DatePicker,
   tags: ["autodocs"],
   argTypes: {
