@@ -119,7 +119,7 @@ export const ThreePanels: Story = {
   ),
 }
 
-export const IDE layout: Story = {
+export const IDELayout: Story = {
   render: () => (
     <ResizablePanelGroup direction="horizontal" className="min-h-[400px] rounded-lg border bg-muted/20">
       <ResizablePanel data-panel defaultSize={20} minSize={10}>
