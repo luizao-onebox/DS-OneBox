@@ -30,8 +30,8 @@ const preview: Preview = {
   },
   decorators: [
     (Story) => (
-      // Força a tela inteira do Storybook a adotar as cores do tema ativo
-      <div className="bg-background text-foreground min-h-screen w-full transition-colors duration-300">
+      // Força a tela inteira do Storybook a adotar as cores do tema ativo, mas com altura adaptativa
+      <div className="bg-background text-foreground w-full transition-colors duration-300">
         <Story />
       </div>
     ),
