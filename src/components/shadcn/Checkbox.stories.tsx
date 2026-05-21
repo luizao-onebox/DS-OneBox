@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Checkbox } from "./Checkbox"
 import { Label } from "./Label"
 

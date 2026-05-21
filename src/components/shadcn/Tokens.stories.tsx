@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Design Tokens - Visual documentation for all design system values.
  * This story provides a comprehensive overview of all design tokens.

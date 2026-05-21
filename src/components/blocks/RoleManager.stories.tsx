@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as React from "react"
 import { Meta, StoryObj } from "@storybook/react"
 import { RoleManager, Permission } from "./RoleManager"

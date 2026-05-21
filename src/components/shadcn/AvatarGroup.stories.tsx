@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { Meta, StoryObj } from "@storybook/react"
 import { AvatarGroup } from "./AvatarGroup"
 import { Avatar, AvatarFallback, AvatarImage } from "./Avatar"

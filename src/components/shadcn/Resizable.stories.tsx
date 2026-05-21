@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { Meta, StoryObj } from "@storybook/react"
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "./Resizable"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "./Card"

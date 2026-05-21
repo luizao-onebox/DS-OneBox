@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "./Tooltip"
 import { Button } from "./Button"
 

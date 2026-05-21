@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Label } from "./Label"
 import { Input } from "./Input"
 

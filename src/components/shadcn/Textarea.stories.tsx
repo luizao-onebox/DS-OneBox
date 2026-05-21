@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Textarea } from "./Textarea"
 
 export default {

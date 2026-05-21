@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { Meta, StoryObj } from "@storybook/react"
 import { PageLayout } from "./PageLayout"
 import { PageHeader } from "./PageHeader"

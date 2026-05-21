@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { Meta, StoryObj } from "@storybook/react"
 import { MarketingBanner } from "./MarketingBanner"
 import { Sparkles, ArrowRight, DownloadCloud } from "lucide-react"

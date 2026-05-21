@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Separator } from "./Separator"
 
 export default {

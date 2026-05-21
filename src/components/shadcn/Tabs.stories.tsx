@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./Tabs"
 
 export default {

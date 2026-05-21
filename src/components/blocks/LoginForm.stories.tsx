@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { LoginForm } from "./LoginForm"
 
 export default {

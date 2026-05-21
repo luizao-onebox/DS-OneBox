@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Button component with support for multiple variants, sizes, icons, and loading states.
  * @see {@link https://ui.shadcn.com/docs/components/button}

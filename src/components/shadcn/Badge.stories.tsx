@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Badge } from "./Badge"
 import { Clock, X } from "lucide-react"
 

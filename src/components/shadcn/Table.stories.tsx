@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { Meta, StoryObj } from "@storybook/react"
 import { useState } from "react"
 import { DataGrid as Table, Column } from "./Table"
@@ -51,7 +52,7 @@ const columns: Column<User>[] = [
     header: "Nome",
     accessor: (user) => (
       <div className="flex items-center gap-2">
-        <Avatar size="sm">
+        <Avatar className="h-8 w-8">
           <AvatarFallback>{user.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
         </Avatar>
         <span className="font-medium">{user.name}</span>

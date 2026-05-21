@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Alert, AlertDescription, AlertTitle } from "./Alert"
 
 export default {

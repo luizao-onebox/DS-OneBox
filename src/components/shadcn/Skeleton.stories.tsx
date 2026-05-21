@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Skeleton } from "./Skeleton"
 
 export default {

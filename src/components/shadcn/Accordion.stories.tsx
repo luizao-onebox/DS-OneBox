@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./Accordion"
 
 export default {

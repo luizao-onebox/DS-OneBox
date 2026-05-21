@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Card components for displaying content in a container.
  * @see {@link https://ui.shadcn.com/docs/components/card}

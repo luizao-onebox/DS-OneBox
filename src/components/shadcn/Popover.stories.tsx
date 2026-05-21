@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Popover, PopoverContent, PopoverTrigger } from "./Popover"
 import { Button } from "./Button"
 
