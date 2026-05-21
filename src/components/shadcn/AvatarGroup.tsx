@@ -25,8 +25,8 @@ function AvatarGroup({ className, children, max = 4, size = "md", ...props }: Av
           className="ring-2 ring-background rounded-full hover:z-10 transition-transform hover:scale-110"
         >
           {React.isValidElement(avatar)
-            ? React.cloneElement(avatar as React.ReactElement<{ className?: string }>, {
-                className: cn((avatar as React.ReactElement<{ className?: string }).props.className, "rounded-full"),
+            ? React.cloneElement(avatar as React.ReactElement<Record<string, unknown>>, {
+                className: cn((avatar as React.ReactElement<Record<string, unknown>>).props.className, "rounded-full"),
               })
             : avatar}
         </div>
