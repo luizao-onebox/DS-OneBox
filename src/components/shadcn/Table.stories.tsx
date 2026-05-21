@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react"
 import { useState } from "react"
-import { Table, Column } from "./Table"
+import { DataGrid as Table, Column } from "./Table"
 import { Badge } from "./Badge"
 import { Avatar, AvatarFallback, AvatarImage } from "./Avatar"
 

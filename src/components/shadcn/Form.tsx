@@ -56,7 +56,7 @@ interface FormItemProps
 
 const FormItem = React.forwardRef<HTMLDivElement, FormItemProps>(
   ({ className, ...props }, ref) => {
-    const { id } = React.useId()
+    const id = React.useId()
 
     return (
       <div

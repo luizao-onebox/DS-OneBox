@@ -42,10 +42,10 @@ export * from "./AspectRatio"
 export * from "./OTPInput"
 export * from "./PasswordStrength"
 export * from "./Combobox"
-export * from "./CommandPalette"
+export { CommandPalette } from "./CommandPalette"
 export * from "./VirtualList"
 export * from "./DragDrop"
-export * from "./ToastMultiPosition"
+
 
 
 

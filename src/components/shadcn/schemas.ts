@@ -51,8 +51,7 @@ export const cepSchema = z.string().refine(
 )
 
 export const dateSchema = z.date({
-  required_error: "Date is required",
-  invalid_type_error: "Invalid date format",
+  message: "Invalid date format or required",
 })
 
 export const dateRangeSchema = z.object({
@@ -101,7 +100,7 @@ export const contactFormSchema = z.object({
 export const searchSchema = z.object({
   query: z.string().min(1, "Search query is required"),
   category: z.string().optional(),
-  filters: z.record(z.string()).optional(),
+  filters: z.record(z.string(), z.string()).optional(),
 })
 
 export const numberRangeSchema = z.object({
