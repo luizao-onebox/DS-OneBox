@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,7 +9,7 @@ import {
 } from "./Breadcrumb"
 
 export default {
-  title: "Components/Breadcrumb",
+  title: "Componentes Nativos/Breadcrumb",
   component: Breadcrumb,
   tags: ["autodocs"],
 }

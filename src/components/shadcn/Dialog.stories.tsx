@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import {
   Dialog,
   DialogContent,
@@ -13,7 +13,7 @@ import { Input } from "./Input"
 import { Label } from "./Label"
 
 export default {
-  title: "Components/Dialog",
+  title: "Componentes Nativos/Dialog",
   component: Dialog,
   tags: ["autodocs"],
 }

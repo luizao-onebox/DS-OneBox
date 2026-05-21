@@ -1,9 +1,9 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import type { Meta, StoryObj } from "@storybook/react"
 import { AspectRatio } from "./AspectRatio"
 
 const meta = {
-  title: "Components/AspectRatio",
+  title: "Componentes Nativos/AspectRatio",
   component: AspectRatio,
   parameters: { layout: "padded" },
   tags: ["autodocs"],

@@ -1,9 +1,9 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { RadioGroup, RadioGroupItem } from "./RadioGroup"
 import { Label } from "./Label"
 
 export default {
-  title: "Components/RadioGroup",
+  title: "Componentes Nativos/RadioGroup",
   component: RadioGroup,
   tags: ["autodocs"],
   parameters: {

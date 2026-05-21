@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import * as React from "react"
 import { Meta, StoryObj } from "@storybook/react"
 import { CalendarDays } from "lucide-react"
@@ -11,7 +11,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "./Avatar"
 
 const meta = {
-  title: "Components/HoverCard",
+  title: "Componentes Nativos/HoverCard",
   component: HoverCard,
   parameters: {
     layout: "centered",

@@ -1,8 +1,8 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Avatar, AvatarImage, AvatarFallback } from "./Avatar"
 
 export default {
-  title: "Components/Avatar",
+  title: "Componentes Nativos/Avatar",
   component: Avatar,
   tags: ["autodocs"],
   parameters: {

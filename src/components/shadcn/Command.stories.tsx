@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import {
   CommandDialog,
   CommandEmpty,
@@ -10,7 +10,7 @@ import {
 } from "./Command"
 
 export default {
-  title: "Components/Command",
+  title: "Componentes Nativos/Command",
   component: CommandDialog,
   tags: ["autodocs"],
 }

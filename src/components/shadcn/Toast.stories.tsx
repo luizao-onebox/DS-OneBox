@@ -1,9 +1,9 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Toast, ToastTitle, ToastDescription, ToastProvider, ToastViewport } from "./Toast"
 import { Button } from "./Button"
 
 export default {
-  title: "Components/Toast",
+  title: "Componentes Nativos/Toast",
   component: Toast,
   tags: ["autodocs"],
   decorators: [

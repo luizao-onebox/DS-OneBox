@@ -1,11 +1,11 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import * as React from "react"
 import { Meta, StoryObj } from "@storybook/react"
 import { ptBR } from "date-fns/locale"
 import { Calendar } from "./Calendar"
 
 const meta = {
-  title: "Components/Calendar",
+  title: "Componentes Nativos/Calendar",
   component: Calendar,
   parameters: {
     layout: "centered",

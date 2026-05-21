@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import {
   Sheet,
   SheetContent,
@@ -10,7 +10,7 @@ import {
 import { Button } from "./Button"
 
 export default {
-  title: "Components/Sheet",
+  title: "Componentes Nativos/Sheet",
   component: Sheet,
   tags: ["autodocs"],
 }

@@ -1,8 +1,8 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Separator } from "./Separator"
 
 export default {
-  title: "Components/Separator",
+  title: "Componentes Nativos/Separator",
   component: Separator,
   parameters: {
     layout: "centered",

@@ -7,7 +7,14 @@ const preview: Preview = {
   parameters: {
     options: {
       storySort: {
-        order: ['Introdução', 'Guia do Desenvolvedor', 'Design Tokens', 'Blocks', 'Components'],
+        order: [
+          'Introdução',
+          ['Bem-vindo', 'Guia do Desenvolvedor'],
+          'Fundamentos',
+          ['Princípios de Design', 'Tokens'],
+          'Componentes Nativos',
+          'Blocks'
+        ],
       },
     },
     controls: {

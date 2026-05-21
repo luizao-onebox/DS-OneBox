@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import * as React from "react"
 import { Meta, StoryObj } from "@storybook/react"
 import { toast } from "sonner"
@@ -6,7 +6,7 @@ import { Toaster } from "./Sonner"
 import { Button } from "./Button"
 
 const meta = {
-  title: "Components/Sonner (Toast)",
+  title: "Componentes Nativos/Sonner (Toast)",
   component: Toaster,
   parameters: {
     layout: "centered",

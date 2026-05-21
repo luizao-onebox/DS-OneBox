@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import * as React from "react"
 import { Meta, StoryObj } from "@storybook/react"
 import { 
@@ -40,7 +40,7 @@ const IconWrapper = ({ icon: Icon, name }: { icon: any; name: string }) => (
 )
 
 const meta = {
-  title: "Design Tokens/Icons",
+  title: "Fundamentos/Tokens/Ícones",
   parameters: {
     layout: "padded",
     docs: {

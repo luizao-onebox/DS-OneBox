@@ -1,10 +1,10 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import type { Meta, StoryObj } from "@storybook/react"
 import { AvatarGroup } from "./AvatarGroup"
 import { Avatar, AvatarFallback, AvatarImage } from "./Avatar"
 
 const meta = {
-  title: "Components/AvatarGroup",
+  title: "Componentes Nativos/AvatarGroup",
   component: AvatarGroup,
   parameters: { layout: "padded" },
   tags: ["autodocs"],

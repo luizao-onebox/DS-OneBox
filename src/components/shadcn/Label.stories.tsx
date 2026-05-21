@@ -1,9 +1,9 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Label } from "./Label"
 import { Input } from "./Input"
 
 export default {
-  title: "Components/Label",
+  title: "Componentes Nativos/Label",
   component: Label,
   tags: ["autodocs"],
   argTypes: {

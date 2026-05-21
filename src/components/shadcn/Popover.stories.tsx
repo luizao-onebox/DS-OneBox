@@ -1,9 +1,9 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Popover, PopoverContent, PopoverTrigger } from "./Popover"
 import { Button } from "./Button"
 
 export default {
-  title: "Components/Popover",
+  title: "Componentes Nativos/Popover",
   component: Popover,
   tags: ["autodocs"],
 }

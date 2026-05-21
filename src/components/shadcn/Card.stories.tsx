@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 /**
  * Card components for displaying content in a container.
  * @see {@link https://ui.shadcn.com/docs/components/card}
@@ -10,7 +10,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "./Avatar"
 import { Heart, MessageSquare, Share2, MoreHorizontal, UserPlus, Check, Bell, Settings, Trash2, Edit } from "lucide-react"
 
 export default {
-  title: "Components/Card",
+  title: "Componentes Nativos/Card",
   component: Card,
   parameters: {
     layout: "centered",

@@ -1,10 +1,10 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import type { Meta, StoryObj } from "@storybook/react"
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "./Resizable"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "./Card"
 
 const meta = {
-  title: "Components/Resizable",
+  title: "Componentes Nativos/Resizable",
   component: ResizablePanelGroup,
   parameters: {
     layout: "padded",

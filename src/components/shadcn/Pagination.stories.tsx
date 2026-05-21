@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import * as React from "react"
 import {
   Pagination,
@@ -11,7 +11,7 @@ import {
 } from "./Pagination"
 
 export default {
-  title: "Components/Pagination",
+  title: "Componentes Nativos/Pagination",
   component: Pagination,
   tags: ["autodocs"],
   parameters: {

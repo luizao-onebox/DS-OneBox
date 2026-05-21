@@ -1,10 +1,10 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import * as React from "react"
 import { Meta, StoryObj } from "@storybook/react"
 import { Logo } from "./Logo"
 
 const meta = {
-  title: "Components/Logo",
+  title: "Componentes Nativos/Logo",
   component: Logo,
   parameters: {
     layout: "centered",

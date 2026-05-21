@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import * as React from "react"
 import { Meta, StoryObj } from "@storybook/react"
 import {
@@ -13,7 +13,7 @@ import {
 import { cn } from "../../lib/utils"
 
 const meta = {
-  title: "Components/NavigationMenu",
+  title: "Componentes Nativos/NavigationMenu",
   component: NavigationMenu,
   parameters: {
     layout: "centered",

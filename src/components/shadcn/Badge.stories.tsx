@@ -1,9 +1,9 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Badge } from "./Badge"
 import { Clock, X } from "lucide-react"
 
 export default {
-  title: "Components/Badge",
+  title: "Componentes Nativos/Badge",
   component: Badge,
   parameters: {
     layout: "padded",

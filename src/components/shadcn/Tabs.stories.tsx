@@ -1,8 +1,8 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./Tabs"
 
 export default {
-  title: "Components/Tabs",
+  title: "Componentes Nativos/Tabs",
   component: Tabs,
   tags: ["autodocs"],
 }

@@ -1,11 +1,11 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import type { Meta, StoryObj } from "@storybook/react"
 import { useState } from "react"
 import { SortableList } from "./DragDrop"
 import { FileText, Image, Video } from "lucide-react"
 
 const meta = {
-  title: "Components/SortableList",
+  title: "Componentes Nativos/SortableList",
   component: SortableList,
   parameters: { layout: "padded" },
   tags: ["autodocs"],

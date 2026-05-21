@@ -1,11 +1,11 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import type { Meta, StoryObj } from "@storybook/react"
 import { useState } from "react"
 import { PasswordStrength } from "./PasswordStrength"
 import { Input } from "./Input"
 
 const meta = {
-  title: "Components/PasswordStrength",
+  title: "Componentes Nativos/PasswordStrength",
   component: PasswordStrength,
   parameters: { layout: "padded" },
   tags: ["autodocs"],

@@ -1,8 +1,8 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Textarea } from "./Textarea"
 
 export default {
-  title: "Components/Textarea",
+  title: "Componentes Nativos/Textarea",
   component: Textarea,
   tags: ["autodocs"],
   argTypes: {

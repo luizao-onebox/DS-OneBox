@@ -1,9 +1,9 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Switch } from "./Switch"
 import { Label } from "./Label"
 
 export default {
-  title: "Components/Switch",
+  title: "Componentes Nativos/Switch",
   component: Switch,
   parameters: {
     layout: "centered",

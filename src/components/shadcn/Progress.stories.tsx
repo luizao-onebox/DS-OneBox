@@ -1,8 +1,8 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Progress } from "./Progress"
 
 export default {
-  title: "Components/Progress",
+  title: "Componentes Nativos/Progress",
   component: Progress,
   tags: ["autodocs"],
   parameters: {

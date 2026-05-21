@@ -1,10 +1,10 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import type { Meta, StoryObj } from "@storybook/react"
 import { useState } from "react"
 import { Combobox } from "./Combobox"
 
 const meta = {
-  title: "Components/Combobox",
+  title: "Componentes Nativos/Combobox",
   component: Combobox,
   parameters: { layout: "padded" },
   tags: ["autodocs"],

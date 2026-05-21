@@ -1,8 +1,8 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Slider } from "./Slider"
 
 export default {
-  title: "Components/Slider",
+  title: "Componentes Nativos/Slider",
   component: Slider,
   tags: ["autodocs"],
   argTypes: {

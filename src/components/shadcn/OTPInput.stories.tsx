@@ -1,10 +1,10 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import type { Meta, StoryObj } from "@storybook/react"
 import { useState } from "react"
 import { OTPInput } from "./OTPInput"
 
 const meta = {
-  title: "Components/OTPInput",
+  title: "Componentes Nativos/OTPInput",
   component: OTPInput,
   parameters: { layout: "centered" },
   tags: ["autodocs"],

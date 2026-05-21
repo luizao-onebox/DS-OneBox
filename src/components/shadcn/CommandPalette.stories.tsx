@@ -1,11 +1,11 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import type { Meta, StoryObj } from "@storybook/react"
 import { useState } from "react"
 import { CommandPalette } from "./CommandPalette"
 import { Home, Settings, User, Search, FileText, Folder } from "lucide-react"
 
 const meta = {
-  title: "Components/CommandPalette",
+  title: "Componentes Nativos/CommandPalette",
   component: CommandPalette,
   parameters: { layout: "fullscreen" },
   tags: ["autodocs"],

@@ -1,9 +1,9 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Checkbox } from "./Checkbox"
 import { Label } from "./Label"
 
 export default {
-  title: "Components/Checkbox",
+  title: "Componentes Nativos/Checkbox",
   component: Checkbox,
   parameters: {
     layout: "centered",

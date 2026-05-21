@@ -1,11 +1,11 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import * as React from "react"
 import { Meta, StoryObj } from "@storybook/react"
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Line, LineChart, Pie, PieChart, Cell, XAxis, YAxis, Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ComposedChart, Funnel, FunnelChart, LabelList, PieChartLabelProps } from "recharts"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "./Chart"
 
 const meta = {
-  title: "Components/Chart",
+  title: "Componentes Nativos/Chart",
   component: ChartContainer,
   parameters: {
     layout: "padded",

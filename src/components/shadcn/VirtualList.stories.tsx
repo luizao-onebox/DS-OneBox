@@ -1,9 +1,9 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import type { Meta, StoryObj } from "@storybook/react"
 import { VirtualList } from "./VirtualList"
 
 const meta = {
-  title: "Components/VirtualList",
+  title: "Componentes Nativos/VirtualList",
   component: VirtualList,
   parameters: { layout: "padded" },
   tags: ["autodocs"],

@@ -1,10 +1,10 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import type { Meta, StoryObj } from "@storybook/react"
 import { useState } from "react"
 import { DatePicker, ptBR } from "./DatePicker"
 
 const meta = {
-  title: "Components/DatePicker",
+  title: "Componentes Nativos/DatePicker",
   component: DatePicker,
   tags: ["autodocs"],
   argTypes: {

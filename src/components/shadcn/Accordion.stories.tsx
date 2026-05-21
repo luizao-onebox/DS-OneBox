@@ -1,8 +1,8 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./Accordion"
 
 export default {
-  title: "Components/Accordion",
+  title: "Componentes Nativos/Accordion",
   component: Accordion,
   tags: ["autodocs"],
 }

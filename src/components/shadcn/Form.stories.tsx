@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import type { Meta, StoryObj } from "@storybook/react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -16,7 +16,7 @@ import {
 import { registerSchema, type RegisterFormData } from "./schemas"
 
 const meta = {
-  title: "Components/Form",
+  title: "Componentes Nativos/Form",
   component: Form,
   tags: ["autodocs"],
   argTypes: {},

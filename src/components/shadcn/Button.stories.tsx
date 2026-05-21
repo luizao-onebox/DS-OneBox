@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 /**
  * Button component with support for multiple variants, sizes, icons, and loading states.
  * @see {@link https://ui.shadcn.com/docs/components/button}
@@ -31,7 +31,7 @@ const iconOptions = {
 }
 
 export default {
-  title: "Components/Button",
+  title: "Componentes Nativos/Button",
   component: Button,
   parameters: {
     docs: {

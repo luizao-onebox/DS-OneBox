@@ -1,10 +1,10 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import * as React from "react"
 import { ScrollArea } from "./ScrollArea"
 import { Separator } from "./Separator"
 
 export default {
-  title: "Components/ScrollArea",
+  title: "Componentes Nativos/ScrollArea",
   component: ScrollArea,
   tags: ["autodocs"],
   parameters: {

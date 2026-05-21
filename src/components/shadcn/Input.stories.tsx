@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import * as React from "react"
 import { Meta, StoryObj } from "@storybook/react"
 import { Input } from "./Input"
@@ -7,7 +7,7 @@ import { Button } from "./Button"
 import { Search, Mail, Eye, EyeOff, Lock, CreditCard, Link, Send } from "lucide-react"
 
 const meta = {
-  title: "Components/Input",
+  title: "Componentes Nativos/Input",
   component: Input,
   parameters: {
     layout: "centered",

@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 /**
  * Design Tokens - Visual documentation for all design system values.
  * This story provides a comprehensive overview of all design tokens.
@@ -26,7 +26,7 @@ const radius = [
 ]
 
 export default {
-  title: "Design System/Tokens",
+  title: "Fundamentos/Tokens/Visão Geral",
   component: null,
   tags: ["autodocs"],
 }

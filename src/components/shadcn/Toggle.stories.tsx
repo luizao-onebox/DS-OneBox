@@ -1,8 +1,8 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Toggle } from "./Toggle"
 
 export default {
-  title: "Components/Toggle",
+  title: "Componentes Nativos/Toggle",
   component: Toggle,
   tags: ["autodocs"],
   argTypes: {

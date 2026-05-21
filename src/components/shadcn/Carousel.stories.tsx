@@ -1,8 +1,8 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "./Carousel"
 
 export default {
-  title: "Components/Carousel",
+  title: "Componentes Nativos/Carousel",
   component: Carousel,
   tags: ["autodocs"],
 }

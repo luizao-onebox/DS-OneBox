@@ -1,8 +1,8 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Alert, AlertDescription, AlertTitle } from "./Alert"
 
 export default {
-  title: "Components/Alert",
+  title: "Componentes Nativos/Alert",
   component: Alert,
   parameters: {
     layout: "padded",

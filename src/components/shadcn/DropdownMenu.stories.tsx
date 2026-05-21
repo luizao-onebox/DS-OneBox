@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -11,7 +11,7 @@ import {
 import { Button } from "./Button"
 
 export default {
-  title: "Components/DropdownMenu",
+  title: "Componentes Nativos/DropdownMenu",
   component: DropdownMenu,
   tags: ["autodocs"],
 }

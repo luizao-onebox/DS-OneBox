@@ -1,8 +1,8 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Skeleton } from "./Skeleton"
 
 export default {
-  title: "Components/Skeleton",
+  title: "Componentes Nativos/Skeleton",
   component: Skeleton,
   parameters: {
     layout: "padded",

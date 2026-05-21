@@ -1,9 +1,9 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "./Tooltip"
 import { Button } from "./Button"
 
 export default {
-  title: "Components/Tooltip",
+  title: "Componentes Nativos/Tooltip",
   component: Tooltip,
   tags: ["autodocs"],
   decorators: [
