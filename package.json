@@ -12,7 +12,9 @@
       "require": "./dist/index.umd.js"
     },
     "./style.css": "./dist/style.css",
-    "./tailwind-preset": "./tailwind-preset.js"
+    "./dist/style.css": "./dist/style.css",
+    "./tailwind-preset": "./tailwind-preset.js",
+    "./*": "./*"
   },
   "type": "module",
   "files": [
@@ -64,6 +66,7 @@
     "embla-carousel-react": "^8.6.0",
     "react-day-picker": "^9.14.0",
     "react-hook-form": "^7.76.0",
+    "react-is": "^19.2.6",
     "recharts": "^3.8.1",
     "sonner": "^2.0.7",
     "tailwindcss-animate": "^1.0.7",
