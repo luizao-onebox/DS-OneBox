@@ -37,13 +37,14 @@ export default defineConfig({
       fileName: (format) => `index.${format}.js`
     },
     rollupOptions: {
-      // Certifica de não embutir (bundle) react e react-dom no pacote final
-      external: ['react', 'react-dom', 'react/jsx-runtime', 'lucide-react'],
+      // Certifica de não embutir (bundle) dependências grandes/problemáticas no pacote final
+      external: ['react', 'react-dom', 'react/jsx-runtime', 'lucide-react', 'recharts'],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
-          'lucide-react': 'Lucide'
+          'lucide-react': 'Lucide',
+          'recharts': 'Recharts'
         }
       }
     }
