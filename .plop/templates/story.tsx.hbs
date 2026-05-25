@@ -1,0 +1,28 @@
+// @ts-nocheck
+import type { Meta, StoryObj } from "@storybook/react"
+import { {{pascalCase name}} } from "./{{pascalCase name}}"
+
+const meta = {
+  title: "Components/{{pascalCase name}}",
+  component: {{pascalCase name}},
+  parameters: {
+    layout: "centered",
+  },
+  tags: ["autodocs"],
+  argTypes: {
+    variant: {
+      control: "select",
+      options: ["default"],
+    },
+  },
+} satisfies Meta<typeof {{pascalCase name}}>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
+  args: {
+    children: "{{pascalCase name}} Example",
+    variant: "default",
+  },
+}
