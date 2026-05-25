@@ -1,4 +1,4 @@
-﻿// @ts-nocheck
+﻿﻿// @ts-nocheck
 import type { Meta, StoryObj } from "@storybook/react"
 import { useState } from "react"
 import { DataGrid as Table, Column } from "./Table"
