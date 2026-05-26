@@ -8,10 +8,1181 @@ This file provides context for Large Language Models (LLMs) to understand, consu
 - Icons: lucide-react
 - Font: Inter (Default sans-serif)
 
-## 2. Design Tokens (Strict Usage Required)
+## 2. AI Agent Skills (MUST READ FIRST)
+DS-OneBox ships with GBrain-style skills that encode workflows and best practices. ALWAYS read the relevant skill before generating code.
+
+### 2.1 Skill Files Available
+- DATA.md
+- FORMS.md
+- RESOLVER.md
+
+### 2.2 Skills Content
+
+### SKILL: DATA.md
+```markdown
+---
+title: Data Capabilities
+description: Workflow para exibir dados tabulares, gráficos e timeline
+version: 1.0.0
+updated: 2026-01-01
+---
+
+# Data Capabilities
+
+## Skill Overview
+
+Esta skill cobre tudo relacionado a exibir dados: tabelas simples, tabelas avançadas, gráficos, timelines e listas virtuais. A escolha correta do componente depende da quantidade de dados e da complexidade de interação necessária.
+
+## Decision Tree — Qual Componente Usar
+
+```
+Quantos dados você precisa exibir?
+├── < 50 itens → Table simples
+├── > 50 itens E precisa de sorting/filtering/pagination → DataTable (TanStack)
+├── Milhares de itens (performance) → VirtualList
+├── Precisa arrastar e reordernar → DragDrop
+└── Dados são uma atividade (ações no tempo) → ActivityTimeline
+
+Tipo de visualização?
+├── Métricas/KPIs → Cards + Progress
+├── Comparativo de categorias → BarChart
+├── Tendência ao longo do tempo → LineChart ou AreaChart
+├── Participação de mercado (porcentagem) → PieChart (Donut)
+├── Comparativo multidimensional → RadarChart
+├── Indicador de meta → GaugeChart
+├── Funil de conversão → FunnelChart
+└── Habilidades/Níveis → SkillBars (custom)
+```
+
+## Tables
+
+### Table — Uso Simples
+
+Para < 50 linhas, sem necessidade de sorting/filtering:
+
+```typescript
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "ds-onebox"
+
+const users = [
+  { id: 1, name: "Ana", email: "ana@email.com", role: "Admin" },
+  { id: 2, name: "Bruno", email: "bruno@email.com", role: "User" },
+]
+
+export function UserTable() {
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Nome</TableHead>
+          <TableHead>Email</TableHead>
+          <TableHead>Cargo</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {users.map((user) => (
+          <TableRow key={user.id}>
+            <TableCell>{user.name}</TableCell>
+            <TableCell>{user.email}</TableCell>
+            <TableCell>
+              <Badge variant="outline">{user.role}</Badge>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  )
+}
+```
+
+### DataTable — Uso Avançado
+
+Para > 50 linhas, ou quando precisar de sorting, filtering, ou seleção:
+
+```typescript
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "ds-onebox"
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from "@tanstack/react-table"
+import { useState } from "react"
+
+const data = [...] // suas 1000+ linhas
+
+const columns: ColumnDef<User>[] = [
+  {
+    accessorKey: "name",
+    header: "Nome",
+    cell: ({ row }) => <div className="font-medium">{row.getValue("name")}</div>,
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+  },
+  {
+    accessorKey: "role",
+    header: "Cargo",
+    cell: ({ row }) => (
+      <Badge variant={row.getValue("role") === "admin" ? "default" : "secondary"}>
+        {row.getValue("role")}
+      </Badge>
+    ),
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => <ActionMenu user={row.original} />,
+  },
+]
+
+export function AdvancedUserTable() {
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [rowSelection, setRowSelection] = useState({})
+
+  const table = useReactTable({
+    data,
+    columns,
+    state: {
+      sorting,
+      columnFilters,
+      rowSelection,
+    },
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onRowSelectionChange: setRowSelection,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  })
+
+  return (
+    <div className="space-y-4">
+      {/* Toolbar */}
+      <div className="flex items-center gap-4">
+        <Input
+          placeholder="Buscar por nome..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("name")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+        {Object.keys(rowSelection).length > 0 && (
+          <Badge variant="secondary">
+            {Object.keys(rowSelection).length} selecionado(s)
+          </Badge>
+        )}
+      </div>
+
+      {/* Table */}
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  Nenhum resultado encontrado.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Pagination */}
+      <div className="flex items-center justify-end space-x-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          Anterior
+        </Button>
+        <span className="text-body-sm text-muted-foreground">
+          Página {table.getState().pagination.pageIndex + 1} de{" "}
+          {table.getPageCount()}
+        </span>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          Próximo
+        </Button>
+      </div>
+    </div>
+  )
+}
+```
+
+## Charts
+
+### Regra de Ouro: Cores em HEX
+
+**SEMPRE use valores HEX ou RGB no ChartConfig. NUNCA use `hsl(var(--xxx))`**.
+
+```typescript
+// ✅ CERTO
+const chartConfig = {
+  desktop: { label: "Desktop", color: "#2563eb" },
+  mobile: { label: "Mobile", color: "#10b981" },
+}
+
+// ❌ ERRADO — hsl(var()) não funciona em SVG
+const chartConfig = {
+  desktop: { label: "Desktop", color: "hsl(var(--primary))" },
+}
+```
+
+### Regra de Ouro: Width/Height
+
+O `ChartContainer` aceita props `width` e `height`. Use-as para garantir dimensões:
+
+```typescript
+// ✅ CERTO — dimensões explícitas
+<ChartContainer config={config} width={500} height={300}>
+  <BarChart data={data}>...</BarChart>
+</ChartContainer>
+
+// ✅ CERTO — responsivo via classe
+<ChartContainer config={config} className="min-h-72 w-full">
+  <BarChart data={data}>...</BarChart>
+</ChartContainer>
+```
+
+### BarChart
+
+```typescript
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+} from "ds-onebox"
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts"
+
+const data = [
+  { month: "Jan", desktop: 186, mobile: 80 },
+  { month: "Fev", desktop: 305, mobile: 200 },
+]
+
+const config = {
+  desktop: { label: "Desktop", color: "#2563eb" },
+  mobile: { label: "Mobile", color: "#10b981" },
+} satisfies ChartConfig
+
+export function MonthlyBarChart() {
+  return (
+    <ChartContainer config={config} className="min-h-72 w-full">
+      <BarChart accessibilityLayer data={data}>
+        <CartesianGrid vertical={false} />
+        <XAxis dataKey="month" tickLine={false} tickMargin={10} />
+        <ChartTooltip content={<ChartTooltipContent />} />
+        <ChartLegend content={<ChartLegendContent />} />
+        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+        <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+      </BarChart>
+    </ChartContainer>
+  )
+}
+```
+
+### LineChart
+
+```typescript
+<ChartContainer config={config} className="min-h-72 w-full">
+  <LineChart data={data} margin={{ left: 12, right: 12 }}>
+    <CartesianGrid vertical={false} />
+    <XAxis dataKey="month" tickLine={false} />
+    <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+    <Line
+      dataKey="desktop"
+      type="monotone"
+      stroke="var(--color-desktop)"
+      strokeWidth={2}
+      dot={false}
+    />
+    <Line
+      dataKey="mobile"
+      type="monotone"
+      stroke="var(--color-mobile)"
+      strokeWidth={2}
+      dot={false}
+    />
+  </LineChart>
+</ChartContainer>
+```
+
+### AreaChart
+
+```typescript
+<ChartContainer config={config} className="min-h-72 w-full">
+  <AreaChart data={data} margin={{ left: 12, right: 12 }}>
+    <defs>
+      <linearGradient id="colorDesktopFill" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="5%" stopColor="var(--color-desktop)" stopOpacity={0.3} />
+        <stop offset="95%" stopColor="var(--color-desktop)" stopOpacity={0} />
+      </linearGradient>
+    </defs>
+    <CartesianGrid vertical={false} />
+    <XAxis dataKey="month" />
+    <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+    <Area
+      dataKey="desktop"
+      type="monotone"
+      fill="url(#colorDesktopFill)"
+      stroke="var(--color-desktop)"
+      strokeWidth={2}
+    />
+  </AreaChart>
+</ChartContainer>
+```
+
+### PieChart (Donut)
+
+```typescript
+const pieConfig = {
+  visitors: { label: "Visitantes" },
+} satisfies ChartConfig
+
+const pieData = [
+  { browser: "chrome", visitors: 275, fill: "#2563eb" },
+  { browser: "safari", visitors: 200, fill: "#10b981" },
+  { browser: "firefox", visitors: 187, fill: "#f59e0b" },
+]
+
+<ChartContainer config={pieConfig} className="mx-auto aspect-square max-h-64">
+  <PieChart>
+    <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+    <Pie
+      data={pieData}
+      dataKey="visitors"
+      nameKey="browser"
+      innerRadius={60}
+      strokeWidth={5}
+    >
+      {pieData.map((entry, index) => (
+        <Cell key={`cell-${index}`} fill={entry.fill} />
+      ))}
+    </Pie>
+  </PieChart>
+</ChartContainer>
+```
+
+### RadarChart
+
+```typescript
+const radarConfig = {
+  A: { label: "Produto A", color: "#2563eb" },
+  B: { label: "Produto B", color: "#10b981" },
+} satisfies ChartConfig
+
+const radarData = [
+  { subject: "Velocidade", A: 120, B: 110, fullMark: 150 },
+  { subject: "Confiabilidade", A: 98, B: 130, fullMark: 150 },
+]
+
+<ChartContainer config={radarConfig} className="min-h-72 w-full">
+  <RadarChart data={radarData}>
+    <PolarGrid stroke="hsl(var(--border))" />
+    <PolarAngleAxis dataKey="subject" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} />
+    <PolarRadiusAxis angle={30} domain={[0, 150]} />
+    <Radar name="Produto A" dataKey="A" stroke="var(--color-A)" fill="var(--color-A)" fillOpacity={0.3} />
+    <Radar name="Produto B" dataKey="B" stroke="var(--color-B)" fill="var(--color-B)" fillOpacity={0.3} />
+    <ChartLegend content={<ChartLegendContent />} />
+    <ChartTooltip content={<ChartTooltipContent />} />
+  </RadarChart>
+</ChartContainer>
+```
+
+### GaugeChart
+
+```typescript
+export function GaugeChart({ value, label }: { value: number; label: string }) {
+  return (
+    <div className="relative w-full max-w-xs aspect-[2/1] overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-[200%]">
+        <ChartContainer config={{}} className="aspect-square h-full w-full">
+          <PieChart>
+            <Pie
+              data={[
+                { name: "value", value },
+                { name: "remain", value: 100 - value },
+              ]}
+              cx="50%"
+              cy="50%"
+              startAngle={180}
+              endAngle={0}
+              innerRadius="75%"
+              outerRadius="100%"
+              paddingAngle={0}
+              dataKey="value"
+              stroke="none"
+            >
+              <Cell fill="#2563eb" />
+              <Cell fill="hsl(var(--muted))" />
+            </Pie>
+            <ChartTooltip content={<ChartTooltipContent hideIndicator hideLabel />} cursor={false} />
+          </PieChart>
+        </ChartContainer>
+      </div>
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col items-center pb-2">
+        <span className="text-h1 font-bold text-foreground leading-none">{value}%</span>
+        <span className="text-body-sm text-muted-foreground mt-1">{label}</span>
+      </div>
+    </div>
+  )
+}
+```
+
+## ActivityTimeline
+
+```typescript
+import { Timeline, TimelineItem, Avatar, Badge } from "ds-onebox"
+
+const activities = [
+  {
+    id: 1,
+    user: { name: "Ana Silva", avatar: "/avatars/ana.png" },
+    action: "criou",
+    target: "Nova tarefa Q1-2026",
+    time: "há 2 minutos",
+    status: "success",
+  },
+  {
+    id: 2,
+    user: { name: "Bruno Costa", avatar: "/avatars/bruno.png" },
+    action: "comentou em",
+    target: "Relatório Mensal",
+    time: "há 15 minutos",
+    status: "info",
+  },
+]
+
+export function ProjectTimeline() {
+  return (
+    <Timeline>
+      {activities.map((activity) => (
+        <TimelineItem
+          key={activity.id}
+          user={activity.user}
+          time={activity.time}
+        >
+          <div className="flex flex-col gap-1">
+            <div className="text-body-sm">
+              <span className="font-medium">{activity.user.name}</span>
+              {" "}{activity.action}{" "}
+              <span className="font-medium">{activity.target}</span>
+            </div>
+            <Badge variant={activity.status === "success" ? "default" : "secondary"}>
+              {activity.status}
+            </Badge>
+          </div>
+        </TimelineItem>
+      ))}
+    </Timeline>
+  )
+}
+```
+
+## Antipatterns
+
+### ❌ NÃO use Table para > 50 linhas sem DataTable
+```typescript
+// ERRADO — vai travar
+{bigData.map(item => <TableRow key={item.id}>...</TableRow>)}
+```
+
+### ❌ NÃO use cores hsl em ChartConfig
+```typescript
+// ERRADO — gráfico não aparece
+{ color: "hsl(var(--primary))" }
+
+// CERTO
+{ color: "#2563eb" }
+```
+
+### ❌ NÃO esqueça do ChartContainer
+```typescript
+// ERRADO — dimensions will be NaN
+<BarChart data={data}><Bar dataKey="value" /></BarChart>
+
+// CERTO
+<ChartContainer config={config}>
+  <BarChart data={data}><Bar dataKey="value" /></BarChart>
+</ChartContainer>
+```
+
+```
+
+### SKILL: FORMS.md
+```markdown
+---
+title: Form Capabilities
+description: Workflow completo para criar formulários com validação, estados e composição
+version: 1.0.0
+updated: 2026-01-01
+---
+
+# Form Capabilities
+
+## Skill Overview
+
+Todo formulário no DS-OneBox deve seguir este workflow. Não use formulários sem validação, sem estados de loading, ou sem feedback de erro. O DS-OneBox fornece toda a infraestrutura para criar formulários profissionais.
+
+## Quando Usar
+
+- Coleta de dados do usuário (login, cadastro, settings)
+- Filtros de busca com múltiplos critérios
+- Criação/edição de entidades (CRUD)
+- Qualquer input que precise ser validado antes de submit
+
+## Quando NÃO Usar
+
+- Busca simples com um único campo → use Input + CommandPalette
+- Toggle de preferência simples → use Switch isolado
+- Seleção de data única → use DatePicker isolado
+
+## Stack Obrigatória
+
+O DS-OneBox sempre usa esta stack para formulários:
+
+```
+┌─────────────────────────────────────────┐
+│            Form (wrapper)               │
+│  ┌─────────────────────────────────┐   │
+│  │     React Hook Form (RHF)        │   │
+│  │  ┌───────────────────────────┐  │   │
+│  │  │     Zod Schema            │  │   │
+│  │  │  (validação + tipagem)    │  │   │
+│  │  └───────────────────────────┘  │   │
+│  │  ┌───────────────────────────┐  │   │
+│  │  │     FormField + Input     │  │   │
+│  │  │  (cada campo do form)     │  │   │
+│  │  └───────────────────────────┘  │   │
+│  └─────────────────────────────────┘   │
+└─────────────────────────────────────────┘
+```
+
+Nunca substitua Zod por Yup, Joi, ou validação manual.
+Nunca substitua RHF por useState + onChange.
+
+## Workflow Passo a Passo
+
+### Passo 1: Definir o Schema Zod
+
+Crie o schema ANTES de qualquer coisa:
+
+```typescript
+import { z } from "zod"
+
+export const userFormSchema = z.object({
+  name: z
+    .string()
+    .min(2, "Nome precisa ter pelo menos 2 caracteres")
+    .max(50, "Nome muito longo"),
+  email: z
+    .string()
+    .email("Email inválido"),
+  age: z
+    .number()
+    .min(18, "Must be at least 18")
+    .optional(),
+  role: z
+    .enum(["admin", "user", "guest"], {
+      required_error: "Selecione um cargo",
+    }),
+  password: z
+    .string()
+    .min(8, "Senha precisa de pelo menos 8 caracteres")
+    .regex(/[A-Z]/, "Deve conter pelo menos uma letra maiúscula")
+    .regex(/[0-9]/, "Deve conter pelo menos um número"),
+  confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Senhas não coincidem",
+  path: ["confirmPassword"],
+})
+
+export type UserFormSchema = z.infer<typeof userFormSchema>
+```
+
+### Passo 2: Criar o Form com RHF
+
+```typescript
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { userFormSchema, type UserFormSchema } from "./schemas"
+
+export function CreateUserForm() {
+  const form = useForm<UserFormSchema>({
+    resolver: zodResolver(userFormSchema),
+    defaultValues: {
+      role: "user",
+    },
+  })
+
+  function onSubmit(data: UserFormSchema) {
+    console.log(data)
+    toast.success("Usuário criado com sucesso!")
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Nome</FormLabel>
+              <FormControl>
+                <Input placeholder="Seu nome completo" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="seu@email.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting ? "Salvando..." : "Criar Usuário"}
+        </Button>
+      </form>
+    </Form>
+  )
+}
+```
+
+### Passo 3: Estados Obrigatórios do Form
+
+Todo form deve ter pelo menos estes estados:
+
+| Estado | Como Detectar | O Que Fazer |
+|---|---|---|
+| isSubmitting | `form.formState.isSubmitting` | Desabilitar submit, mostrar spinner |
+| isSubmitted | `form.formState.isSubmitted` | Reset button aparece |
+| isDirty | `form.formState.isDirty` | Warn antes de sair |
+| isValid | `form.formState.isValid` | Habilitar submit só quando válido |
+| errors | `form.formState.errors` | Mostrar FormMessage em cada campo |
+
+```typescript
+// Exemplo completo de estados
+<Button
+  type="submit"
+  disabled={
+    form.formState.isSubmitting ||
+    (!form.formState.isValid && form.formState.submitCount > 0)
+  }
+>
+  {form.formState.isSubmitting && <Spinner className="mr-2" />}
+  {form.formState.isSubmitting ? "Salvando..." : "Salvar"}
+</Button>
+```
+
+### Passo 4: Feedback de Sucesso/Erro
+
+SEMPRE mostre toast após submit:
+
+```typescript
+async function onSubmit(data: UserFormSchema) {
+  try {
+    await createUser(data)
+    toast.success("Usuário criado com sucesso!")
+    form.reset()
+  } catch (error) {
+    toast.error("Erro ao criar usuário. Tente novamente.")
+  }
+}
+```
+
+## Composição com Outros Componentes
+
+### Form + Select
+
+```typescript
+<FormField
+  control={form.control}
+  name="role"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Cargo</FormLabel>
+      <Select onValueChange={field.onChange} defaultValue={field.value}>
+        <FormControl>
+          <SelectTrigger>
+            <SelectValue placeholder="Selecione um cargo" />
+          </SelectTrigger>
+        </FormControl>
+        <SelectContent>
+          <SelectItem value="admin">Administrador</SelectItem>
+          <SelectItem value="user">Usuário</SelectItem>
+          <SelectItem value="guest">Convidado</SelectItem>
+        </SelectContent>
+      </Select>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+```
+
+### Form + DatePicker
+
+```typescript
+<FormField
+  control={form.control}
+  name="birthDate"
+  render={({ field }) => (
+    <FormItem className="flex flex-col">
+      <FormLabel>Data de Nascimento</FormLabel>
+      <Popover>
+        <PopoverTrigger asChild>
+          <FormControl>
+            <Button
+              variant="outline"
+              className={
+                !field.value ? "text-muted-foreground" : ""
+              }
+            >
+              {field.value ? (
+                format(field.value, "PPP")
+              ) : (
+                <span>Pick a date</span>
+              )}
+              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+            </Button>
+          </FormControl>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start">
+          <DatePicker
+            selected={field.value}
+            onSelect={field.onChange}
+            disabled={(date) =>
+              date > new Date() || date < new Date("1900-01-01")
+            }
+          />
+        </PopoverContent>
+      </Popover>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+```
+
+### Form + Checkbox
+
+```typescript
+<FormField
+  control={form.control}
+  name="terms"
+  render={({ field }) => (
+    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+      <FormControl>
+        <Checkbox
+          checked={field.value}
+          onCheckedChange={field.onChange}
+        />
+      </FormControl>
+      <div className="space-y-1 leading-none">
+        <FormLabel>
+          Accept terms and conditions
+        </FormLabel>
+        <FormDescription>
+          Você concorda com nossos termos de serviço.
+        </FormDescription>
+        <FormMessage />
+      </div>
+    </FormItem>
+  )}
+/>
+```
+
+### Form + Combobox
+
+```typescript
+<FormField
+  control={form.control}
+  name="country"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>País</FormLabel>
+      <FormControl>
+        <Combobox
+          options={countryOptions}
+          value={field.value}
+          onValueChange={field.onChange}
+          placeholder="Buscar país..."
+        />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+```
+
+## PasswordStrength — Composable
+
+Para campos de senha, use PasswordStrength junto com validação Zod:
+
+```typescript
+<FormField
+  control={form.control}
+  name="password"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Senha</FormLabel>
+      <FormControl>
+        <Input type="password" {...field} />
+      </FormControl>
+      <PasswordStrength password={field.value} />
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+```
+
+## DatePicker — Custom Dropdown
+
+O DatePicker usa react-day-picker v9. Para substituir o select nativo:
+
+```typescript
+<DatePicker
+  selected={date}
+  onSelect={setDate}
+  components={{
+    Dropdown: ({ value, onChange, options }) => (
+      <Select
+        value={value}
+        onValueChange={onChange}
+      >
+        <SelectTrigger>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {options?.map((opt) => (
+            <SelectItem key={opt.value} value={opt.value}>
+              {opt.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    ),
+  }}
+/>
+```
+
+## Antipatterns — O Que NÃO Fazer
+
+### ❌ NÃO use Input sem FormField
+```typescript
+// ERRADO
+<input
+  value={name}
+  onChange={(e) => setName(e.target.value)}
+/>
+
+// CERTO
+<FormField name="name" render={({ field }) => (
+  <Input {...field} />
+)} />
+```
+
+### ❌ NÃO valide no onChange
+```typescript
+// ERRADO
+<Input onChange={(e) => {
+  if (e.target.value.length < 2) return
+  setName(e.target.value)
+}} />
+
+// CERTO — deixe o Zod validar no submit
+```
+
+### ❌ NÃO mostre erros inline SEM FormMessage
+```typescript
+// ERRADO
+<Input />
+{errors.name && <span className="text-red-500">{errors.name.message}</span>}
+
+// CERTO
+<FormField ...>
+  <FormControl><Input {...field} /></FormControl>
+  <FormMessage />
+</FormField>
+```
+
+### ❌ NÃO use useState para todo form state
+```typescript
+// ERRADO
+const [name, setName] = useState("")
+const [email, setEmail] = useState("")
+const [loading, setLoading] = useState(false)
+
+// CERTO
+const form = useForm()
+const { isSubmitting } = form.formState
+```
+
+## Extensões Futuras
+
+- `FormSection`: agrupar campos com título
+- `FormArray`: campos dinâmicos (adicionar/remover items)
+- `FormAsyncValidation`: validação async (ex: verificar email disponível)
+
+```
+
+### SKILL: RESOLVER.md
+```markdown
+---
+title: DS-OneBox Skills Resolver
+description: Roteador de tarefas que indica qual skill/component usar para cada necessidade
+version: 1.0.0
+updated: 2026-01-01
+---
+
+# DS-OneBox Skills Resolver
+
+## Propósito
+
+Este documento é o roteador central. Para qualquer tarefa de UI, ele aponta qual capability ou componente usar. Quando a IA receber uma instrução como "criar um formulário de login" ou "mostrar dados em tabela", ela deve consultar este resolver ANTES de começar a codificar.
+
+## Fluxo de Decisão Principal
+
+```
+1. Qual o objetivo principal?
+├── Mostrar informações ao usuário → goto FEEDBACK
+├── Coletar dados do usuário → goto FORMS
+├── Exibir dados tabulares → goto DATA
+├── Organizar layout da página → goto LAYOUT
+├── Navegar entre telas/seções → goto NAVIGATION
+├── Compor múltiplas informações → goto COMPOSITION
+└── Desbloquear/interagir com sistema → goto INTERACTION
+```
+
+## Detalhamento por Categoria
+
+### FEEDBACK — Comunicar estado ao usuário
+
+| Task | Solução | Componentes |
+|---|---|---|
+| Notificação breve (sucesso, erro, info) | Toast | ToastProvider, toast() |
+| Mensagem destacada (alerta, warning) | Alert | Alert, AlertTitle, AlertDescription |
+| Indicador de status (badge, tag) | Badge | Badge (variants: default, success, warning, destructive) |
+| Progresso de operação (barra, circular) | Progress | Progress |
+| Skeleton loading (carregamento) | Skeleton | Skeleton |
+
+### FORMS — Coletar e validar dados
+
+| Task | Solução | Componentes |
+|---|---|---|
+| Formulário com validação | Form + Zod + React Hook Form | Form, FormField, FormItem, FormLabel, FormControl, FormMessage |
+| Input de texto | Input | Input (variants: default, file, floating-label) |
+| Checkbox | Checkbox | Checkbox |
+| Radio group | RadioGroup | RadioGroup, RadioGroupItem |
+| Toggle/Switch | Switch | Switch |
+| Slider/Range | Slider | Slider |
+| Select/Dropdown | Select | Select, SelectTrigger, SelectContent, SelectItem, SelectValue |
+| Date picker | DatePicker | DatePicker (react-day-picker v9 com custom Dropdown) |
+| Combobox (busca + select) | Combobox | Combobox, ComboboxItem |
+| Input de senha com força | PasswordStrength | PasswordStrength |
+| Input OTP (código) | OTPInput | OTPInput |
+
+### DATA — Exibir e gerenciar dados
+
+| Task | Solução | Componentes |
+|---|---|---|
+| Tabela simples (< 50 linhas) | Table | Table, TableHeader, TableBody, TableRow, TableHead, TableCell |
+| Tabela avançada (> 50 linhas, sorting, filtering, pagination) | DataTable | DataTable com TanStack Table + ColumnDef |
+| Timeline de atividades | ActivityTimeline | Timeline, TimelineItem |
+| Grupo de avatares | AvatarGroup | Avatar, AvatarGroup |
+| Gráfico de barras | BarChart | ChartContainer + Recharts BarChart |
+| Gráfico de linhas | LineChart | ChartContainer + Recharts LineChart |
+| Gráfico de área | AreaChart | ChartContainer + Recharts AreaChart |
+| Gráfico de rosca | PieChart | ChartContainer + Recharts PieChart |
+| Gráfico radar (aranha) | RadarChart | ChartContainer + Recharts RadarChart |
+| Gráfico de gauge | GaugeChart | ChartContainer + PieChart (half circle) |
+| Gráfico de funil | FunnelChart | ChartContainer + Recharts FunnelChart |
+| Skill bars (progresso) | SkillBars | custom div com bg-muted + div animado |
+| Lista virtual (milhares de itens) | VirtualList | VirtualList |
+| Drag and drop | DragDrop | DragDrop, DragDropItem (react-beautiful-dnd) |
+
+### LAYOUT — Organizar estrutura da página
+
+| Task | Solução | Componentes |
+|---|---|---|
+| Container principal | Container | Container (layout primitive) |
+| Grid responsivo | Grid | Grid, GridItem |
+| Flex container | Flex | Flex, FlexItem |
+| Seção com padding | Section | Section |
+| Card | Card | Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter |
+| Modal/Dialog | Dialog | Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription |
+| Drawer (painel lateral) | Drawer | Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerFooter |
+| Sidebar de navegação | Sidebar | Sidebar, SidebarProvider, SidebarTrigger, SidebarContent, SidebarGroup, SidebarMenu |
+| Popover | Popover | Popover, PopoverTrigger, PopoverContent |
+| Tooltip | Tooltip | Tooltip, TooltipTrigger, TooltipContent |
+| Hover card | HoverCard | HoverCard, HoverCardTrigger, HoverCardContent |
+| Tabs | Tabs | Tabs, TabsList, TabsTrigger, TabsContent |
+| Accordion (retrátil) | Accordion | Accordion, AccordionItem, AccordionTrigger, AccordionContent |
+| Separator | Separator | Separator |
+| Aspect ratio | AspectRatio | AspectRatio |
+| Scroll area | ScrollArea | ScrollArea, ScrollAreaViewport, ScrollAreaScrollbar, ScrollAreaThumb |
+
+### NAVIGATION — Mover entre telas/seções
+
+| Task | Solução | Componentes |
+|---|---|---|
+| Navegação principal com submenus | NavigationMenu | NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLink |
+| Breadcrumb | Breadcrumb | Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator |
+| Paginação | Pagination | Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis |
+| Link | Link | link (shadcn/ui) |
+| Context menu (botão direito) | ContextMenu | ContextMenu, ContextMenuTrigger, ContextMenuContent, ContextMenuItem, ContextMenuCheckboxItem, ContextMenuRadioGroup, ContextMenuLabel, ContextMenuSeparator |
+| Command palette (Ctrl+K) | CommandPalette | CommandPalette, CommandInput, CommandList, CommandGroup, CommandItem |
+
+### COMPOSITION — Combinar múltiplas capacidades
+
+| Task | Solução | Componentes |
+|---|---|---|
+| Dashboard com charts | DashboardCharts | DashboardCharts (compose: Card + ChartContainer + Recharts) |
+| Bloco de filtro avançado | AdvancedFilter | AdvancedFilter (compose: Input + Select + DatePicker + Button) |
+| Timeline de projeto | ActivityTimeline | Timeline + AvatarGroup + Badge |
+| Lista com ações em batch | DataTable + Switch/Checkbox | DataTable com seleção + CommandPalette |
+| Página de detalhes | Card + Accordion + Tabs | Composition de Layout + Data |
+
+### INTERACTION — Desbloquear e操纵 sistema
+
+| Task | Solução | Componentes |
+|---|---|---|
+| Toast com ação | toast() com onClick | toast("Mensagem", { action: { onClick: fn } }) |
+| Toasts em múltiplas posições | ToastMultiPosition | ToastProvider, toast() com position prop |
+| Copiar para clipboard | useClipboard hook | custom hook |
+| Hotkey global | CommandPalette | CommandPalette com shortcuts |
+
+## Regras de Composição Obrigatórias
+
+### 1. Forms sempre em trio
+Todo formulário deve usar a tríade:
+```
+Form + zod schema + react-hook-form
+```
+Nunca use Input isolado. Nunca use validação manual. Sempre use o padrão do DS-OneBox.
+
+### 2. Charts precisam de 3 coisas
+Todo gráfico deve ter:
+```
+ChartContainer + ChartConfig (cores HEX) + Recharts component
+```
+Nunca use `hsl(var(--xxx))` nas cores do config. Sempre HEX ou RGB.
+
+### 3. Tables têm threshold
+```
+< 50 linhas → Table simples
+> 50 linhas → DataTable (TanStack)
+```
+
+### 4. Accordion com elementos interativos
+Para colocar Switch/Button dentro de AccordionTrigger:
+```
+<AccordionTrigger interactiveContent>
+```
+Isso evita button dentro de button.
+
+### 5. Dialog precisa de provider
+Todo Dialog deve estar dentro de um DialogProvider no root da aplicação.
+
+### 6. Sidebar requer setup específico
+Sidebar precisa que o CSS global do DS seja importado ANTES do SidebarProvider. E o `#root` (flex-direction: column) deve ser resetado.
+
+## Como Usar Este Resolver
+
+1. **Receba uma tarefa**: "criar página de settings com forms e tabela"
+2. **Identifique as sub-tarefas**: "forms" (FORMS) + "tabela" (DATA)
+3. **Consulte a tabela correspondente**: encontre a solução exata
+4. **Aplique as regras de composição**: verifique obrigatoriedades
+5. **Implemente**: use os componentes listados
+
+## Limites de Cada Componente
+
+| Componente | Não fazer |
+|---|---|
+| Table | Não use para > 50 linhas |
+| Toast | Não abuse — máximo 3 simultâneos |
+| Dialog | Não aninhe — máximo 1 por vez |
+| Accordion | Não aninhe — máximo 2 níveis |
+| Tabs | Não use para > 7 abas |
+| Tooltip | Não use para conteúdo longo (> 50 chars) |
+
+## Atualização
+
+Este resolver é versionado junto com o DS-OneBox. Quando um novo componente for adicionado, esta tabela deve ser atualizada primeiro.
+
+```
+
+## 3. Design Tokens (Strict Usage Required)
 DO NOT use arbitrary tailwind classes for colors or typography. ALWAYS use the semantic tokens defined below.
 
-### 2.1 Typography (Semantic Classes)
+### 3.1 Typography (Semantic Classes)
 The design system abstracts font-size, line-height, letter-spacing, and font-weight into single semantic utility classes.
 - Display: text-display-2xl, text-display-xl, text-display-lg, text-display-md, text-display-sm
 - Headings: text-h1, text-h2, text-h3, text-h4, text-h5, text-h6
@@ -19,22 +1190,22 @@ The design system abstracts font-size, line-height, letter-spacing, and font-wei
 - Labels: text-label-xl, text-label-lg, text-label-md, text-label-sm, text-label-xs
 - Code: text-code-lg, text-code-md, text-code-sm, text-code-xs
 
-### 2.2 Colors (Scales 50 to 950)
+### 3.2 Colors (Scales 50 to 950)
 Colors follow a semantic 3-layer architecture.
 - Brand/Primary: primary-{scale} (e.g., bg-primary-500)
 - Semantic States: success-{scale}, warning-{scale}, destructive-{scale}, info-{scale}
 - Neutrals: neutral-{scale} (Use for borders, backgrounds)
 
-### 2.3 Layout Primitives
+### 3.3 Layout Primitives
 Avoid hardcoding pixel values (e.g., w-[400px]). Use fluid classes like w-full max-w-md or primitives:
 - <Container>, <Section>, <Grid>, <Flex> (Exported from ds-onebox)
 
-## 3. Golden Rules for Code Generation
+## 4. Golden Rules for Code Generation
 1. Icons: Always import from lucide-react. For buttons, use className="mr-2 h-4 w-4".
 2. Responsive Spacing: Prefer tailwind spacing (p-4, gap-4) over arbitrary values (p-[16px]).
 3. Shadcn UI Architecture: Many components use dot notation or multiple exports (e.g., Card, CardHeader, CardTitle, CardContent). Always read the component's source code below to see the exact exports and props before using them.
 
-## 4. UI Components Source Code (Shadcn)
+## 5. UI Components Source Code (Shadcn)
 Below is the exact source code for each component. Read this to understand the exported sub-components, the props interfaces, and the CVA variants available.
 
 ### Component: Accordion
@@ -61,22 +1232,54 @@ AccordionItem.displayName = "AccordionItem"
 
 const AccordionTrigger = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
-  <AccordionPrimitive.Header className="flex">
-    <AccordionPrimitive.Trigger
-      ref={ref}
-      className={cn(
-        "flex flex-1 items-center justify-between py-4 font-medium transition-all duration-200 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md [&[data-state=open]>svg]:rotate-180",
-        className
-      )}
-      {...props}
-    >
-      {children}
-      <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-300 ease-out" />
-    </AccordionPrimitive.Trigger>
-  </AccordionPrimitive.Header>
-))
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger> & {
+    interactiveContent?: boolean
+  }
+>(({ className, children, interactiveContent = false, ...props }, ref) => {
+  if (interactiveContent) {
+    return (
+      <AccordionPrimitive.Header className="flex">
+        <AccordionPrimitive.Trigger
+          ref={ref}
+          asChild
+          {...props}
+        >
+          <div
+            role="button"
+            tabIndex={0}
+            className={cn(
+              "flex flex-1 items-center justify-between py-4 font-medium transition-all duration-200 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md cursor-pointer",
+              className
+            )}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault()
+              }
+            }}
+          >
+            {children}
+          </div>
+        </AccordionPrimitive.Trigger>
+      </AccordionPrimitive.Header>
+    )
+  }
+
+  return (
+    <AccordionPrimitive.Header className="flex">
+      <AccordionPrimitive.Trigger
+        ref={ref}
+        className={cn(
+          "flex flex-1 items-center justify-between py-4 font-medium transition-all duration-200 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md [&[data-state=open]>svg]:rotate-180",
+          className
+        )}
+        {...props}
+      >
+        {children}
+        <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-300 ease-out" />
+      </AccordionPrimitive.Trigger>
+    </AccordionPrimitive.Header>
+  )
+})
 AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName
 
 const AccordionContent = React.forwardRef<
@@ -96,10 +1299,11 @@ AccordionContent.displayName = AccordionPrimitive.Content.displayName
 /**
  * @description
  * Container retrátil para exibir listas de conteúdos (FAQ, detalhes avançados).
- * 
+ *
  * **REGRAS PARA A IA:**
  * - Sempre envolva os `<AccordionItem>` com `<Accordion type="single" collapsible>` para abrir apenas um por vez, ou `type="multiple"` para vários simultaneamente.
  * - Todos `<AccordionItem>` precisam de um `value="..."` único.
+ * - Para colocar elementos interativos (Switch, Button, etc.) dentro do `<AccordionTrigger>`, use a prop `interactiveContent={true}`. Isso substitui o <button> nativo por um <div role="button">, evitando o erro validateDOMNesting (button dentro de button).
  */
 export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }
 
@@ -1244,16 +2448,19 @@ function useChart() {
  * **REGRAS PARA A IA:**
  * - Sempre envolva a tag do Recharts (ex: `<BarChart>`) com este container.
  * - Passe um objeto `config` mapeando as chaves dos dados para rótulos e cores.
+ * - **IMPORTANTE:** Para uso com Recharts, certifique-se de que as cores na configuração (`color`) usem HEX ou RGB (ex: `#2563eb`), pois o formato `hsl(var(--xxx))` não funciona corretamente dentro dos atributos SVG gerados pelo ChartContainer.
  */
 const ChartContainer = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {
     config: ChartConfig
+    width?: string | number
+    height?: string | number
     children: React.ComponentProps<
       typeof ResponsiveContainer
     >["children"]
   }
->(({ id, className, children, config, ...props }, ref) => {
+>(({ id, className, children, config, width = "100%", height = "100%", ...props }, ref) => {
   const uniqueId = React.useId()
   const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`
 
@@ -1263,9 +2470,10 @@ const ChartContainer = React.forwardRef<
         data-chart={chartId}
         ref={ref}
         className={cn(
-          "flex aspect-video justify-center text-body-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
+          "flex h-full w-full justify-center text-body-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
           className
         )}
+        style={{ minHeight: "300px" }}
         {...props}
       >
         <style
@@ -1281,7 +2489,9 @@ const ChartContainer = React.forwardRef<
               .join("\n"),
           }}
         />
-        <ResponsiveContainer>{children}</ResponsiveContainer>
+        <ResponsiveContainer width={width} height={height}>
+          {children}
+        </ResponsiveContainer>
       </div>
     </ChartContext.Provider>
   )
@@ -6188,7 +7398,7 @@ function VirtualList<T>({
 export { VirtualList }
 
 \\n
-## 5. Blocks Source Code (Complex Layouts)
+## 6. Blocks Source Code (Complex Layouts)
 Below is the exact source code for the complex blocks. Use this to understand the props they accept and how they compose the base components.
 
 ### Block: ActivityTimeline
