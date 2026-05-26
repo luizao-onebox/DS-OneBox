@@ -107,13 +107,58 @@ const DialogDescription = React.forwardRef<
 DialogDescription.displayName = DialogPrimitive.Description.displayName
 
 /**
+ * @name Dialog
  * @description
- * Janela modal (Overlay) usada para focar a atenção do usuário em uma tarefa ou informação.
- * 
- * **REGRAS PARA A IA:**
- * - Sempre estruture como: `<Dialog><DialogTrigger /><DialogContent><DialogHeader><DialogTitle /></DialogHeader>...</DialogContent></Dialog>`.
- * - Não use Dialogs para fluxos imensos. Se for formulário longo, prefira o componente `Sheet`.
- * - Dialogs são bloqueantes por natureza (foco preso no modal). 
+ * Janela modal (Overlay) para focar atenção do usuário em uma tarefa ou informação específica.
+ *
+ * ## Workflow (LEIA PRIMEIRO)
+ * 1. O Dialog precisa estar dentro de um DialogProvider no root da aplicação
+ * 2. Estruture: Dialog > DialogTrigger > DialogContent > DialogHeader > DialogTitle > Content > DialogFooter
+ * 3. Para conteúdo longo ou filtros, use Drawer ao invés de Dialog
+ *
+ * ## Uso Básico
+ * ```tsx
+ * <Dialog>
+ *   <DialogTrigger asChild>
+ *     <Button>Editar</Button>
+ *   </DialogTrigger>
+ *   <DialogContent>
+ *     <DialogHeader>
+ *       <DialogTitle>Editar Usuário</DialogTitle>
+ *       <DialogDescription>Faça as alterações necessárias.</DialogDescription>
+ *     </DialogHeader>
+ *     <UserForm />
+ *     <DialogFooter>
+ *       <DialogTrigger asChild>
+ *         <Button variant="outline">Cancelar</Button>
+ *       </DialogTrigger>
+ *       <Button onClick={handleSave}>Salvar</Button>
+ *     </DialogFooter>
+ *   </DialogContent>
+ * </Dialog>
+ * ```
+ *
+ * ## Estrutura Obrigatória
+ * ```
+ * Dialog
+ * ├── DialogTrigger (o botão que abre)
+ * └── DialogContent (o modal)
+ *     ├── DialogHeader
+ *     │   ├── DialogTitle (obrigatório para acessibilidade)
+ *     │   └── DialogDescription (opcional)
+ *     ├── seu conteúdo (form, info, etc.)
+ *     └── DialogFooter
+ *         └── botões de ação
+ * ```
+ *
+ * ## Regras Obrigatórias
+ * - **NÃO aninhe Dialogs** — se precisar de segundo modal, use Drawer
+ * - **Para conteúdo longo (scroll), use Drawer** ao invés de Dialog
+ * - **Para confirmações destrutivas, use AlertDialog** ao invés de Dialog
+ * - **DialogTitle é obrigatório** — leitores de tela dependem dele
+ *
+ * ## Props Comuns do DialogTrigger
+ * - `asChild` — Faz o trigger renderizar como o elemento filho (ex: Button), não como button nativo
  */
 export {
   Dialog,

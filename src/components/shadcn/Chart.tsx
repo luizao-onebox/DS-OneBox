@@ -33,13 +33,39 @@ function useChart() {
 }
 
 /**
+ * @name ChartContainer
  * @description
- * Container que envolve qualquer componente Recharts para injetar as variáveis de cor dinâmicas.
- * 
- * **REGRAS PARA A IA:**
- * - Sempre envolva a tag do Recharts (ex: `<BarChart>`) com este container.
- * - Passe um objeto `config` mapeando as chaves dos dados para rótulos e cores.
- * - **IMPORTANTE:** Para uso com Recharts, certifique-se de que as cores na configuração (`color`) usem HEX ou RGB (ex: `#2563eb`), pois o formato `hsl(var(--xxx))` não funciona corretamente dentro dos atributos SVG gerados pelo ChartContainer.
+ * Container que envolve qualquer componente Recharts para injetar as variáveis de cor dinâmicas e fornecer dimensões responsivas.
+ *
+ * ## Workflow (LEIA PRIMEIRO)
+ * 1. Defina o `chartConfig` com cores em HEX (NUNCA hsl ou variáveis CSS)
+ * 2. Envolva o componente Recharts com este container
+ * 3. Passe `width` e `height` para garantir dimensões (fallback: 100%)
+ *
+ * ## Uso
+ * ```tsx
+ * const config = {
+ *   desktop: { label: "Desktop", color: "#2563eb" },
+ *   mobile: { label: "Mobile", color: "#10b981" },
+ * } satisfies ChartConfig
+ *
+ * <ChartContainer config={config} width={500} height={300}>
+ *   <BarChart data={data}>
+ *     <Bar dataKey="desktop" fill="var(--color-desktop)" />
+ *   </BarChart>
+ * </ChartContainer>
+ * ```
+ *
+ * ## Regras Obrigatórias
+ * - **Cores DEVEM ser HEX ou RGB** (ex: `#2563eb`). hsl(var()) NÃO funciona em SVG inline.
+ * - **SEMPRE use ChartContainer** para qualquer gráfico Recharts
+ * - Para responsividade, use `className="w-full"` e defina altura com `height` ou `className="min-h-X"
+ *
+ * ## Props
+ * - `config` — objeto mapeando chaves de dados para label e color (obrigatório)
+ * - `width` — largura do gráfico (padrão: "100%")
+ * - `height` — altura do gráfico (padrão: "100%")
+ * - `children` — componente Recharts (BarChart, LineChart, etc.)
  */
 const ChartContainer = React.forwardRef<
   HTMLDivElement,

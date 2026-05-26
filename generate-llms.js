@@ -8,6 +8,7 @@ const __dirname = path.dirname(__filename);
 const shadcnDir = './src/components/shadcn';
 const blocksDir = './src/components/blocks';
 const skillsDir = './skills';
+const templatesDir = './templates';
 
 function getFiles(dir, extension = '.tsx') {
   if (!fs.existsSync(dir)) return [];
@@ -23,9 +24,17 @@ function getSkillFiles(dir) {
     .map(f => f);
 }
 
+function getTemplateFiles(dir) {
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir)
+    .filter(f => f.endsWith('.md'))
+    .map(f => f);
+}
+
 const shadcnComponents = getFiles(shadcnDir, '.tsx');
 const blocks = getFiles(blocksDir, '.tsx');
 const skills = getSkillFiles(skillsDir);
+const templates = getTemplateFiles(templatesDir);
 
 let llmDocContent = "# DS-OneBox: LLM Context & Documentation\n";
 llmDocContent += "This file provides context for Large Language Models (LLMs) to understand, consume, and generate code using the DS-OneBox Design System.\n\n";
@@ -98,14 +107,16 @@ for (let b of blocks) {
   llmDocContent += "```tsx\n" + code + "\n```\n\n";
 }
 
-llmDocContent += "## 7. Design Graph (Machine-Readable)\n";
-llmDocContent += "For programmatic access to component relationships, capabilities, and rules, see DESIGN_GRAPH.json in the root of the repository.\n";
-llmDocContent += "This JSON file contains:\n";
-llmDocContent += "- Capabilities with their components\n";
-llmDocContent += "- Component relationships (parent/children)\n";
-llmDocContent += "- Valid compositions (DashboardKPIs, UserForm, etc.)\n";
-llmDocContent += "- Integration rules with severity levels\n";
-llmDocContent += "- Antipatterns to avoid\n";
+llmDocContent += "## 8. Page Templates (AI Generation Ready)\n";
+llmDocContent += "Templates prontos para IA gerar páginas completas. Cada template inclui estrutura, componentes e fluxo de dados.\n\n";
+
+if (templates.length > 0) {
+  for (let t of templates) {
+    const content = fs.readFileSync(path.join(templatesDir, t), 'utf8');
+    llmDocContent += "### Template: " + t.replace('.md', '') + "\n";
+    llmDocContent += "```markdown\n" + content + "\n```\n\n";
+  }
+}
 
 if (!fs.existsSync('./public')) {
   fs.mkdirSync('./public');

@@ -85,12 +85,51 @@ const AccordionContent = React.forwardRef<
 AccordionContent.displayName = AccordionPrimitive.Content.displayName
 
 /**
+ * @name Accordion
  * @description
- * Container retrátil para exibir listas de conteúdos (FAQ, detalhes avançados).
+ * Container retrátil para exibir listas de conteúdos (FAQ, detalhes avançados, configurações).
  *
- * **REGRAS PARA A IA:**
- * - Sempre envolva os `<AccordionItem>` com `<Accordion type="single" collapsible>` para abrir apenas um por vez, ou `type="multiple"` para vários simultaneamente.
- * - Todos `<AccordionItem>` precisam de um `value="..."` único.
- * - Para colocar elementos interativos (Switch, Button, etc.) dentro do `<AccordionTrigger>`, use a prop `interactiveContent={true}`. Isso substitui o <button> nativo por um <div role="button">, evitando o erro validateDOMNesting (button dentro de button).
+ * ## Workflow (LEIA PRIMEIRO)
+ * 1. Envolva tudo com `<Accordion type="single" collapsible>` (um aberto por vez) ou `type="multiple"` (vários abertos)
+ * 2. Cada item é um `<AccordionItem value="único">`
+ * 3. Dentro do Item: `<AccordionTrigger>` + `<AccordionContent>`
+ *
+ * ## Uso Básico
+ * ```tsx
+ * <Accordion type="single" collapsible>
+ *   <AccordionItem value="item-1">
+ *     <AccordionTrigger>Pergunta 1</AccordionTrigger>
+ *     <AccordionContent>Resposta 1</AccordionContent>
+ *   </AccordionItem>
+ *   <AccordionItem value="item-2">
+ *     <AccordionTrigger>Pergunta 2</AccordionTrigger>
+ *     <AccordionContent>Resposta 2</AccordionContent>
+ *   </AccordionItem>
+ * </Accordion>
+ * ```
+ *
+ * ## Regras Obrigatórias
+ * - **Máximo 2 níveis de aninhamento**. 3 níveis é confuso e inacessível.
+ * - **Cada AccordionItem precisa de `value` único**
+ * - **Para elementos interativos dentro do Trigger** (Switch, Button): use `interactiveContent={true}`
+ *
+ * ## AccordionTrigger com Elementos Interativos
+ * O Trigger é um `<button>` nativo. Colocar Switch/Button dentro causa validateDOMNesting.
+ * Solução:
+ * ```tsx
+ * // ❌ ERRADO
+ * <AccordionTrigger><Switch /> Título</AccordionTrigger>
+ *
+ * // ✅ CERTO
+ * <AccordionTrigger interactiveContent>
+ *   <Flex align="center" justify="between" className="w-full">
+ *     <span>Título</span>
+ *     <Switch />
+ *   </Flex>
+ * </AccordionTrigger>
+ * ```
+ *
+ * ## Props do AccordionTrigger
+ * - `interactiveContent?: boolean` — Substitui button nativo por div role="button". Use quando houver elementos interativos dentro.
  */
 export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }
