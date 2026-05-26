@@ -1,0 +1,311 @@
+{
+  "version": "1.0.0",
+  "generated": "2026-01-01",
+  "description": "Machine-readable graph of DS-OneBox components, capabilities, and relationships for AI agents",
+
+  "capabilities": {
+    "FEEDBACK": {
+      "description": "Comunicar estado ao usuário",
+      "components": ["Toast", "Alert", "Badge", "Progress", "Skeleton", "CommandPalette", "ScrollArea"],
+      "rules": [
+        "Toast: máximo 3 simultâneos",
+        "Toast: duração 3-5 segundos",
+        "Skeleton para conteúdo carregando",
+        "Spinner para ações inline em botões",
+        "Badge: success = bom, destructive = ruim"
+      ]
+    },
+    "FORMS": {
+      "description": "Coletar e validar dados",
+      "components": ["Form", "FormField", "FormItem", "FormLabel", "FormControl", "FormMessage", "Input", "Checkbox", "RadioGroup", "Switch", "Slider", "Select", "DatePicker", "Combobox", "PasswordStrength", "OTPInput"],
+      "stack": ["React Hook Form", "Zod", "DS-OneBox Form Components"],
+      "rules": [
+        "SEMPRE usar Form + Zod + RHF",
+        "Nunca validar no onChange",
+        "Sempre usar FormMessage para erros",
+        "Sempre mostrar toast após submit",
+        "DatePicker usa react-day-picker v9 com custom Dropdown"
+      ]
+    },
+    "DATA": {
+      "description": "Exibir e gerenciar dados",
+      "components": ["Table", "DataTable", "ChartContainer", "ChartTooltip", "ChartTooltipContent", "ChartLegend", "ChartLegendContent", "ActivityTimeline", "TimelineItem", "AvatarGroup", "VirtualList", "DragDrop"],
+      "threshold": {
+        "table_rows": 50,
+        "above": "DataTable (TanStack)",
+        "below": "Table (simples)"
+      },
+      "chart_types": {
+        "bar": "BarChart",
+        "line": "LineChart",
+        "area": "AreaChart",
+        "pie_donut": "PieChart",
+        "radar": "RadarChart",
+        "gauge": "GaugeChart (PieChart half-circle)",
+        "funnel": "FunnelChart"
+      },
+      "rules": [
+        "ChartConfig colors DEVEM ser HEX ou RGB",
+        "ChartContainer é OBRIGATÓRIO para todo gráfico",
+        "ChartContainer aceita props width/height"
+      ]
+    },
+    "LAYOUT": {
+      "description": "Organizar estrutura da página",
+      "components": ["Container", "Section", "Grid", "GridItem", "Flex", "FlexItem", "Card", "CardHeader", "CardTitle", "CardDescription", "CardContent", "CardFooter", "Dialog", "DialogContent", "DialogHeader", "DialogFooter", "DialogTitle", "DialogDescription", "DialogProvider", "AlertDialog", "Drawer", "Sidebar", "SidebarProvider", "Popover", "Tooltip", "HoverCard", "Tabs", "TabsList", "TabsTrigger", "TabsContent", "Accordion", "AccordionItem", "AccordionTrigger", "AccordionContent", "Separator", "AspectRatio", "ScrollArea"],
+      "rules": [
+        "Dialog requer DialogProvider no root",
+        "Sidebar CSS deve ser importado ANTES do SidebarProvider",
+        "Sidebar e main DEVEM ser irmãos",
+        "AccordionTrigger com interactiveContent para elementos interativos",
+        "Máximo 2 níveis de Accordion",
+        "Máximo 7 Tabs"
+      ]
+    },
+    "NAVIGATION": {
+      "description": "Mover entre telas e seções",
+      "components": ["NavigationMenu", "Breadcrumb", "Pagination", "ContextMenu"],
+      "rules": [
+        "Breadcrumb para localização em páginas",
+        "Pagination para DataTable com muitos itens"
+      ]
+    }
+  },
+
+  "relationships": [
+    {
+      "parent": "Card",
+      "children": ["CardHeader", "CardTitle", "CardDescription", "CardContent", "CardFooter"],
+      "pattern": "CardWRAPPER"
+    },
+    {
+      "parent": "Accordion",
+      "children": ["AccordionItem"],
+      "pattern": "AccordionITEM"
+    },
+    {
+      "parent": "AccordionItem",
+      "children": ["AccordionTrigger", "AccordionContent"],
+      "pattern": "AccordionPAIR"
+    },
+    {
+      "parent": "Tabs",
+      "children": ["TabsList", "TabsContent"],
+      "pattern": "TabsLIST"
+    },
+    {
+      "parent": "TabsList",
+      "children": ["TabsTrigger"],
+      "pattern": "TabsTRIGGER"
+    },
+    {
+      "parent": "Table",
+      "children": ["TableHeader", "TableBody"],
+      "pattern": "TableSECTION"
+    },
+    {
+      "parent": "TableHeader",
+      "children": ["TableRow"],
+      "pattern": "TableROW"
+    },
+    {
+      "parent": "TableBody",
+      "children": ["TableRow"],
+      "pattern": "TableROW"
+    },
+    {
+      "parent": "TableRow",
+      "children": ["TableHead", "TableCell"],
+      "pattern": "TableCELL"
+    },
+    {
+      "parent": "Form",
+      "children": ["FormField"],
+      "pattern": "FormFIELD"
+    },
+    {
+      "parent": "FormField",
+      "children": ["FormItem", "FormLabel", "FormControl", "FormMessage"],
+      "pattern": "FormPARTS"
+    },
+    {
+      "parent": "Sidebar",
+      "children": ["SidebarHeader", "SidebarContent", "SidebarGroup", "SidebarMenu"],
+      "pattern": "SidebarPARTS"
+    },
+    {
+      "parent": "Dialog",
+      "children": ["DialogContent", "DialogHeader", "DialogFooter"],
+      "pattern": "DialogSECTIONS"
+    },
+    {
+      "parent": "Drawer",
+      "children": ["DrawerContent", "DrawerHeader", "DrawerFooter"],
+      "pattern": "DrawerSECTIONS"
+    },
+    {
+      "parent": "NavigationMenu",
+      "children": ["NavigationMenuList", "NavigationMenuItem"],
+      "pattern": "NavLIST"
+    },
+    {
+      "parent": "CommandPalette",
+      "children": ["CommandInput", "CommandList", "CommandGroup", "CommandItem"],
+      "pattern": "CommandPARTS"
+    },
+    {
+      "parent": "Pagination",
+      "children": ["PaginationContent", "PaginationItem", "PaginationPrevious", "PaginationNext", "PaginationEllipsis"],
+      "pattern": "PaginationPARTS"
+    }
+  ],
+
+  "compositions": [
+    {
+      "name": "DashboardKPIs",
+      "description": "Cards de métricas para dashboard",
+      "components": ["Card", "CardHeader", "CardTitle", "CardDescription", "CardContent", "Badge", "Progress"],
+      "example": "src/components/blocks/DashboardCharts.tsx"
+    },
+    {
+      "name": "UserForm",
+      "description": "Formulário de criação/edição de usuário",
+      "components": ["Card", "Form", "FormField", "Input", "Select", "Button", "toast()"],
+      "stack": ["React Hook Form", "Zod"]
+    },
+    {
+      "name": "DataTablePage",
+      "description": "Página completa com tabela avançada",
+      "components": ["Card", "Input", "DataTable", "Pagination", "Dialog", "Badge"],
+      "stack": ["TanStack Table"]
+    },
+    {
+      "name": "SettingsPage",
+      "description": "Página de configurações com tabs",
+      "components": ["Tabs", "TabsList", "TabsTrigger", "TabsContent", "Card", "Form"],
+      "layout": "vertical"
+    },
+    {
+      "name": "TimelineActivity",
+      "description": "Feed de atividade com timeline",
+      "components": ["Card", "Timeline", "TimelineItem", "Avatar", "AvatarGroup", "Badge"],
+      "composition": "ActivityTimeline + AvatarGroup + Badge"
+    },
+    {
+      "name": "AdvancedFilter",
+      "description": "Bloco de filtros avançados",
+      "components": ["Card", "Input", "Select", "DatePicker", "Button"],
+      "composition": "Composition de FORMS para filtros"
+    },
+    {
+      "name": "ChartDashboard",
+      "description": "Dashboard com múltiplos gráficos",
+      "components": ["Card", "ChartContainer", "ChartTooltip", "ChartLegend"],
+      "chart_types": ["BarChart", "LineChart", "AreaChart", "PieChart", "RadarChart"],
+      "stack": ["Recharts"]
+    }
+  ],
+
+  "integration_rules": [
+    {
+      "rule": "ChartColorsMustBeHex",
+      "severity": "error",
+      "message": "ChartConfig colors must be HEX or RGB, not hsl(var())",
+      "example": {
+        "wrong": "color: 'hsl(var(--primary))'",
+        "correct": "color: '#2563eb'"
+      }
+    },
+    {
+      "rule": "AccordionInteractiveContent",
+      "severity": "warning",
+      "message": "AccordionTrigger with interactive elements needs interactiveContent prop",
+      "fix": "Add interactiveContent prop to AccordionTrigger"
+    },
+    {
+      "rule": "FormRequiresZodRHF",
+      "severity": "error",
+      "message": "Forms must use Zod schema + React Hook Form",
+      "fix": "Use Form + zodResolver + z.object from 'zod'"
+    },
+    {
+      "rule": "TableThreshold",
+      "severity": "warning",
+      "message": "Tables with > 50 rows should use DataTable (TanStack)",
+      "threshold": 50
+    },
+    {
+      "rule": "SidebarDOMStructure",
+      "severity": "error",
+      "message": "Sidebar and main must be siblings, not wrapped in extra div",
+      "pattern": "SidebarProvider > div.flex > Sidebar + main"
+    },
+    {
+      "rule": "DialogProvider",
+      "severity": "error",
+      "message": "Dialog must be inside DialogProvider",
+      "fix": "Add DialogProvider to app root"
+    },
+    {
+      "rule": "ToastAfterSubmit",
+      "severity": "warning",
+      "message": "Forms should show toast on submit success/error",
+      "pattern": "toast.success() or toast.error() after handleSubmit"
+    }
+  ],
+
+  "antipatterns": [
+    {
+      "name": "ButtonInsideButton",
+      "components": ["AccordionTrigger", "Switch", "Button"],
+      "error": "validateDOMNesting: <button> cannot appear as descendant of <button>",
+      "fix": "Use AccordionTrigger interactiveContent={true}"
+    },
+    {
+      "name": "TableWithoutDataTable",
+      "components": ["Table"],
+      "error": "Performance issue with > 50 rows",
+      "fix": "Use DataTable with TanStack Table"
+    },
+    {
+      "name": "DialogNesting",
+      "components": ["Dialog"],
+      "error": "Nested dialogs are confusing and inaccessible",
+      "fix": "Use Drawer for second level"
+    },
+    {
+      "name": "AccordionThreeLevels",
+      "components": ["Accordion"],
+      "error": "3 levels of accordion is confusing",
+      "fix": "Maximum 2 levels, use Tabs for more"
+    },
+    {
+      "name": "TooManyTabs",
+      "components": ["Tabs"],
+      "threshold": 7,
+      "error": "More than 7 tabs is confusing",
+      "fix": "Use NavigationMenu or grouped Tabs"
+    }
+  ],
+
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.76.0",
+    "@hookform/resolvers": "^5.2.2",
+    "zod": "^4.4.3",
+    "recharts": "^3.8.1",
+    "@tanstack/react-table": "^8.21.3",
+    "@radix-ui/react-accordion": "^1.2.12",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
+    "@radix-ui/react-select": "^2.2.6",
+    "@radix-ui/react-tabs": "^1.1.13",
+    "@radix-ui/react-toast": "^1.2.15",
+    "@radix-ui/react-tooltip": "^1.2.8",
+    "lucide-react": "^0.474.0",
+    "sonner": "^2.0.7",
+    "date-fns": "^4.2.1",
+    "react-day-picker": "^9.14.0"
+  }
+}

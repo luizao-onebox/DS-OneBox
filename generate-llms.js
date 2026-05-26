@@ -86,7 +86,7 @@ llmDocContent += "Below is the exact source code for each component. Read this t
 for (let c of shadcnComponents) {
   const code = fs.readFileSync(path.join(shadcnDir, c + '.tsx'), 'utf8');
   llmDocContent += "### Component: " + c + "\n";
-  llmDocContent += "\\\	sx\n" + code + "\n\\\\n\n";
+  llmDocContent += "```tsx\n" + code + "\n```\n\n";
 }
 
 llmDocContent += "## 6. Blocks Source Code (Complex Layouts)\n";
@@ -95,12 +95,22 @@ llmDocContent += "Below is the exact source code for the complex blocks. Use thi
 for (let b of blocks) {
   const code = fs.readFileSync(path.join(blocksDir, b + '.tsx'), 'utf8');
   llmDocContent += "### Block: " + b + "\n";
-  llmDocContent += "\\\	sx\n" + code + "\n\\\\n\n";
+  llmDocContent += "```tsx\n" + code + "\n```\n\n";
 }
+
+llmDocContent += "## 7. Design Graph (Machine-Readable)\n";
+llmDocContent += "For programmatic access to component relationships, capabilities, and rules, see DESIGN_GRAPH.json in the root of the repository.\n";
+llmDocContent += "This JSON file contains:\n";
+llmDocContent += "- Capabilities with their components\n";
+llmDocContent += "- Component relationships (parent/children)\n";
+llmDocContent += "- Valid compositions (DashboardKPIs, UserForm, etc.)\n";
+llmDocContent += "- Integration rules with severity levels\n";
+llmDocContent += "- Antipatterns to avoid\n";
 
 if (!fs.existsSync('./public')) {
   fs.mkdirSync('./public');
 }
 fs.writeFileSync('./public/llms.txt', llmDocContent);
 fs.writeFileSync('./public/llm-docs.md', llmDocContent);
+fs.writeFileSync('./public/design-graph.json', fs.readFileSync('./DESIGN_GRAPH.json', 'utf8'));
 console.log('LLM docs generated successfully in /public');

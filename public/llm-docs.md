@@ -13,7 +13,9 @@ DS-OneBox ships with GBrain-style skills that encode workflows and best practice
 
 ### 2.1 Skill Files Available
 - DATA.md
+- FEEDBACK.md
 - FORMS.md
+- LAYOUT.md
 - RESOLVER.md
 
 ### 2.2 Skills Content
@@ -566,6 +568,429 @@ export function ProjectTimeline() {
 
 ```
 
+### SKILL: FEEDBACK.md
+```markdown
+---
+title: Feedback Capabilities
+description: Workflow para notificar, alertar e indicar estado ao usuário
+version: 1.0.0
+updated: 2026-01-01
+---
+
+# Feedback Capabilities
+
+## Skill Overview
+
+Esta skill cobre tudo relacionado a comunicar estado ao usuário: notificações (toasts), alertas, badges, progress bars e estados de loading. Feedback é o contrato de confiança entre o sistema e o usuário — silêncio é ambiguidade.
+
+## Toast — Notificações Breves
+
+### Setup Obrigatório
+
+Adicione o Toaster no root da aplicação:
+
+```typescript
+import { Toaster, toast } from "ds-onebox"
+
+export function App() {
+  return (
+    <>
+      <Toaster position="top-right" richColors />
+      {/* resto da app */}
+    </>
+  )
+}
+```
+
+### Toast Functions
+
+O DS-OneBox exporta a função `toast` diretamente (estilo Sonner):
+
+```typescript
+import { toast } from "ds-onebox"
+
+// Notificação simples
+toast("Usuário salvo com sucesso!")
+
+// Com título
+toast.success("Operação concluída!", {
+  description: "O usuário foi criado com sucesso.",
+})
+
+toast.error("Erro ao salvar", {
+  description: "Verifique sua conexão e tente novamente.",
+})
+
+toast.warning("Atenção", {
+  description: "Suas alterações ainda não foram salvas.",
+})
+
+toast.info("Dica", {
+  description: "Use Ctrl+S para salvar rapidamente.",
+})
+
+// Com ação
+toast("Mensagem enviada!", {
+  action: {
+    label: "Desfazer",
+    onClick: () => undoMessage(),
+  },
+})
+
+// Promise (auto-resolve)
+toast.promise(saveUser(data), {
+  loading: "Salvando...",
+  success: "Usuário salvo!",
+  error: "Erro ao salvar",
+})
+```
+
+### Posições Disponíveis
+
+```typescript
+<Toaster position="top-left" />
+<Toaster position="top-center" />
+<Toaster position="top-right" /> {/* padrão */}
+<Toaster position="bottom-left" />
+<Toaster position="bottom-center" />
+<Toaster position="bottom-right" />
+```
+
+### ToastMultiPosition — Múltiplas Posições
+
+Para notificações em posições diferentes na mesma tela:
+
+```typescript
+import { ToastMultiPosition, toast } from "ds-onebox"
+
+// Toast no topo direito
+toast.success("Sucesso!", { position: "top-right" })
+
+// Toast no centro inferior
+toast.info("Atualizando...", { position: "bottom-center" })
+
+// Toast no canto esquerdo
+toast.warning("Atenção", { position: "top-left" })
+```
+
+### Regras de Toast
+
+| Regra | Por quê |
+|---|---|
+| Máximo 3 toasts simultâneos | Mais que isso é spam |
+| Duração: 3-5 segundos | Tempo suficiente para ler |
+| Não abuse de `toast.error` | Se todo clique gera erro, o sistema parece quebrado |
+| Use `toast.promise` para operações async | Mostra loading → success/error automaticamente |
+
+### Antipatterns de Toast
+
+```typescript
+// ❌ ERRADO — toast dentro de loop
+data.map(item => toast.success(`Item ${item.name} criado!`))
+
+// ❌ ERRADO — toast antes da ação
+toast.success("Deletando...")
+await deleteItem() // se falhar, o toast já foi mostrado
+
+// ✅ CERTO — toast.promise para async
+toast.promise(deleteItem(id), {
+  loading: "Deletando...",
+  success: "Item deletado!",
+  error: "Erro ao deletar",
+})
+
+// ✅ CERTO — toast após ação confirmada
+const result = await deleteItem(id)
+if (result.success) {
+  toast.success("Item deletado!")
+}
+```
+
+## Alert — Alertas Destacados
+
+Use Alert para mensagens que devem PERMANECER na tela e chamar atenção:
+
+```typescript
+import { Alert, AlertTitle, AlertDescription } from "ds-onebox"
+
+// Variants: default, destructive, success, warning
+export function SettingsWarning() {
+  return (
+    <Alert variant="warning">
+      <AlertTitle>Assinatura expira em 3 dias</AlertTitle>
+      <AlertDescription>
+        Renove sua assinatura para continuar usando todas as
+        funcionalidades premium.
+      </AlertDescription>
+      <Button size="sm" className="mt-4">
+        Renovar Agora
+      </Button>
+    </Alert>
+  )
+}
+```
+
+### Alert vs Toast
+
+| Situação | Componente |
+|---|---|
+| Mensagem breve que desaparece | Toast |
+| Mensagem que deve permanecer visível | Alert |
+| Erro que afeta toda a página | Alert (topo da página) |
+| Sucesso de ação pontual | Toast |
+| Warning que requer ação | Alert + Button |
+
+## Badge — Indicadores de Status
+
+Badges são indicadores compactos. Use variants para comunicar significado:
+
+```typescript
+import { Badge } from "ds-onebox"
+
+// Variants de cor comunican significado
+<Badge variant="default">Pendente</Badge>    {/* tom neutro */}
+<Badge variant="secondary">Rascunho</Badge>  {/* tom secundário */}
+<Badge variant="outline">Inativo</Badge>    {/* outline sutil */}
+<Badge variant="success">Ativo</Badge>       {/* verde — sucesso */}
+<Badge variant="warning">Pendente</Badge>    {/* amarelo — atenção */}
+<Badge variant="destructive">Erro</Badge>   {/* vermelho — erro/crítico */}
+```
+
+### Regras de Badge
+
+**NUNCA invente significados para cores.** Se um Badge é `success` (verde), ele indica algo positivo/sucesso. Se é `destructive`, indica erro/perigo.
+
+```typescript
+// ❌ ERRADO — cor não comunica significado
+<Badge variant="success">Pendente</Badge>
+<Badge variant="destructive">Ativo</Badge>
+
+// ✅ CERTO — cor comunica significado
+<Badge variant="secondary">Pendente</Badge>
+<Badge variant="success">Ativo</Badge>
+<Badge variant="destructive">Erro</Badge>
+```
+
+## Progress — Indicadores de Progresso
+
+### Progress Bar
+
+```typescript
+import { Progress } from "ds-onebox"
+
+export function UploadProgress({ value }: { value: number }) {
+  return (
+    <div className="space-y-2">
+      <div className="flex justify-between text-body-sm">
+        <span>Enviando arquivo...</span>
+        <span>{value}%</span>
+      </div>
+      <Progress value={value} />
+    </div>
+  )
+}
+```
+
+### Progress com Limites
+
+Use Progress para operações que têm tempo definido. Para operações infinitas, use Skeleton.
+
+```typescript
+// ✅ CERTO — upload tem limite definido
+<Progress value={uploadProgress} />
+
+// ✅ CERTO — processamento tem limite
+<Progress value={processingProgress} />
+
+// ❌ ERRADO — websocket/sse não tem limite
+<Progress value={0} /> {/* nunca chega a 100 */}
+```
+
+## Skeleton — Loading State
+
+Use Skeleton em vez de Spinner quando quiser mostrar o layout que está carregando:
+
+```typescript
+import { Skeleton } from "ds-onebox"
+
+export function UserCardSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-12 w-12 rounded-full" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-[200px]" />
+            <Skeleton className="h-4 w-[150px]" />
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <Skeleton className="h-4 w-full mb-2" />
+        <Skeleton className="h-4 w-3/4" />
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+### Skeleton vs Spinner
+
+| Situação | Componente |
+|---|---|
+| Mostrar estrutura carregando | Skeleton |
+| Ação em progresso (button desabilitado) | Spinner |
+| Carregamento de página inteira | Skeleton |
+| Loading inline (dentro de text) | Spinner |
+| Tabela carregando | Skeleton com rows |
+
+## CommandPalette — Busca e Atalhos
+
+CommandPalette é uma busca rápida com atalhos (estilo Spotlight/Ctrl+K):
+
+```typescript
+import {
+  CommandPalette,
+  CommandInput,
+  CommandList,
+  CommandGroup,
+  CommandItem,
+} from "ds-onebox"
+
+export function GlobalSearch() {
+  return (
+    <CommandPalette>
+      <CommandInput placeholder="Buscar usuários, comandos..." />
+      <CommandList>
+        <CommandGroup heading="Ações Rápidas">
+          <CommandItem onSelect={() => navigate("/users/new")}>
+            <Plus className="mr-2 h-4 w-4" />
+            Criar novo usuário
+          </CommandItem>
+          <CommandItem onSelect={() => navigate("/reports")}>
+            <FileText className="mr-2 h-4 w-4" />
+            Ver relatórios
+          </CommandItem>
+        </CommandGroup>
+        <CommandGroup heading="Usuários">
+          {users.map(user => (
+            <CommandItem
+              key={user.id}
+              onSelect={() => selectUser(user)}
+            >
+              {user.name}
+            </CommandItem>
+          ))}
+        </CommandGroup>
+      </CommandList>
+    </CommandPalette>
+  )
+}
+```
+
+## ScrollArea — Área com Scroll Customizado
+
+Para áreas com scroll estilizado:
+
+```typescript
+import { ScrollArea, ScrollBar } from "ds-onebox"
+
+export function NotificationList() {
+  return (
+    <ScrollArea className="h-[300px] w-[350px] rounded-md border">
+      <div className="p-4">
+        {notifications.map(notification => (
+          <NotificationItem key={notification.id} {...notification} />
+        ))}
+      </div>
+      <ScrollBar orientation="vertical" />
+      <ScrollBar orientation="horizontal" />
+    </ScrollArea>
+  )
+}
+```
+
+## Combo: Feedback Patterns
+
+### Página de Sucesso
+
+```typescript
+export function UserCreatedPage({ user }) {
+  return (
+    <div className="flex flex-col items-center justify-center space-y-6 py-12">
+      <div className="rounded-full bg-success-50 p-4">
+        <CheckCircle className="h-12 w-12 text-success-500" />
+      </div>
+      <div className="text-center">
+        <h1 className="text-h2">Usuário criado!</h1>
+        <p className="text-body-md text-muted-foreground mt-2">
+          {user.name} foi adicionado ao sistema.
+        </p>
+      </div>
+      <div className="flex gap-4">
+        <Button variant="outline" onClick={() => navigate("/users")}>
+          Voltar para lista
+        </Button>
+        <Button onClick={() => navigate(`/users/${user.id}`)}>
+          Ver detalhes
+        </Button>
+      </div>
+    </div>
+  )
+}
+```
+
+### Página de Erro
+
+```typescript
+export function ErrorBoundary({ error }) {
+  return (
+    <Alert variant="destructive" className="max-w-md mx-auto mt-12">
+      <AlertTitle>Algo deu errado</AlertTitle>
+      <AlertDescription className="space-y-4">
+        <p>{error.message || "Ocorreu um erro inesperado."}</p>
+        <Button onClick={() => window.location.reload()}>
+          Tentar novamente
+        </Button>
+      </AlertDescription>
+    </Alert>
+  )
+}
+```
+
+### Empty State
+
+```typescript
+export function EmptyUsers() {
+  return (
+    <Card className="flex flex-col items-center justify-center py-12">
+      <Users className="h-12 w-12 text-muted-foreground mb-4" />
+      <h3 className="text-h4 mb-2">Nenhum usuário encontrado</h3>
+      <p className="text-body-sm text-muted-foreground mb-6">
+        Comece adicionando seu primeiro usuário ao sistema.
+      </p>
+      <UserDialog>
+        <DialogTrigger asChild>
+          <Button><Plus className="mr-2 h-4 w-4" /> Adicionar Usuário</Button>
+        </DialogTrigger>
+      </UserDialog>
+    </Card>
+  )
+}
+```
+
+## Checklist de Feedback
+
+- [ ] Toast após toda ação de escrita (create, update, delete)?
+- [ ] Loading state em botões durante operações async?
+- [ ] Error state com mensagem clara quando algo falha?
+- [ ] Empty state quando listas estão vazias?
+- [ ] Skeleton em vez de Spinner para conteúdo carregando?
+- [ ] Badge variants comunicam significado (success = bom, destructive = ruim)?
+- [ ] Máximo 3 toasts simultâneos?
+
+```
+
 ### SKILL: FORMS.md
 ```markdown
 ---
@@ -993,6 +1418,587 @@ const { isSubmitting } = form.formState
 
 ```
 
+### SKILL: LAYOUT.md
+```markdown
+---
+title: Layout Capabilities
+description: Workflow para organizar estrutura de páginas com Sidebar, Dialog, Tabs, Accordion
+version: 1.0.0
+updated: 2026-01-01
+---
+
+# Layout Capabilities
+
+## Skill Overview
+
+Esta skill cobre tudo relacionado a organizar a estrutura visual da página: containers, grids, modais, drawers, sidebars, tabs e accordions. Layout é a espinha dorsal de qualquer aplicação — um layout bem feito é invisível, um mau layout é sentido em cada clique.
+
+## Sidebar — Navegação Lateral
+
+### Setup Obrigatório
+
+A Sidebar requer configuração específica no root da aplicação. IGNORE esta seção se não estiver usando Sidebar.
+
+```typescript
+// 1. No seu entry point (main.tsx / App.tsx):
+// O CSS global do DS-OneBox deve vir PRIMEIRO
+import "ds-onebox/dist/style.css"
+
+// 2. Reset do #root — o DS força flex-direction: column
+// No seu CSS global, faça:
+#root {
+  flex-direction: unset !important;
+}
+
+// 3. Estrutura DOM — Sidebar e main DEVEM ser irmãos
+// NUNCA envolva em divs extras
+```
+
+### Estrutura Correta
+
+```typescript
+import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarGroup, SidebarMenu } from "ds-onebox"
+
+export function AppLayout() {
+  return (
+    <SidebarProvider>
+      <div className="flex h-screen overflow-hidden">
+        <Sidebar>
+          <SidebarHeader>
+            <Logo theme="light" />
+          </SidebarHeader>
+          <SidebarContent>
+            <SidebarGroup>
+              <SidebarGroupLabel>Navegação</SidebarGroupLabel>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive>
+                    <Link to="/dashboard">
+                      <LayoutDashboard className="h-4 w-4" />
+                      Dashboard
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link to="/users">
+                      <Users className="h-4 w-4" />
+                      Usuários
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroup>
+          </SidebarContent>
+        </Sidebar>
+
+        {/* main É IRMÃO de Sidebar, não filho */}
+        <main className="flex-1 overflow-y-auto">
+          <Outlet />
+        </main>
+      </div>
+    </SidebarProvider>
+  )
+}
+```
+
+### Antipatterns da Sidebar
+
+```typescript
+// ❌ ERRADO — div encapsulando Sidebar e main
+<div>
+  <Sidebar>...</Sidebar>
+  <main>...</main>
+</div>
+
+// ❌ ERRADO — min-h-screen no body causa scroll duplo
+<body className="min-h-screen">
+  <SidebarProvider>
+    <Sidebar />
+    <main />
+  </SidebarProvider>
+</body>
+
+// ✅ CERTO
+<body>
+  <SidebarProvider>
+    <div className="flex h-screen overflow-hidden">
+      <Sidebar />
+      <main className="flex-1 overflow-y-auto" />
+    </div>
+  </SidebarProvider>
+</body>
+```
+
+## Dialog — Modal
+
+### Setup Obrigatório
+
+Todo Dialog precisa estar dentro de um DialogProvider. Adicione no root da aplicação:
+
+```typescript
+import { DialogProvider } from "ds-onebox"
+
+export function App() {
+  return (
+    <DialogProvider>
+      <SidebarProvider>
+        {/* ... resto da app */}
+      </SidebarProvider>
+    </DialogProvider>
+  )
+}
+```
+
+### Dialog Simples
+
+```typescript
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "ds-onebox"
+
+export function UserDialog() {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>Editar Usuário</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Editar Usuário</DialogTitle>
+          <DialogDescription>
+            Faça as alterações necessárias e clique em salvar.
+          </DialogDescription>
+        </DialogHeader>
+
+        <UserForm />
+
+        <DialogFooter>
+          <DialogTrigger asChild>
+            <Button variant="outline">Cancelar</Button>
+          </DialogTrigger>
+          <Button onClick={handleSave}>Salvar Alterações</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+```
+
+### AlertDialog — Confirmação
+
+Use AlertDialog para confirmações destrutivas:
+
+```typescript
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "ds-onebox"
+
+export function DeleteUserButton({ userId }) {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button variant="destructive">
+          <Trash className="mr-2 h-4 w-4" />
+          Excluir
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Tem certeza absoluta?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Esta ação não pode ser desfeita. O usuário será
+            permanentemente removido do sistema e todos os seus dados
+            serão excluídos.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => deleteUser(userId)}
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          >
+            Sim, excluir
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  )
+}
+```
+
+## Drawer — Painel Lateral
+
+Drawer é preferable a Dialog quando o conteúdo é extenso ou quando você quer manter o contexto da página visível:
+
+```typescript
+import {
+  Drawer,
+  DrawerTrigger,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerClose,
+} from "ds-onebox"
+
+export function FilterDrawer() {
+  return (
+    <Drawer>
+      <DrawerTrigger asChild>
+        <Button variant="outline">
+          <Filter className="mr-2 h-4 w-4" />
+          Filtros
+        </Button>
+      </DrawerTrigger>
+      <DrawerContent>
+        <DrawerHeader>
+          <DrawerTitle>Filtros Avançados</DrawerTitle>
+          <DrawerDescription>
+            Refine sua busca usando os filtros abaixo.
+          </DrawerDescription>
+        </DrawerHeader>
+
+        <div className="px-4 space-y-6">
+          <FilterForm />
+        </div>
+
+        <DrawerFooter>
+          <Button>Aplicar Filtros</Button>
+          <DrawerClose asChild>
+            <Button variant="outline">Cancelar</Button>
+          </DrawerClose>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
+  )
+}
+```
+
+## Tabs — Navegação por Abas
+
+Use Tabs para dividir conteúdo relacionado em seções na mesma página:
+
+```typescript
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "ds-onebox"
+
+export function SettingsPage() {
+  return (
+    <Tabs defaultValue="account" className="w-full">
+      <TabsList>
+        <TabsTrigger value="account">Conta</TabsTrigger>
+        <TabsTrigger value="notifications">Notificações</TabsTrigger>
+        <TabsTrigger value="security">Segurança</TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="account">
+        <Card>
+          <CardHeader>
+            <CardTitle>Informações da Conta</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <AccountForm />
+          </CardContent>
+        </Card>
+      </TabsContent>
+
+      <TabsContent value="notifications">
+        <NotificationSettings />
+      </TabsContent>
+
+      <TabsContent value="security">
+        <SecuritySettings />
+      </TabsContent>
+    </Tabs>
+  )
+}
+```
+
+### Limite de Tabs
+
+**MÁXIMO 7 tabs**. Se precisar de mais, use Tabs aninhados ou uma Sidebar/NavigationMenu.
+
+```typescript
+// ❌ ERRADO — 10 tabs é confuso
+<TabsList>
+  <TabsTrigger value="1">Tab 1</TabsTrigger>
+  <TabsTrigger value="2">Tab 2</TabsTrigger>
+  {/* ... 8 mais */}
+</TabsList>
+
+// ✅ CERTO —分组 com Tabs aninhados ou NavigationMenu
+```
+
+## Accordion — Conteúdo Retrátil
+
+Use Accordion para FAQs, detalhes expandíveis, ou configurações:
+
+```typescript
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "ds-onebox"
+
+export function FAQ() {
+  return (
+    <Accordion type="single" collapsible>
+      <AccordionItem value="item-1">
+        <AccordionTrigger>Como funciona o pagamento?</AccordionTrigger>
+        <AccordionContent>
+          O pagamento é processado através do Stripe. Aceitamos cartões de
+          crédito, débito e PIX. O valor é cobrado automaticamente
+          no dia do vencimento da sua assinatura.
+        </AccordionContent>
+      </AccordionItem>
+
+      <AccordionItem value="item-2">
+        <AccordionTrigger>Posso cancelar a qualquer momento?</AccordionTrigger>
+        <AccordionContent>
+          Sim! Você pode cancelar sua assinatura a qualquer momento
+          diretamente nas configurações da sua conta. Não há multas
+          ou taxas de cancelamento.
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  )
+}
+```
+
+### Accordion com Elementos Interativos
+
+Se precisar colocar Switch, Button ou outros elementos interativos DENTRO do AccordionTrigger, use a prop `interactiveContent`:
+
+```typescript
+// ❌ ERRADO — button dentro de button
+<AccordionTrigger>
+  <Switch checked={enabled} />
+  Notificação de Email
+</AccordionTrigger>
+
+// ✅ CERTO — interactiveContent substitui o button nativo por div
+<AccordionTrigger interactiveContent>
+  <Flex align="center" justify="between" className="w-full">
+    <span>Notificação de Email</span>
+    <Switch checked={enabled} onCheckedChange={setEnabled} />
+  </Flex>
+</AccordionTrigger>
+```
+
+### Limite de Accordion
+
+**MÁXIMO 2 níveis de aninhamento**. 3 níveis é confuso e inacessível.
+
+```typescript
+// ❌ ERRADO — 3 níveis de accordion
+<Accordion>
+  <AccordionItem>
+    <AccordionTrigger>Nível 1</AccordionTrigger>
+    <AccordionContent>
+      <Accordion>
+        {/* Nível 2 */}
+        <AccordionItem>
+          <AccordionTrigger>Nível 2</AccordionTrigger>
+          <AccordionContent>
+            <Accordion>
+              {/* Nível 3 — MUITO CONFUSO */}
+            </Accordion>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
+
+// ✅ CERTO — máximo 2 níveis, depois use Tabs
+```
+
+## NavigationMenu — Menu de Navegação
+
+Para navegação principal com dropdowns e submenus:
+
+```typescript
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuLink,
+} from "ds-onebox"
+
+export function Header() {
+  return (
+    <NavigationMenu>
+      <NavigationMenuList>
+        <NavigationMenuItem>
+          <Link href="/dashboard" legacyBehavior passHref>
+            <NavigationMenuLink>
+              Dashboard
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <Link href="/products" legacyBehavior passHref>
+            <NavigationMenuLink>
+              Produtos
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
+  )
+}
+```
+
+## Breadcrumb — Migalha de Pão
+
+```typescript
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+} from "ds-onebox"
+
+export function PageBreadcrumb() {
+  return (
+    <Breadcrumb>
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="/">Home</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbLink href="/products">Produtos</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <span className="text-foreground">Detalhes</span>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
+  )
+}
+```
+
+## Antipatterns de Layout
+
+### ❌ NÃO aninhe Dialogs
+
+```typescript
+// ERRADO
+<Dialog>
+  <DialogContent>
+    <Dialog>
+      <DialogContent>...</DialogContent>
+    </Dialog>
+  </DialogContent>
+</Dialog>
+
+// CERTO — use Drawer para o segundo nível
+```
+
+### ❌ NÃO use w-full h-screen no body
+
+```typescript
+// ERRADO — causa scroll duplo com Sidebar
+<body className="w-full h-screen">
+  <SidebarProvider>...</SidebarProvider>
+</body>
+
+// CERTO — overflow-hidden no container
+<body>
+  <SidebarProvider>
+    <div className="flex h-screen overflow-hidden">
+      <Sidebar />
+      <main />
+    </div>
+  </SidebarProvider>
+</body>
+```
+
+### ❌ NÃO use padding inconsistente
+
+```typescript
+// ERRADO — padding direto no Card sem CardContent
+<Card className="p-6">
+  <Table>...</Table>
+</Card>
+
+// CERTO — use CardContent como wrapper
+<Card>
+  <CardHeader>...</CardHeader>
+  <CardContent>
+    <Table>...</Table>
+  </CardContent>
+</Card>
+```
+
+## Composição Típica de Página
+
+```typescript
+export function UserManagementPage() {
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-h2">Gerenciar Usuários</h1>
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem><BreadcrumbLink href="/">Home</BreadcrumbLink></BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>Usuários</BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+        <UserDialog>
+          <DialogTrigger asChild>
+            <Button><Plus className="mr-2 h-4 w-4" /> Novo Usuário</Button>
+          </DialogTrigger>
+        </UserDialog>
+      </div>
+
+      {/* Filtros */}
+      <AdvancedFilter />
+
+      {/* Tabela */}
+      <Card>
+        <CardContent className="p-0">
+          <DataTable columns={columns} data={users} />
+        </CardContent>
+      </Card>
+
+      {/* Paginação */}
+      <Pagination>...</Pagination>
+    </div>
+  )
+}
+```
+
+```
+
 ### SKILL: RESOLVER.md
 ```markdown
 ---
@@ -1209,7 +2215,7 @@ Avoid hardcoding pixel values (e.g., w-[400px]). Use fluid classes like w-full m
 Below is the exact source code for each component. Read this to understand the exported sub-components, the props interfaces, and the CVA variants available.
 
 ### Component: Accordion
-\	sx
+```tsx
 import * as React from "react"
 import * as AccordionPrimitive from "@radix-ui/react-accordion"
 import { ChevronDown } from "lucide-react"
@@ -1307,9 +2313,10 @@ AccordionContent.displayName = AccordionPrimitive.Content.displayName
  */
 export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }
 
-\\n
+```
+
 ### Component: Alert
-\	sx
+```tsx
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { AlertCircle, CheckCircle2, Info, AlertTriangle } from "lucide-react"
@@ -1401,9 +2408,10 @@ AlertDescription.displayName = "AlertDescription"
 
 export { Alert, AlertTitle, AlertDescription }
 
-\\n
+```
+
 ### Component: AspectRatio
-\	sx
+```tsx
 import * as React from "react"
 import { cn } from "../../lib/utils"
 
@@ -1433,9 +2441,10 @@ AspectRatio.displayName = "AspectRatio"
 
 export { AspectRatio }
 
-\\n
+```
+
 ### Component: Avatar
-\	sx
+```tsx
 import * as React from "react"
 import { cn } from "../../lib/utils"
 
@@ -1501,9 +2510,10 @@ AvatarFallback.displayName = "AvatarFallback"
 
 export { Avatar, AvatarImage, AvatarFallback }
 
-\\n
+```
+
 ### Component: AvatarGroup
-\	sx
+```tsx
 import * as React from "react"
 import { cn } from "../../lib/utils"
 
@@ -1553,9 +2563,10 @@ function AvatarGroup({ className, children, max = 4, size = "md", ...props }: Av
 
 export { AvatarGroup }
 
-\\n
+```
+
 ### Component: Badge
-\	sx
+```tsx
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { Slot } from "@radix-ui/react-slot"
@@ -1662,9 +2673,10 @@ Badge.displayName = "Badge"
 
 export { Badge, badgeVariants }
 
-\\n
+```
+
 ### Component: Breadcrumb
-\	sx
+```tsx
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { ChevronRight, MoreHorizontal } from "lucide-react"
@@ -1792,9 +2804,10 @@ export {
   BreadcrumbEllipsis,
 }
 
-\\n
+```
+
 ### Component: Button
-\	sx
+```tsx
 import * as React from "react"
 import { Slot, Slottable } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -1910,9 +2923,10 @@ Button.displayName = "Button"
 
 export { Button, buttonVariants }
 
-\\n
+```
+
 ### Component: Calendar
-\	sx
+```tsx
 import * as React from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { DayPicker } from "react-day-picker"
@@ -2036,9 +3050,10 @@ Calendar.displayName = "Calendar"
 
 export { Calendar }
 
-\\n
+```
+
 ### Component: Card
-\	sx
+```tsx
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cn } from "../../lib/utils"
@@ -2132,9 +3147,10 @@ CardFooter.displayName = "CardFooter"
 
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
 
-\\n
+```
+
 ### Component: Carousel
-\	sx
+```tsx
 import * as React from "react"
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
@@ -2404,9 +3420,10 @@ export {
   CarouselNext,
 }
 
-\\n
+```
+
 ### Component: Chart
-\	sx
+```tsx
 import * as React from "react"
 import { Legend, ResponsiveContainer, Tooltip } from "recharts"
 
@@ -2766,9 +3783,10 @@ export {
   ChartLegendContent,
 }
 
-\\n
+```
+
 ### Component: Checkbox
-\	sx
+```tsx
 import * as React from "react"
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
 import { Check } from "lucide-react"
@@ -2806,9 +3824,10 @@ Checkbox.displayName = CheckboxPrimitive.Root.displayName
  */
 export { Checkbox }
 
-\\n
+```
+
 ### Component: Combobox
-\	sx
+```tsx
 import * as React from "react"
 import { cn } from "../../lib/utils"
 import { ChevronDown, Check, Search, X } from "lucide-react"
@@ -2998,9 +4017,10 @@ Combobox.displayName = "Combobox"
 export { Combobox }
 export type { ComboboxOption }
 
-\\n
+```
+
 ### Component: Command
-\	sx
+```tsx
 import * as React from "react"
 import { type DialogProps } from "@radix-ui/react-dialog"
 import { Command as CommandPrimitive } from "cmdk"
@@ -3162,9 +4182,10 @@ export {
   CommandSeparator,
 }
 
-\\n
+```
+
 ### Component: CommandPalette
-\	sx
+```tsx
 import * as React from "react"
 import { cn } from "../../lib/utils"
 import { Search, Command, CornerDownLeft, ArrowUp, ArrowDown } from "lucide-react"
@@ -3376,9 +4397,10 @@ CommandPalette.displayName = "CommandPalette"
 export { CommandPalette }
 export type { CommandItem }
 
-\\n
+```
+
 ### Component: Container
-\	sx
+```tsx
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "../../lib/utils"
@@ -3422,9 +4444,10 @@ export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
 )
 Container.displayName = "Container"
 
-\\n
+```
+
 ### Component: ContextMenu
-\	sx
+```tsx
 import * as React from "react"
 import * as ContextMenuPrimitive from "@radix-ui/react-context-menu"
 import { Check, ChevronRight, Circle } from "lucide-react"
@@ -3633,9 +4656,10 @@ export {
   ContextMenuRadioGroup,
 }
 
-\\n
+```
+
 ### Component: DatePicker
-\	sx
+```tsx
 import * as React from "react"
 import { Calendar as CalendarIcon } from "lucide-react"
 import { format, Locale } from "date-fns"
@@ -3743,9 +4767,10 @@ export { DatePicker }
  * - Formata a data com date-fns (padrão: "PPP" = "Jan 1, 2024").
  */
 
-\\n
+```
+
 ### Component: Dialog
-\	sx
+```tsx
 import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { X } from "lucide-react"
@@ -3876,9 +4901,10 @@ export {
   DialogDescription,
 }
 
-\\n
+```
+
 ### Component: DragDrop
-\	sx
+```tsx
 import * as React from "react"
 import { cn } from "../../lib/utils"
 import { GripVertical, ChevronRight, ChevronDown } from "lucide-react"
@@ -4091,9 +5117,10 @@ function SortableList({ items, onReorder, className, ...props }: SortableListPro
 export { DragDropProvider, Draggable, Droppable, SortableList }
 export type { DragItem, SortableItem }
 
-\\n
+```
+
 ### Component: DropdownMenu
-\	sx
+```tsx
 import * as React from "react"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
 import { Check, ChevronRight, Circle } from "lucide-react"
@@ -4305,9 +5332,10 @@ export {
   DropdownMenuRadioGroup,
 }
 
-\\n
+```
+
 ### Component: Flex
-\	sx
+```tsx
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "../../lib/utils"
@@ -4381,9 +5409,10 @@ export const Flex = React.forwardRef<HTMLDivElement, FlexProps>(
 )
 Flex.displayName = "Flex"
 
-\\n
+```
+
 ### Component: Form
-\	sx
+```tsx
 import * as React from "react"
 import type * as LabelPrimitive from "@radix-ui/react-label"
 import type { ControllerProps, FieldPath, FieldValues } from "react-hook-form"
@@ -4575,9 +5604,10 @@ export {
   FormMessage,
 }
 
-\\n
+```
+
 ### Component: Grid
-\	sx
+```tsx
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "../../lib/utils"
@@ -4637,9 +5667,10 @@ export const Grid = React.forwardRef<HTMLDivElement, GridProps>(
 )
 Grid.displayName = "Grid"
 
-\\n
+```
+
 ### Component: HoverCard
-\	sx
+```tsx
 import * as React from "react"
 import * as HoverCardPrimitive from "@radix-ui/react-hover-card"
 
@@ -4668,9 +5699,10 @@ HoverCardContent.displayName = HoverCardPrimitive.Content.displayName
 
 export { HoverCard, HoverCardTrigger, HoverCardContent }
 
-\\n
+```
+
 ### Component: Input
-\	sx
+```tsx
 import * as React from "react"
 import { cn } from "../../lib/utils"
 import { AlertCircle } from "lucide-react"
@@ -4754,9 +5786,10 @@ Input.displayName = "Input"
 
 export { Input }
 
-\\n
+```
+
 ### Component: Label
-\	sx
+```tsx
 import * as React from "react"
 import * as LabelPrimitive from "@radix-ui/react-label"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -4793,9 +5826,10 @@ Label.displayName = LabelPrimitive.Root.displayName
 
 export { Label }
 
-\\n
+```
+
 ### Component: Logo
-\	sx
+```tsx
 import * as React from "react"
 import { cn } from "../../lib/utils"
 
@@ -4872,9 +5906,10 @@ export function Logo({
   )
 }
 
-\\n
+```
+
 ### Component: NavigationMenu
-\	sx
+```tsx
 import * as React from "react"
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu"
 import { cva } from "class-variance-authority"
@@ -5003,9 +6038,10 @@ export {
   NavigationMenuIndicator,
   NavigationMenuViewport,
 }
-\\n
+```
+
 ### Component: OTPInput
-\	sx
+```tsx
 import * as React from "react"
 import { cn } from "../../lib/utils"
 
@@ -5092,9 +6128,10 @@ OTPInput.displayName = "OTPInput"
 
 export { OTPInput }
 
-\\n
+```
+
 ### Component: Pagination
-\	sx
+```tsx
 import * as React from "react"
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react"
 
@@ -5216,9 +6253,10 @@ export {
   PaginationPrevious,
 }
 
-\\n
+```
+
 ### Component: PasswordStrength
-\	sx
+```tsx
 import * as React from "react"
 import { cn } from "../../lib/utils"
 import { Check, X } from "lucide-react"
@@ -5344,9 +6382,10 @@ PasswordStrength.displayName = "PasswordStrength"
 
 export { PasswordStrength }
 
-\\n
+```
+
 ### Component: Popover
-\	sx
+```tsx
 import * as React from "react"
 import * as PopoverPrimitive from "@radix-ui/react-popover"
 
@@ -5386,9 +6425,10 @@ PopoverContent.displayName = PopoverPrimitive.Content.displayName
  */
 export { Popover, PopoverTrigger, PopoverContent }
 
-\\n
+```
+
 ### Component: Progress
-\	sx
+```tsx
 import * as React from "react"
 import * as ProgressPrimitive from "@radix-ui/react-progress"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -5467,9 +6507,10 @@ Progress.displayName = ProgressPrimitive.Root.displayName
 
 export { Progress }
 
-\\n
+```
+
 ### Component: RadioGroup
-\	sx
+```tsx
 import * as React from "react"
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
 import { Circle } from "lucide-react"
@@ -5522,9 +6563,10 @@ RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName
  */
 export { RadioGroup, RadioGroupItem }
 
-\\n
+```
+
 ### Component: Resizable
-\	sx
+```tsx
 import * as React from "react"
 import { cn } from "../../lib/utils"
 
@@ -5637,9 +6679,10 @@ ResizableHandle.displayName = "ResizableHandle"
 
 export { ResizablePanelGroup, ResizablePanel, ResizableHandle }
 
-\\n
+```
+
 ### Component: ScrollArea
-\	sx
+```tsx
 import * as React from "react"
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area"
 
@@ -5696,9 +6739,10 @@ ScrollBar.displayName = ScrollAreaPrimitive.ScrollAreaScrollbar.displayName
 
 export { ScrollArea, ScrollBar }
 
-\\n
+```
+
 ### Component: Section
-\	sx
+```tsx
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "../../lib/utils"
@@ -5741,9 +6785,10 @@ export const Section = React.forwardRef<HTMLElement, SectionProps>(
 )
 Section.displayName = "Section"
 
-\\n
+```
+
 ### Component: Select
-\	sx
+```tsx
 import * as React from "react"
 import * as SelectPrimitive from "@radix-ui/react-select"
 import { Check, ChevronDown, ChevronUp } from "lucide-react"
@@ -5902,9 +6947,10 @@ export {
   SelectScrollUpButton,
   SelectScrollDownButton,
 }
-\\n
+```
+
 ### Component: Separator
-\	sx
+```tsx
 import * as React from "react"
 import { cn } from "../../lib/utils"
 
@@ -5946,9 +6992,10 @@ Separator.displayName = "Separator"
 
 export { Separator }
 
-\\n
+```
+
 ### Component: Sheet
-\	sx
+```tsx
 import * as React from "react"
 import * as SheetPrimitive from "@radix-ui/react-dialog"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -6097,9 +7144,10 @@ export {
   SheetDescription,
 }
 
-\\n
+```
+
 ### Component: Skeleton
-\	sx
+```tsx
 import * as React from "react"
 import { cn } from "../../lib/utils"
 
@@ -6130,9 +7178,10 @@ Skeleton.displayName = "Skeleton"
 
 export { Skeleton }
 
-\\n
+```
+
 ### Component: Slider
-\	sx
+```tsx
 import * as React from "react"
 import * as SliderPrimitive from "@radix-ui/react-slider"
 
@@ -6171,9 +7220,10 @@ Slider.displayName = SliderPrimitive.Root.displayName
 
 export { Slider }
 
-\\n
+```
+
 ### Component: Sonner
-\	sx
+```tsx
 import { Toaster as Sonner, toast } from "sonner"
 
 type ToasterProps = React.ComponentProps<typeof Sonner>
@@ -6204,9 +7254,10 @@ const Toaster = ({ ...props }: ToasterProps) => {
 
 export { Toaster, toast }
 
-\\n
+```
+
 ### Component: Switch
-\	sx
+```tsx
 import * as React from "react"
 import * as SwitchPrimitives from "@radix-ui/react-switch"
 
@@ -6243,9 +7294,10 @@ Switch.displayName = SwitchPrimitives.Root.displayName
  */
 export { Switch }
 
-\\n
+```
+
 ### Component: Table
-\	sx
+```tsx
 import * as React from "react"
 import { cn } from "../../lib/utils"
 import { ChevronDown, ChevronUp, ChevronsUpDown, MoreHorizontal, Check } from "lucide-react"
@@ -6691,9 +7743,10 @@ export {
   TableCaption,
 }
 
-\\n
+```
+
 ### Component: Tabs
-\	sx
+```tsx
 import * as React from "react"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
 
@@ -6757,9 +7810,10 @@ TabsContent.displayName = TabsPrimitive.Content.displayName
  */
 export { Tabs, TabsList, TabsTrigger, TabsContent }
 
-\\n
+```
+
 ### Component: Textarea
-\	sx
+```tsx
 import * as React from "react"
 import { cn } from "../../lib/utils"
 import { AlertCircle } from "lucide-react"
@@ -6816,9 +7870,10 @@ Textarea.displayName = "Textarea"
 
 export { Textarea }
 
-\\n
+```
+
 ### Component: Timeline
-\	sx
+```tsx
 import * as React from "react"
 import { cn } from "../../lib/utils"
 import { Check, Circle, Clock } from "lucide-react"
@@ -6921,9 +7976,10 @@ Timeline.displayName = "Timeline"
 export { Timeline }
 export type { TimelineItem }
 
-\\n
+```
+
 ### Component: Toast
-\	sx
+```tsx
 import * as React from "react"
 import * as ToastPrimitives from "@radix-ui/react-toast"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -7057,9 +8113,10 @@ export {
   ToastAction,
 }
 
-\\n
+```
+
 ### Component: ToastMultiPosition
-\	sx
+```tsx
 import * as React from "react"
 import { cn } from "../../lib/utils"
 import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from "lucide-react"
@@ -7203,9 +8260,10 @@ function toast(options: Omit<Toast, "id">) {
 export { ToastProvider, useToast, toast }
 export type { Toast, ToastPosition }
 
-\\n
+```
+
 ### Component: Toggle
-\	sx
+```tsx
 import * as React from "react"
 import * as TogglePrimitive from "@radix-ui/react-toggle"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -7261,9 +8319,10 @@ Toggle.displayName = TogglePrimitive.Root.displayName
 
 export { Toggle, toggleVariants }
 
-\\n
+```
+
 ### Component: Tooltip
-\	sx
+```tsx
 import * as React from "react"
 import * as TooltipPrimitive from "@radix-ui/react-tooltip"
 
@@ -7307,9 +8366,10 @@ TooltipContent.displayName = TooltipPrimitive.Content.displayName
  */
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider }
 
-\\n
+```
+
 ### Component: VirtualList
-\	sx
+```tsx
 import * as React from "react"
 import { cn } from "../../lib/utils"
 
@@ -7397,12 +8457,13 @@ function VirtualList<T>({
 
 export { VirtualList }
 
-\\n
+```
+
 ## 6. Blocks Source Code (Complex Layouts)
 Below is the exact source code for the complex blocks. Use this to understand the props they accept and how they compose the base components.
 
 ### Block: ActivityTimeline
-\	sx
+```tsx
 import * as React from "react"
 import { cn } from "../../lib/utils"
 import { Check, Circle } from "lucide-react"
@@ -7506,9 +8567,10 @@ export const ActivityTimeline = React.forwardRef<
 })
 ActivityTimeline.displayName = "ActivityTimeline"
 
-\\n
+```
+
 ### Block: AdvancedFilter
-\	sx
+```tsx
 import * as React from "react"
 import { PlusCircle, Filter, X } from "lucide-react"
 
@@ -7674,9 +8736,10 @@ function Check({ className }: { className?: string }) {
   )
 }
 
-\\n
+```
+
 ### Block: Animation
-\	sx
+```tsx
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "../../lib/utils"
@@ -7877,9 +8940,10 @@ export function AnimatedCounter({
   )
 }
 
-\\n
+```
+
 ### Block: CreationWizard
-\	sx
+```tsx
 import * as React from "react"
 
 import {
@@ -7974,9 +9038,10 @@ export function CreationWizard({
   )
 }
 
-\\n
+```
+
 ### Block: DashboardCharts
-\	sx
+```tsx
 import * as React from "react"
 import {
   Area,
@@ -8316,9 +9381,10 @@ export function DashboardCharts() {
   )
 }
 
-\\n
+```
+
 ### Block: DashboardMetrics
-\	sx
+```tsx
 import * as React from "react"
 import { DollarSign, Users, CreditCard, Activity } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "../shadcn/Card"
@@ -8389,9 +9455,10 @@ export function DashboardMetrics() {
   )
 }
 
-\\n
+```
+
 ### Block: DataCard
-\	sx
+```tsx
 import * as React from "react"
 import { MoreVertical } from "lucide-react"
 
@@ -8509,9 +9576,10 @@ export function DataCard({
   )
 }
 
-\\n
+```
+
 ### Block: DataTable
-\	sx
+```tsx
 import * as React from "react"
 import {
   ColumnDef,
@@ -8730,9 +9798,10 @@ export function DataTable<TData, TValue>({
   )
 }
 
-\\n
+```
+
 ### Block: DatePicker
-\	sx
+```tsx
 import * as React from "react"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
@@ -8777,9 +9846,10 @@ export function DatePicker() {
   )
 }
 
-\\n
+```
+
 ### Block: DetailDrawer
-\	sx
+```tsx
 import * as React from "react"
 import { Copy, ExternalLink, FileText, History, Info } from "lucide-react"
 
@@ -8906,9 +9976,10 @@ export function DetailDrawer({
   )
 }
 
-\\n
+```
+
 ### Block: EmptyState
-\	sx
+```tsx
 import * as React from "react"
 import { FileQuestion, FolderX, ServerCrash } from "lucide-react"
 import { Button } from "../shadcn/Button"
@@ -8961,9 +10032,10 @@ export function EmptyState({
   )
 }
 
-\\n
+```
+
 ### Block: FileUploader
-\	sx
+```tsx
 import * as React from "react"
 import { UploadCloud, File, X, CheckCircle, AlertCircle } from "lucide-react"
 
@@ -9146,9 +10218,10 @@ export function FileUploader({
   )
 }
 
-\\n
+```
+
 ### Block: GlobalBanner
-\	sx
+```tsx
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { X } from "lucide-react"
@@ -9225,9 +10298,10 @@ GlobalBanner.displayName = "GlobalBanner"
 
 export { GlobalBanner, bannerVariants }
 
-\\n
+```
+
 ### Block: Kanban
-\	sx
+```tsx
 import * as React from "react"
 import { MoreHorizontal, Plus, Calendar } from "lucide-react"
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd"
@@ -9379,9 +10453,10 @@ export function KanbanCard({ task, onClick }: { task: KanbanTask; onClick?: () =
   )
 }
 
-\\n
+```
+
 ### Block: LoginForm
-\	sx
+```tsx
 import * as React from "react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../shadcn/Card"
 import { Input } from "../shadcn/Input"
@@ -9470,9 +10545,10 @@ export function LoginForm({ isLoading = false, errorMessage, onSubmit }: LoginFo
   )
 }
 
-\\n
+```
+
 ### Block: MarketingBanner
-\	sx
+```tsx
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "../../lib/utils"
@@ -9652,9 +10728,10 @@ export function MarketingBanner({
   )
 }
 
-\\n
+```
+
 ### Block: MetricGrid
-\	sx
+```tsx
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "../../lib/utils"
@@ -9739,9 +10816,10 @@ export function MetricCard({
   )
 }
 
-\\n
+```
+
 ### Block: NotificationCenter
-\	sx
+```tsx
 import * as React from "react"
 import { Bell, Check, Trash2, MailOpen } from "lucide-react"
 
@@ -9886,9 +10964,10 @@ export function NotificationCenter({
   )
 }
 
-\\n
+```
+
 ### Block: PageHeader
-\	sx
+```tsx
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "../../lib/utils"
@@ -9948,9 +11027,10 @@ export function PageHeader({
   )
 }
 
-\\n
+```
+
 ### Block: PageLayout
-\	sx
+```tsx
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "../../lib/utils"
@@ -9994,9 +11074,10 @@ export function PageLayout({
   )
 }
 
-\\n
+```
+
 ### Block: PricingCards
-\	sx
+```tsx
 import * as React from "react"
 import { Check } from "lucide-react"
 
@@ -10162,9 +11243,10 @@ export function PricingCards() {
   )
 }
 
-\\n
+```
+
 ### Block: RegisterForm
-\	sx
+```tsx
 import * as React from "react"
 import { Lock, Mail, User } from "lucide-react"
 
@@ -10302,9 +11384,10 @@ export function RegisterForm() {
   )
 }
 
-\\n
+```
+
 ### Block: RoleManager
-\	sx
+```tsx
 import * as React from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../shadcn/Table"
 import { Checkbox } from "../shadcn/Checkbox"
@@ -10396,9 +11479,10 @@ export function RoleManager({ permissions, onPermissionChange }: RoleManagerProp
   )
 }
 
-\\n
+```
+
 ### Block: ScoreDistribution
-\	sx
+```tsx
 import * as React from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "../shadcn/Card"
 import { Alert, AlertDescription } from "../shadcn/Alert"
@@ -10485,9 +11569,10 @@ export function ScoreDistribution() {
   )
 }
 
-\\n
+```
+
 ### Block: SettingsLayout
-\	sx
+```tsx
 import * as React from "react"
 import { cn } from "../../lib/utils"
 import { Button } from "../shadcn/Button"
@@ -10567,9 +11652,10 @@ export function SettingsNav({ className, items, ...props }: SettingsNavProps) {
   )
 }
 
-\\n
+```
+
 ### Block: Sidebar
-\	sx
+```tsx
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import {
@@ -10895,9 +11981,10 @@ export function SidebarFooterItem({
   return content
 }
 
-\\n
+```
+
 ### Block: Stepper
-\	sx
+```tsx
 import * as React from "react"
 import { Check } from "lucide-react"
 import { cn } from "../../lib/utils"
@@ -11048,9 +12135,10 @@ export function Stepper({
   )
 }
 
-\\n
+```
+
 ### Block: Topbar
-\	sx
+```tsx
 import * as React from "react"
 import { Bell, Maximize, Keyboard, ChevronDown } from "lucide-react"
 
@@ -11209,9 +12297,10 @@ export function TopbarProfile({
   )
 }
 
-\\n
+```
+
 ### Block: UserSettings
-\	sx
+```tsx
 import * as React from "react"
 
 import {
@@ -11383,4 +12472,13 @@ export function UserSettings() {
   )
 }
 
-\\n
+```
+
+## 7. Design Graph (Machine-Readable)
+For programmatic access to component relationships, capabilities, and rules, see DESIGN_GRAPH.json in the root of the repository.
+This JSON file contains:
+- Capabilities with their components
+- Component relationships (parent/children)
+- Valid compositions (DashboardKPIs, UserForm, etc.)
+- Integration rules with severity levels
+- Antipatterns to avoid
