@@ -1,0 +1,57 @@
+{
+  "version": "1.0.0",
+  "generated": "2026-01-01",
+  "lastUpdated": "2026-01-01T00:00:00Z",
+  "description": "Usage telemetry and enrichment tiers for DS-OneBox components. Auto-maintained by CI.",
+
+  "enrichmentStrategy": {
+    "Tier1": {
+      "description": "Componentes críticos de uso frequente. Documentação completa, testes, exemplos, e Storybook detalhado.",
+      "criteria": ["usado em > 10 projetos", "composite de capability principal", "sem workarounds conhecidos"],
+      "components": []
+    },
+    "Tier2": {
+      "description": "Componentes de uso regular. Documentação completa e exemplos funcionais.",
+      "criteria": ["usado em 3-10 projetos", "capability secundária", "poucos workarounds"],
+      "components": []
+    },
+    "Tier3": {
+      "description": "Componentes de uso raro ou novo. Documentação mínima mas funcional.",
+      "criteria": ["usado em < 3 projetos", "novo ou experimental", "workarounds aceitáveis"],
+      "components": []
+    }
+  },
+
+  "usage": {
+    "totalProjects": 0,
+    "totalComponents": 0,
+    "components": {}
+  },
+
+  "patterns": {
+    "autoDetected": [],
+    "validated": []
+  },
+
+  "gaps": {
+    "missingTests": [],
+    "missingExamples": [],
+    "missingStories": [],
+    "workarounds": [],
+    "roadmapSuggestions": []
+  },
+
+  "health": {
+    "avgDocumentationCoverage": 0,
+    "avgTestCoverage": 0,
+    "lastAudit": null,
+    "issues": []
+  },
+
+  "ci": {
+    "workflow": ".github/workflows/ds-intelligence.yml",
+    "runSchedule": "weekly",
+    "autoUpdate": true,
+    "notifyOnGaps": true
+  }
+}
