@@ -17,6 +17,9 @@ DS-OneBox ships with GBrain-style skills that encode workflows and best practice
 - FORMS.md
 - LAYOUT.md
 - RESOLVER.md
+- SELF_MAINTENANCE.md
+- SKILL.md
+- USAGE_INTELLIGENCE.md
 
 ### 2.2 Skills Content
 
@@ -2182,6 +2185,1084 @@ Sidebar precisa que o CSS global do DS seja importado ANTES do SidebarProvider. 
 ## Atualização
 
 Este resolver é versionado junto com o DS-OneBox. Quando um novo componente for adicionado, esta tabela deve ser atualizada primeiro.
+
+```
+
+### SKILL: SELF_MAINTENANCE.md
+```markdown
+---
+title: Self-Maintenance
+description: Sistema de auto-correção, auto-link e auto-documentation para DS-OneBox
+version: 1.0.0
+updated: 2026-01-01
+---
+
+# Self-Maintenance
+
+## Propósito
+
+Este skill automatiza a manutenção do DS-OneBox: auto-corrige antipatterns, auto-link componentes em relationships, auto-documenta componentes novos, e auto-fecha gaps detectados. Inspirado no GBrain thin-harness-fat-skills, a inteligência vive nos scripts, não nos mantenedores.
+
+## Auto-Fix — Correção Automática de Antipatterns
+
+### Script: auto-fix.js
+
+```javascript
+// scripts/auto-fix.js
+import fs from 'fs'
+import path from 'path'
+
+const ANTIPATTERNS = [
+  {
+    name: 'AccordionTriggerInteractiveContent',
+    pattern: /<AccordionTrigger>\s*<Switch/g,
+    file: 'src/components/shadcn/Accordion.tsx',
+    check: (content) => content.includes('interactiveContent'),
+    fix: (content) => {
+      return content.replace(
+        /<AccordionTrigger>/g,
+        '<AccordionTrigger interactiveContent>'
+      )
+    }
+  },
+  {
+    name: 'ChartContainerMissingDimensions',
+    pattern: /<ChartContainer(?!.*(width|height))/g,
+    check: (content) => content.includes('minHeight'),
+    fix: (content) => {
+      return content.replace(
+        /<ChartContainer/g,
+        '<ChartContainer className="min-h-72"'
+      )
+    }
+  }
+]
+
+function runAutoFix() {
+  console.log('🔍 Procurando antipatterns...')
+  let fixed = 0
+
+  for (const antipattern of ANTIPATTERNS) {
+    const files = findFiles('./src', ['.tsx', '.ts'])
+
+    for (const file of files) {
+      const content = fs.readFileSync(file, 'utf8')
+
+      if (antipattern.pattern.test(content) && !antipattern.check(content)) {
+        const fixedContent = antipattern.fix(content)
+        fs.writeFileSync(file, fixedContent)
+        console.log(`✅ Fixed: ${antipattern.name} em ${file}`)
+        fixed++
+      }
+    }
+  }
+
+  console.log(`\n📊 Total de correções: ${fixed}`)
+  return fixed > 0
+}
+
+function findFiles(dir, extensions) {
+  const files = []
+  const entries = fs.readdirSync(dir, { withFileTypes: true })
+
+  for (const entry of entries) {
+    const full = path.join(dir, entry.name)
+    if (entry.isDirectory() && !entry.name.includes('node_modules')) {
+      files.push(...findFiles(full, extensions))
+    } else if (extensions.some(ext => entry.name.endsWith(ext))) {
+      files.push(full)
+    }
+  }
+
+  return files
+}
+
+runAutoFix()
+```
+
+## Auto-Link — Relacionamentos Automáticos
+
+### Script: auto-link.js
+
+Detecta automaticamente relationships entre componentes baseado em imports:
+
+```javascript
+// scripts/auto-link.js
+import fs from 'fs'
+import path from 'path'
+
+function extractImports(filePath) {
+  const content = fs.readFileSync(filePath, 'utf8')
+  const imports = []
+
+  // Match: import { X, Y } from "ds-onebox"
+  const namedImports = content.matchAll(
+    /import\s*\{([^}]+)\}\s*from\s*["']ds-onebox["']/g
+  )
+
+  for (const match of namedImports) {
+    const names = match[1].split(',').map(n => n.trim())
+    imports.push(...names)
+  }
+
+  return imports
+}
+
+function buildRelationshipGraph() {
+  const graph = {}
+  const shadcnDir = './src/components/shadcn'
+  const files = fs.readdirSync(shadcnDir).filter(f => f.endsWith('.tsx'))
+
+  for (const file of files) {
+    const componentName = file.replace('.tsx', '')
+    const imports = extractImports(path.join(shadcnDir, file))
+
+    graph[componentName] = {
+      imports: imports.filter(i => files.includes(`${i}.tsx`)),
+      importedBy: []
+    }
+  }
+
+  // Inverter: calcular importedBy
+  for (const [component, data] of Object.entries(graph)) {
+    for (const imported of data.imports) {
+      if (graph[imported]) {
+        graph[imported].importedBy.push(component)
+      }
+    }
+  }
+
+  return graph
+}
+
+function detectPatterns() {
+  const graph = buildRelationshipGraph()
+  const patterns = []
+
+  // Detectar padrão: TableWRAPPER (Table usa TableHeader, TableBody, etc.)
+  const tableParts = ['TableHeader', 'TableBody', 'TableRow', 'TableHead', 'TableCell']
+  const allPartsExist = tableParts.every(p => graph[p])
+  if (allPartsExist && graph['Table']) {
+    patterns.push({
+      parent: 'Table',
+      children: tableParts,
+      pattern: 'TableSECTION'
+    })
+  }
+
+  // Detectar padrão: CardWRAPPER
+  const cardParts = ['CardHeader', 'CardTitle', 'CardDescription', 'CardContent', 'CardFooter']
+  if (cardParts.every(p => graph[p]) && graph['Card']) {
+    patterns.push({
+      parent: 'Card',
+      children: cardParts,
+      pattern: 'CardWRAPPER'
+    })
+  }
+
+  // Detectar padrão: FormPARTS
+  const formParts = ['FormField', 'FormItem', 'FormLabel', 'FormControl', 'FormMessage']
+  if (formParts.every(p => graph[p]) && graph['Form']) {
+    patterns.push({
+      parent: 'Form',
+      children: formParts,
+      pattern: 'FormPARTS'
+    })
+  }
+
+  return patterns
+}
+
+const patterns = detectPatterns()
+fs.writeFileSync('./detected-patterns.json', JSON.stringify(patterns, null, 2))
+console.log(`📊 Padrões detectados: ${patterns.length}`)
+```
+
+## Auto-Documentation — Geração Automática de Docs
+
+### Script: auto-doc.js
+
+Gera documentação automaticamente quando um novo componente é criado:
+
+```javascript
+// scripts/auto-doc.js
+import fs from 'fs'
+import path from 'path'
+
+function generateComponentDoc(componentName) {
+  const PascalCase = componentName
+  const camelCase = componentName.charAt(0).toLowerCase() + componentName.slice(1)
+
+  return `---
+title: ${PascalCase}
+description: Componente ${PascalCase} do DS-OneBox
+version: 1.0.0
+---
+
+# ${PascalCase}
+
+## Quando Usar
+
+<!-- Adicione aqui quando usar este componente -->
+
+## Quando NÃO Usar
+
+<!-- Adicione aqui quando NÃO usar este componente -->
+
+## Uso Básico
+
+\`\`\`tsx
+<${PascalCase}>
+  {/* conteúdo */}
+</${PascalCase}>
+\`\`\`
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|---|---|---|---|
+| className | string | - | Classes CSS adicionais |
+| children | ReactNode | - | Conteúdo do componente |
+
+## Exemplos
+
+### Exemplo Básico
+
+\`\`\`tsx
+export function ${PascalCase}Example() {
+  return (
+    <${PascalCase}>
+      Exemplo de ${PascalCase}
+    </${PascalCase}>
+  )
+}
+\`\`\`
+
+## Composição
+
+Este componente faz parte do padrão: **${camelCase}PATTERN**
+
+<!-- Vincule ao DESIGN_GRAPH.json automaticamente -->
+
+## Antipatterns
+
+<!-- Documente erros comuns aqui -->
+
+## Accessibility
+
+<!-- Documente considerações de a11y aqui -->
+`
+}
+
+function updateDesignGraph(componentName) {
+  const graphPath = './DESIGN_GRAPH.json'
+  const graph = JSON.parse(fs.readFileSync(graphPath, 'utf8'))
+
+  // Adicionar às capabilities correspondentes
+  // (detectar capability baseado em nomes 类似)
+  const capabilities = ['FEEDBACK', 'FORMS', 'DATA', 'LAYOUT', 'NAVIGATION']
+
+  for (const cap of capabilities) {
+    if (componentName.toLowerCase().includes(cap.toLowerCase())) {
+      graph.capabilities[cap].components.push(componentName)
+    }
+  }
+
+  fs.writeFileSync(graphPath, JSON.stringify(graph, null, 2))
+  console.log(`✅ DESIGN_GRAPH.json atualizado com ${componentName}`)
+}
+
+function updateLlmDocs() {
+  // Regenerar llms.txt
+  const { execSync } = require('child_process')
+  execSync('npm run build:llms', { stdio: 'inherit' })
+  console.log('✅ llms.txt regenerado')
+}
+
+// Hook: rodar após criar componente
+const componentName = process.argv[2]
+if (componentName) {
+  console.log(`🤖 Auto-documentando ${componentName}...`)
+  updateDesignGraph(componentName)
+  updateLlmDocs()
+  console.log('✅ Documentação gerada!')
+}
+```
+
+## Auto-Update — Sincronização de Skills
+
+### Script: sync-skills.js
+
+Sincroniza os skills com o estado atual do DS:
+
+```javascript
+// scripts/sync-skills.js
+import fs from 'fs'
+
+function extractComponents() {
+  const shadcnDir = './src/components/shadcn'
+  const files = fs.readdirSync(shadcnDir).filter(f => f.endsWith('.tsx'))
+  return files.map(f => f.replace('.tsx', ''))
+}
+
+function extractBlocks() {
+  const blocksDir = './src/components/blocks'
+  if (!fs.existsSync(blocksDir)) return []
+  const files = fs.readdirSync(blocksDir).filter(f => f.endsWith('.tsx'))
+  return files.map(f => f.replace('.tsx', ''))
+}
+
+function updateResolver() {
+  const components = extractComponents()
+  const blocks = extractBlocks()
+
+  const resolverPath = './skills/RESOLVER.md'
+  let content = fs.readFileSync(resolverPath, 'utf8')
+
+  // Atualizar lista de componentes (buscar marcação especial)
+  const componentList = components
+    .sort()
+    .map(c => `- ${c}`)
+    .join('\n')
+
+  // Substituir entre marcadores
+  const markerStart = '<!-- COMPONENTS_START -->'
+  const markerEnd = '<!-- COMPONENTS_END -->'
+
+  if (content.includes(markerStart) && content.includes(markerEnd)) {
+    const startIdx = content.indexOf(markerStart)
+    const endIdx = content.indexOf(markerEnd) + markerEnd.length
+    content = content.slice(0, startIdx) + markerStart + '\n' + componentList + '\n' + content.slice(endIdx)
+    fs.writeFileSync(resolverPath, content)
+    console.log('✅ RESOLVER.md atualizado')
+  }
+}
+
+function updateDesignGraph() {
+  const components = extractComponents()
+  const blocks = extractBlocks()
+
+  const graphPath = './DESIGN_GRAPH.json'
+  const graph = JSON.parse(fs.readFileSync(graphPath, 'utf8'))
+
+  // Atualizar capabilities com componentes faltantes
+  for (const component of components) {
+    let found = false
+    for (const [, cap] of Object.entries(graph.capabilities)) {
+      if (cap.components.includes(component)) {
+        found = true
+        break
+      }
+    }
+    if (!found) {
+      // Componente novo sem capability — adicionar como LAYOUT
+      graph.capabilities['LAYOUT'].components.push(component)
+    }
+  }
+
+  fs.writeFileSync(graphPath, JSON.stringify(graph, null, 2))
+  console.log(`✅ DESIGN_GRAPH.json sincronizado (${components.length} componentes)`)
+}
+
+updateResolver()
+updateDesignGraph()
+```
+
+## Git Hook — Auto-Maintenance on Commit
+
+### .git/hooks/pre-commit
+
+```bash
+#!/bin/bash
+
+echo "🤖 DS-OneBox Self-Maintenance Check..."
+
+# 1. Verificar se novo componente foi adicionado
+NEW_COMPONENTS=$(git diff --cached --name-only | grep "src/components/shadcn/.*\.tsx$" | grep -v "stories" | wc -l)
+
+if [ "$NEW_COMPONENTS" -gt "0" ]; then
+  echo "📝 $NEW_COMPONENTS novo(s) componente(s) detectado(s)"
+  echo "🤖 Gerando documentação automaticamente..."
+
+  node scripts/auto-doc.js
+  node scripts/sync-skills.js
+
+  git add skills/
+  git add DESIGN_GRAPH.json
+  git add USAGE_TELEMETRY.json
+fi
+
+# 2. Verificar antipatterns
+echo "🔍 Verificando antipatterns..."
+node scripts/auto-fix.js
+FIXED=$(git diff --name-only | wc -l)
+
+if [ "$FIXED" -gt "0" ]; then
+  echo "⚠️ $FIXED arquivo(s) auto-corrigido(s)"
+  git add .
+fi
+
+# 3. Verificar se imports estão corretos
+echo "🔗 Verificando relationships..."
+node scripts/auto-link.js
+
+echo "✅ Self-maintenance check completo!"
+```
+
+## CI: Daily Maintenance Job
+
+```yaml
+# .github/workflows/ds-maintenance.yml
+name: DS Self-Maintenance
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # Todo dia às 6h
+  workflow_dispatch:
+
+jobs:
+  maintenance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup
+        run: npm ci
+
+      - name: Auto-fix antipatterns
+        run: node scripts/auto-fix.js
+
+      - name: Sync relationships
+        run: node scripts/auto-link.js
+
+      - name: Update documentation
+        run: |
+          node scripts/sync-skills.js
+          npm run build:llms
+
+      - name: Check coverage
+        run: npm run ds:coverage
+
+      - name: Generate report
+        run: npm run ds:report
+
+      - name: Create improvement PR
+        if: github.event_name == 'schedule'
+        run: |
+          git config user.email "ds-brain@onebox.ai"
+          git config user.name "DS Brain"
+
+          if git diff --quiet; then
+            echo "No changes needed"
+          else
+            git checkout -b chore/ds-maintenance-$(date +%Y%m%d)
+            git add .
+            git commit -m "chore(ds): self-maintenance run $(date)"
+            git push origin chore/ds-maintenance-$(date +%Y%m%d)
+
+            gh pr create \
+              --title "DS Self-Maintenance: $(date)" \
+              --body "Automated maintenance run" \
+              --assignee "@me"
+          fi
+```
+
+## Checklist de Auto-Maintenance
+
+- [ ] Scripts auto-fix rodando no CI?
+- [ ] Scripts auto-link detectando relationships?
+- [ ] Scripts auto-doc gerando docs para componentes novos?
+- [ ] Scripts sync-skills atualizando RESOLVER.md?
+- [ ] Hook pre-commit configurado?
+- [ ] USAGE_TELEMETRY.json sendo atualizado?
+- [ ] PR automático criado quando há changes?
+
+```
+
+### SKILL: SKILL.md
+```markdown
+---
+title: DS-OneBox Impeccable Skill
+description: Design skill for DS-OneBox that combines component library expertise with design best practices
+version: 1.0.0
+updated: 2026-01-01
+skill_version: "3.0"
+author: DS-OneBox Team
+builds_on:
+  - ds-onebox-components
+  - impeccable-frontend-design
+---
+
+# DS-OneBox Impeccable Skill
+
+## Overview
+
+DS-OneBox Impeccable é a fusão do poder do DS-OneBox (componentes, tokens, workflow) com a expertise de design do Impeccable. Este skill ensina IA a criar interfaces bonitas e consistentes usando os componentes e tokens do DS-OneBox.
+
+## How This Skill Works
+
+DS-OneBox Impeccable funciona em 3 camadas:
+
+```
+┌─────────────────────────────────────────────────┐
+│            CAMADA 3: Commands                   │
+│  /ds-audit  /ds-extract  /ds-teach  /ds-polish │
+├─────────────────────────────────────────────────┤
+│            CAMADA 2: References                 │
+│  typography  color  spatial  motion  ux-writing│
+├─────────────────────────────────────────────────┤
+│            CAMADA 1: Foundation                 │
+│  DS-OneBox Components + Tokens + Skills        │
+└─────────────────────────────────────────────────┘
+```
+
+## Quick Start
+
+1. **READ FIRST**: Sempre leia `skills/RESOLVER.md` antes de usar componentes
+2. **USE COMPONENTS**: Use componentes do DS-OneBox, não construa do zero
+3. **FOLLOW WORKFLOWS**: Siga os workflows em `skills/FORMS.md`, `skills/DATA.md`, etc.
+4. **CHECK TOKENS**: Use tokens de cor e tipografia do DS, não valores hardcoded
+5. **AUDIT**: Use `/ds-audit` antes de considerar uma tela pronta
+
+## Core Principle: Shape Before Build
+
+Semelhante ao Impeccable, DS-OneBox Impeccable segue o princípio **Shape Before Build**:
+
+```
+1. SHAPE  → Planear UX/UI mentalmente
+2. CHOOSE → Selecionar componentes do DS-OneBox
+3. COMPOSE → Juntar componentes seguindo workflows
+4. STYLE  → Aplicar tokens do DS-OneBox
+5. POLISH → Refinar com /ds-polish
+```
+
+## The 7 Design References
+
+| Reference | Purpose | When to Read |
+|---|---|---|
+| [typography](reference/typography.md) | Font hierarchy, sizes, weights | Before any text element |
+| [color-contrast](reference/color-contrast.md) | Color tokens, contrast ratios | Before any color decision |
+| [spatial-design](reference/spatial-design.md) | Spacing, layout rhythm | Before layout decisions |
+| [motion-design](reference/motion-design.md) | Animations, transitions | Before adding motion |
+| [interaction-design](reference/interaction-design.md) | Forms, focus, loading | Before interactive elements |
+| [responsive-design](reference/responsive-design.md) | Breakpoints, mobile-first | Before responsive layouts |
+| [ux-writing](reference/ux-writing.md) | Labels, errors, empty states | Before any copy |
+
+## The 4 Commands
+
+### /ds-audit
+
+Verifica se o código está usando DS-OneBox corretamente.
+
+```bash
+/ds-audit src/components/
+```
+
+**O que verifica:**
+- ✅ Componentes do DS-OneBox sendo usados
+- ✅ Tokens de cor (não hardcoded)
+- ✅ Form workflow (Zod + RHF)
+- ✅ Chart colors (HEX, não hsl)
+- ❌ Anti-patterns conhecidos
+
+### /ds-extract
+
+Extrai componentes genéricos e sugere equivalentes do DS-OneBox.
+
+```bash
+/ds-extract src/
+```
+
+**O que faz:**
+- Detecta `<div onClick>` → sugere `<Button />`
+- Detecta `useState` para form → sugere `Form + Zod + RHF`
+- Detecta `toast` manual → sugere `toast()` do DS
+- Detecta `table.map()` → sugere `<Table />` ou `<DataTable />`
+
+### /ds-teach
+
+Gera PRODUCT.md e DESIGN.md baseado nos tokens e componentes do DS-OneBox.
+
+```bash
+/ds-teach
+```
+
+**O que faz:**
+- Analisa tokens em uso
+- Mapeia componentes usados
+- Gera DESIGN.json com compliance score
+- Sugere gaps no uso do DS
+
+### /ds-polish
+
+Refina código para alinhar com DS-OneBox e princípios de design.
+
+```bash
+/ds-polish src/components/Dashboard.tsx
+```
+
+**O que faz:**
+- Substitui valores hardcoded por tokens
+- Adiciona estados de loading/error/empty
+- Refina espaçamento e hierarquia visual
+- Adiciona animações de transição
+
+## Anti-Patterns Specific to DS-OneBox
+
+### ❌ NEVER Do
+
+1. **Chart com cores hsl**
+   ```tsx
+   // ❌ ERRADO
+   const config = { color: 'hsl(var(--primary))' }
+
+   // ✅ CERTO
+   const config = { color: '#2563eb' }
+   ```
+
+2. **Button dentro de AccordionTrigger**
+   ```tsx
+   // ❌ ERRADO
+   <AccordionTrigger><Switch /> Título</AccordionTrigger>
+
+   // ✅ CERTO
+   <AccordionTrigger interactiveContent>
+     <Flex align="center" className="w-full">
+       <span>Título</span>
+       <Switch />
+     </Flex>
+   </AccordionTrigger>
+   ```
+
+3. **Table para > 50 linhas**
+   ```tsx
+   // ❌ ERRADO
+   {bigData.map(item => <TableRow />)}
+
+   // ✅ CERTO — use DataTable com TanStack
+   ```
+
+4. **Form sem Zod + RHF**
+   ```tsx
+   // ❌ ERRADO
+   const [name, setName] = useState('')
+   <input value={name} onChange={e => setName(e.target.value)} />
+
+   // ✅ CERTO
+   <Form><FormField name="name" render={({ field }) => (
+     <Input {...field} />
+   )} /></Form>
+   ```
+
+5. **Toast manual sem usar a API**
+   ```tsx
+   // ❌ ERRADO
+   <div className="toast">{message}</div>
+
+   // ✅ CERTO
+   toast.success('Mensagem salva!')
+   ```
+
+6. **Spacing hardcoded**
+   ```tsx
+   // ❌ ERRADO
+   <div style={{ padding: '16px' }}>
+
+   // ✅ CERTO
+   <div className="p-4">
+   // ou use tokens do DS
+   ```
+
+7. **Sidebar sem SidebarProvider**
+   ```tsx
+   // ❌ ERRADO
+   <Sidebar><Nav /></Sidebar>
+
+   // ✅ CERTO
+   <SidebarProvider>
+     <div className="flex h-screen overflow-hidden">
+       <Sidebar><Nav /></Sidebar>
+       <main />
+     </div>
+   </SidebarProvider>
+   ```
+
+## Workflow Integration
+
+O DS-OneBox Impeccable funciona junto com os skills existentes:
+
+| Task | Skill to Read |
+|---|---|
+| Criar formulário | `skills/FORMS.md` |
+| Criar tabela/gráfico | `skills/DATA.md` |
+| Criar layout | `skills/LAYOUT.md` |
+| Adicionar feedback | `skills/FEEDBACK.md` |
+| Design de tipografia | `reference/typography.md` |
+| Design de cores | `reference/color-contrast.md` |
+| Design de espaço | `reference/spatial-design.md` |
+| Design de motion | `reference/motion-design.md` |
+| Design de UX writing | `reference/ux-writing.md` |
+
+## Decision Tree
+
+```
+Preciso criar uma UI
+├── É um formulário? → skills/FORMS.md
+├── É uma tabela/gráfico? → skills/DATA.md
+├── É um layout? → skills/LAYOUT.md
+├── É feedback/notificação? → skills/FEEDBACK.md
+└── Como deve ficar? → reference/
+    ├── Texto está ruim? → typography.md
+    ├── Cores estão erradas? → color-contrast.md
+    ├── Espaçamento está estranho? → spatial-design.md
+    ├── Falta vida? → motion-design.md
+    └── Texto está confuso? → ux-writing.md
+```
+
+## Success Criteria
+
+Uma tela está **DS-OneBox Compliant** quando:
+
+- [ ] Usa componentes do DS-OneBox (não construiu do zero)
+- [ ] Usa tokens de cor (não hardcoded)
+- [ ] Segue workflow correto (ex: Form + Zod + RHF)
+- [ ] Não tem anti-patterns conhecidos
+- [ ] Passa em `/ds-audit`
+- [ ] Tem estados de loading/error/empty
+- [ ] Segue hierarquia de tipografia
+- [ ] Tem contraste adequado
+
+## Files in This Skill
+
+```
+skills/
+├── SKILL.md                      ← Você está aqui
+├── reference/
+│   ├── typography.md             ← Tipografia do DS
+│   ├── color-contrast.md          ← Cores do DS
+│   ├── spatial-design.md         ← Espaçamento do DS
+│   ├── motion-design.md          ← Animações do DS
+│   ├── interaction-design.md     ← Interação do DS
+│   ├── responsive-design.md      ← Responsivo do DS
+│   └── ux-writing.md             ← UX Writing do DS
+└── commands/
+    ├── ds-audit.md              ← Audit command
+    ├── ds-extract.md             ← Extract command
+    ├── ds-teach.md               ← Teach command
+    └── ds-polish.md              ← Polish command
+```
+
+```
+
+### SKILL: USAGE_INTELLIGENCE.md
+```markdown
+---
+title: Usage Intelligence
+description: Sistema de auto-tiering e enriquecimento de componentes baseado em uso real
+version: 1.0.0
+updated: 2026-01-01
+---
+
+# Usage Intelligence
+
+## Propósito
+
+Este skill automatiza a priorização e enriquecimento de documentação do DS-OneBox baseado em dados reais de uso. Inspirado no GBrain fail-improve loop, o sistema detecta gaps, sugere roadmaps e auto-evolui a qualidade da documentação.
+
+## Como Funciona
+
+```
+Código é escrito (projeto host)
+    → CI detecta uso de componentes (via git hooks ou análise estática)
+    → USAGE_TELEMETRY.json é atualizado
+    → Componentes são re-tiered automaticamente
+    → Gaps são identificados
+    → Roadmap suggestions são geradas
+    → PR é aberto com improvements
+```
+
+## Auto-Tiering — Sistema de Classes
+
+### Tier 1 — Critical Core
+
+**Critérios:**
+- Usado em > 10 projetos ou > 100 instâncias
+- Faz parte de uma capability principal
+- Sem workarounds conhecidos no TROUBLESHOOTING.md
+- Tem testes unitários
+- Tem Storybook com todas as variantes
+
+**Ações automáticas:**
+- Documentação completa com Workflow, Exemplos, Antipatterns
+- Testes de regressão visual (Chromatic)
+- Monitoramento de performance
+- Alertas prioritários quando quebrado
+
+### Tier 2 — Regular Use
+
+**Critérios:**
+- Usado em 3-10 projetos
+- Capability secundária ou composta
+- Workarounds mínimos documentados
+- Tem pelo menos 1 exemplo funcional
+
+**Ações automáticas:**
+- Documentação completa
+- Exemplos no Storybook
+- Workarounds documentados no TROUBLESHOOTING.md
+
+### Tier 3 — Experimental / Rare
+
+**Critérios:**
+- Usado em < 3 projetos
+- Novo ou experimental
+- Workarounds aceitáveis
+
+**Ações automáticas:**
+- Documentação mínima mas funcional
+- Badge "experimental" no Storybook
+- Suggestion para possivelmente deprecate
+
+## Usage Telemetry — Como Coletar
+
+### Método 1: Git Hook (Recomendado para projetos host)
+
+Adicione no `.git/hooks/pre-commit` do projeto que usa o DS:
+
+```bash
+#!/bin/bash
+# Detecta uso de componentes DS-OneBox
+COMPONENTS=$(grep -roh "from \"ds-onebox\"" --include="*.tsx" --include="*.ts" src/ | wc -l)
+echo "DS-OneBox components used: $COMPONENTS"
+```
+
+### Método 2: Análise Estática (CI)
+
+No repositório host, adicione um script de análise:
+
+```typescript
+// scripts/analyze-ds-usage.ts
+import fs from 'fs'
+import path from 'path'
+
+function analyzeUsage(dir: string): Record<string, number> {
+  const usage: Record<string, number> = {}
+
+  function walk(d: string) {
+    const files = fs.readdirSync(d)
+    for (const file of files) {
+      const full = path.join(d, file)
+      if (fs.statSync(full).isDirectory()) {
+        walk(full)
+      } else if (file.endsWith('.tsx') || file.endsWith('.ts')) {
+        const content = fs.readFileSync(full, 'utf8')
+        const matches = content.match(/from "ds-onebox"/g)
+        if (matches) {
+          usage[dir] = (usage[dir] || 0) + matches.length
+        }
+      }
+    }
+  }
+
+  walk(dir)
+  return usage
+}
+
+const usage = analyzeUsage('./src')
+fs.writeFileSync('./ds-usage-report.json', JSON.stringify(usage, null, 2))
+```
+
+### Método 3: Import Graph (para DS-OneBox próprio)
+
+```bash
+# Gere o grafo de imports
+npx madge --circular --extensions ts,tsx src/components/shadcn/
+
+# Detecte quais componentes são mais importados
+npx madge --depends --extensions ts,tsx src/index.ts | head -20
+```
+
+## Gap Detection — O Que Buscar
+
+O CI verifica automaticamente:
+
+| Gap | O Que Verificar | Severidade |
+|---|---|---|
+| Missing Tests | Componente sem `.test.tsx` | 🟡 Alta |
+| Missing Stories | Componente sem `.stories.tsx` | 🟡 Média |
+| Missing Examples | Não aparece em nenhum block | 🟡 Média |
+| Workaround Exists | Componente tem entrada no TROUBLESHOOTING.md | 🟢 Baixa |
+| Circular Dependency | Componente importa a si mesmo indiretamente | 🔴 Crítica |
+| Deprecated Pattern | Usa API antiga (ex: `<button>` dentro de `<AccordionTrigger>`) | 🟡 Média |
+| Performance Issue | Componente tem `NaN` ou dimensionamento quebrado | 🔴 Crítica |
+
+## Roadmap Suggestions — Como Gerar
+
+Quando o sistema detecta gaps, ele sugere automaticamente:
+
+```
+GAP: ChartContainer usado em 15 projetos mas não tem width/height props
+SUGGESTION: Adicionar props width/height ao ChartContainer
+PRIORITY: Alta
+ESTIMATED_EFFORT: Baixo (1-2h)
+COMPONENTS_AFFECTED: ["ChartContainer", "ChartTooltip", "ChartLegend"]
+
+GAP: AccordionTrigger com validateDOMNesting em 8 projetos
+SUGGESTION: Adicionar prop interactiveContent ao AccordionTrigger
+PRIORITY: Alta
+ESTIMATED_EFFORT: Baixo (30min)
+COMPONENTS_AFFECTED: ["AccordionTrigger"]
+
+GAP: Nenhum componente de Drag and Drop documentado
+SUGGESTION: Criar skill DRAG_DROP.md e componente DragDrop
+PRIORITY: Média
+ESTIMATED_EFFORT: Médio (4-8h)
+COMPONENTS_AFFECTED: []
+```
+
+## Self-Improve Loop
+
+Inspirado no GBrain, o DS-OneBox tem um loop de auto-melhoria:
+
+```
+1. DETECT
+   → CI analisa código, Storybook, eissues
+   → Identifica gaps vs. best practices
+
+2. PRIORITIZE
+   → Score baseado em: impacto × frequência × esforço
+   → Gaps críticos vão para o topo
+
+3. IMPROVE
+   → Gera PR automaticamente com:
+     - Documentação melhorada
+     - Antipattern removido
+     - Teste adicionado
+     - Exemplo adicionado
+
+4. VALIDATE
+   → CI verifica se o PR resolve o gap
+   → Se sim: merge automático
+   → Se não: notifica maintainer
+
+5. COMPOUND
+   → Cada ciclo faz o DS mais inteligente
+   → Padrões de erro viram padrões de acerto
+```
+
+## CI Workflow — Configuração
+
+Adicione no repositório `.github/workflows/ds-intelligence.yml`:
+
+```yaml
+name: DS Intelligence
+
+on:
+  push:
+    branches: [main, storybook]
+  schedule:
+    - cron: '0 8 * * 1'  # Toda segunda-feira às 8h
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Run DS Intelligence Check
+        run: npm run ds:intelligence
+
+      - name: Check for gaps
+        run: npm run ds:check-gaps
+
+      - name: Generate roadmap
+        run: npm run ds:roadmap
+
+      - name: Create PR if needed
+        if: steps.check.outputs.hasChanges == 'true'
+        run: |
+          git config --local user.email "ds-brain@onebox.ai"
+          git config --local user.name "DS Brain"
+          git checkout -b chore/ds-intelligence-$(date +%Y%m%d)
+          git add .
+          git commit -m "chore(ds): DS intelligence improvements"
+          git push origin chore/ds-intelligence-$(date +%Y%m%d)
+          gh pr create --title "DS Intelligence: Automated Improvements" --body "Auto-generated by DS Brain"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+## Scripts do package.json
+
+Adicione ao package.json do DS:
+
+```json
+{
+  "scripts": {
+    "ds:intelligence": "node scripts/ds-intelligence.js",
+    "ds:check-gaps": "node scripts/check-gaps.js",
+    "ds:roadmap": "node scripts/generate-roadmap.js",
+    "ds:report": "node scripts/generate-usage-report.js"
+  }
+}
+```
+
+## Atualização do USAGE_TELEMETRY
+
+O sistema atualiza automaticamente:
+
+```json
+{
+  "usage": {
+    "totalProjects": 3,
+    "components": {
+      "ChartContainer": {
+        "projects": ["dashboard-financeiro", "projeto-a", "projeto-b"],
+        "instances": 47,
+        "tier": "Tier1",
+        "lastUsed": "2026-01-01"
+      }
+    }
+  },
+  "gaps": {
+    "missingTests": ["DragDrop", "OTPInput"],
+    "roadmapSuggestions": [
+      {
+        "component": "VirtualList",
+        "suggestion": "Adicionar componente de lista virtual para > 1000 itens",
+        "priority": "medium"
+      }
+    ]
+  }
+}
+```
+
+## Métricas de Saúde
+
+O sistema rastreia:
+
+| Métrica | Como Medir | Meta |
+|---|---|---|
+| Documentation Coverage | Componentes com JSDoc completo / Total | > 90% |
+| Test Coverage | Componentes com testes / Total | > 80% |
+| Storybook Coverage | Componentes com stories / Total | > 95% |
+| Gap Resolution Time | Tempo entre gap detectado e corrigido | < 7 dias |
+| Antipattern Count | Workarounds no TROUBLESHOOTING.md | < 5 |
+
+## Boas Práticas
+
+1. **Nãoforce tiers manualmente** — deixe o sistema calcular baseado em uso real
+2. **Revise sugestões de roadmap** — nem toda sugestão precisa ser implementada
+3. **Documente exceções** — se um componente tem workaround válido, documente no TROUBLESHOOTING.md
+4. **Colete feedback** — quando um antipattern é corrigido, remova do TROUBLESHOOTING.md
 
 ```
 
