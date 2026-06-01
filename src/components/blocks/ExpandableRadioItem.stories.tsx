@@ -2,17 +2,18 @@ import * as React from "react"
 import type { Meta, StoryObj } from "@storybook/react"
 import { Camera, Upload, ChevronRight, HelpCircle } from "lucide-react"
 
-import { ExpandableRadioGroup } from "./ExpandableRadioGroup"
+import { ExpandableRadioItem } from "./ExpandableRadioItem"
+import { RadioGroup } from "../shadcn/RadioGroup"
 import { Button } from "../shadcn/Button"
 
 const meta = {
-  title: "Blocks/ExpandableRadioGroup",
-  component: ExpandableRadioGroup,
+  title: "Blocks/ExpandableRadioItem",
+  component: ExpandableRadioItem,
   tags: ["autodocs"],
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof ExpandableRadioGroup>
+} satisfies Meta<typeof ExpandableRadioItem>
 
 export default meta
 type Story = StoryObj<typeof meta>
@@ -62,50 +63,43 @@ export const Default: Story = {
             Selecione um dos documentos listados abaixo para continuar com a validação.
           </p>
 
-          <ExpandableRadioGroup
-            defaultValue="rg"
-            className="border-t border-border/60"
-            options={[
-              {
-                id: "doc-cnh",
-                value: "cnh",
-                label: "CNH",
-                badge: {
-                  text: "Aprovação mais rápida",
-                  className: "bg-green-100 text-green-800",
-                },
-                content: <DocumentActions />
-              },
-              {
-                id: "doc-cin",
-                value: "cin",
-                label: "CIN",
-                content: <DocumentActions />
-              },
-              {
-                id: "doc-rne",
-                value: "rne",
-                label: "RNE",
-                content: <DocumentActions />
-              },
-              {
-                id: "doc-passaporte",
-                value: "passaporte",
-                label: "Passaporte",
-                content: <DocumentActions />
-              },
-              {
-                id: "doc-rg",
-                value: "rg",
-                label: "RG",
-                badge: {
-                  text: "Aprovação pode demorar mais",
-                  className: "bg-amber-100 text-amber-900",
-                },
-                content: <DocumentActions />
+          <RadioGroup defaultValue="rg" className="flex flex-col gap-0 border-t border-border/60">
+            <ExpandableRadioItem 
+              value="cnh" 
+              label="CNH" 
+              badge={
+                <span className="px-2 py-0.5 text-xs font-medium rounded-md whitespace-nowrap bg-green-100 text-green-800">
+                  Aprovação mais rápida
+                </span>
               }
-            ]}
-          />
+            >
+              <DocumentActions />
+            </ExpandableRadioItem>
+
+            <ExpandableRadioItem value="cin" label="CIN">
+              <DocumentActions />
+            </ExpandableRadioItem>
+
+            <ExpandableRadioItem value="rne" label="RNE">
+              <DocumentActions />
+            </ExpandableRadioItem>
+
+            <ExpandableRadioItem value="passaporte" label="Passaporte">
+              <DocumentActions />
+            </ExpandableRadioItem>
+
+            <ExpandableRadioItem 
+              value="rg" 
+              label="RG"
+              badge={
+                <span className="px-2 py-0.5 text-xs font-medium rounded-md whitespace-nowrap bg-amber-100 text-amber-900">
+                  Aprovação pode demorar mais
+                </span>
+              }
+            >
+              <DocumentActions />
+            </ExpandableRadioItem>
+          </RadioGroup>
         </div>
       </div>
     )
