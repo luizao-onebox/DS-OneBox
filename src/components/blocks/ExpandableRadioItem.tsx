@@ -2,7 +2,7 @@ import * as React from "react"
 import { ChevronDown } from "lucide-react"
 
 import { cn } from "../../lib/utils"
-import { RadioGroupItem } from "../shadcn/RadioGroup"
+import { RadioGroup, RadioGroupItem } from "../shadcn/RadioGroup"
 import { Label } from "../shadcn/Label"
 
 const ExpandableRadioContext = React.createContext<string | undefined>(undefined)
