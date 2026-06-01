@@ -17,25 +17,42 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
+// Conteúdo expandido (botões de ação)
 const DocumentActions = () => (
-  <div className="flex flex-col gap-3">
+  <div className="flex flex-col gap-3 pt-2">
     <Button 
       variant="outline" 
-      className="w-full justify-start h-14 text-blue-600 border-blue-200 hover:bg-blue-50 hover:text-blue-700 bg-white"
+      className="w-full justify-between h-14 text-blue-600 border-blue-200 hover:bg-blue-50 hover:text-blue-700 bg-white"
     >
-      <Camera className="mr-3 h-5 w-5" />
-      <span className="text-base font-normal">Tirar foto do documento</span>
-      <ChevronRight className="ml-auto h-5 w-5 opacity-50" />
+      <span className="flex items-center text-base font-normal">
+        <Camera className="mr-3 h-5 w-5" />
+        Tirar foto do documento
+      </span>
+      <ChevronRight className="h-5 w-5 opacity-50" />
     </Button>
     <Button 
       variant="outline" 
-      className="w-full justify-start h-14 text-blue-600 border-blue-200 hover:bg-blue-50 hover:text-blue-700 bg-white"
+      className="w-full justify-between h-14 text-blue-600 border-blue-200 hover:bg-blue-50 hover:text-blue-700 bg-white"
     >
-      <Upload className="mr-3 h-5 w-5" />
-      <span className="text-base font-normal">Fazer upload do documento</span>
-      <ChevronRight className="ml-auto h-5 w-5 opacity-50" />
+      <span className="flex items-center text-base font-normal">
+        <Upload className="mr-3 h-5 w-5" />
+        Fazer upload do documento
+      </span>
+      <ChevronRight className="h-5 w-5 opacity-50" />
     </Button>
   </div>
+)
+
+const GreenBadge = () => (
+  <span className="px-2 py-0.5 text-xs font-medium rounded-md whitespace-nowrap bg-green-100 text-green-800">
+    Aprovação mais rápida
+  </span>
+)
+
+const AmberBadge = () => (
+  <span className="px-2 py-0.5 text-xs font-medium rounded-md whitespace-nowrap bg-amber-100 text-amber-900">
+    Aprovação pode demorar mais
+  </span>
 )
 
 export const Default: Story = {
@@ -43,15 +60,7 @@ export const Default: Story = {
     return (
       <div className="w-[400px] border rounded-xl overflow-hidden shadow-sm">
         <ExpandableRadioGroup defaultValue="rg">
-          <ExpandableRadioItem 
-            value="cnh" 
-            label="CNH" 
-            badge={
-              <span className="px-2 py-0.5 text-xs font-medium rounded-md whitespace-nowrap bg-green-100 text-green-800">
-                Aprovação mais rápida
-              </span>
-            }
-          >
+          <ExpandableRadioItem value="cnh" label="CNH" badge={<GreenBadge />}>
             <DocumentActions />
           </ExpandableRadioItem>
 
@@ -67,15 +76,7 @@ export const Default: Story = {
             <DocumentActions />
           </ExpandableRadioItem>
 
-          <ExpandableRadioItem 
-            value="rg" 
-            label="RG"
-            badge={
-              <span className="px-2 py-0.5 text-xs font-medium rounded-md whitespace-nowrap bg-amber-100 text-amber-900">
-                Aprovação pode demorar mais
-              </span>
-            }
-          >
+          <ExpandableRadioItem value="rg" label="RG" badge={<AmberBadge />}>
             <DocumentActions />
           </ExpandableRadioItem>
         </ExpandableRadioGroup>
@@ -90,15 +91,15 @@ export const WithoutBadge: Story = {
       <div className="w-[400px] border rounded-xl overflow-hidden shadow-sm">
         <ExpandableRadioGroup defaultValue="option1">
           <ExpandableRadioItem value="option1" label="Opção 1">
-            <p className="text-sm text-muted-foreground">Conteúdo expandido da opção 1</p>
+            <p className="text-sm text-muted-foreground pt-2">Conteúdo expandido da opção 1</p>
           </ExpandableRadioItem>
 
           <ExpandableRadioItem value="option2" label="Opção 2">
-            <p className="text-sm text-muted-foreground">Conteúdo expandido da opção 2</p>
+            <p className="text-sm text-muted-foreground pt-2">Conteúdo expandido da opção 2</p>
           </ExpandableRadioItem>
 
           <ExpandableRadioItem value="option3" label="Opção 3">
-            <p className="text-sm text-muted-foreground">Conteúdo expandido da opção 3</p>
+            <p className="text-sm text-muted-foreground pt-2">Conteúdo expandido da opção 3</p>
           </ExpandableRadioItem>
         </ExpandableRadioGroup>
       </div>
@@ -118,15 +119,15 @@ export const Controlled: Story = {
         <div className="border rounded-xl overflow-hidden shadow-sm">
           <ExpandableRadioGroup value={selected} onValueChange={setSelected}>
             <ExpandableRadioItem value="cnh" label="CNH">
-              <p className="text-sm text-muted-foreground">Carteira Nacional de Habilitação</p>
+              <p className="text-sm text-muted-foreground pt-2">Carteira Nacional de Habilitação</p>
             </ExpandableRadioItem>
 
             <ExpandableRadioItem value="rg" label="RG">
-              <p className="text-sm text-muted-foreground">Registro Geral</p>
+              <p className="text-sm text-muted-foreground pt-2">Registro Geral</p>
             </ExpandableRadioItem>
 
             <ExpandableRadioItem value="passaporte" label="Passaporte">
-              <p className="text-sm text-muted-foreground">Documento de viagem internacional</p>
+              <p className="text-sm text-muted-foreground pt-2">Documento de viagem internacional</p>
             </ExpandableRadioItem>
           </ExpandableRadioGroup>
         </div>
