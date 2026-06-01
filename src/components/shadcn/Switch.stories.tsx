@@ -1,4 +1,4 @@
-﻿// @ts-nocheck
+﻿﻿﻿﻿// @ts-nocheck
 import { Switch } from "./Switch"
 import { Label } from "./Label"
 

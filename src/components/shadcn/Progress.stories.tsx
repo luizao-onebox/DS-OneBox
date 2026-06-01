@@ -1,4 +1,4 @@
-﻿// @ts-nocheck
+﻿﻿﻿﻿// @ts-nocheck
 import { Progress } from "./Progress"
 
 export default {
