@@ -2,8 +2,7 @@ import * as React from "react"
 import type { Meta, StoryObj } from "@storybook/react"
 import { Camera, Upload, ChevronRight } from "lucide-react"
 
-import { ExpandableRadioItem } from "./ExpandableRadioItem"
-import { RadioGroup } from "../shadcn/RadioGroup"
+import { ExpandableRadioItem, ExpandableRadioGroup } from "./ExpandableRadioItem"
 import { Button } from "../shadcn/Button"
 
 const meta = {
@@ -18,7 +17,6 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-// Componente helper para o conteúdo expandido
 const DocumentActions = () => (
   <div className="flex flex-col gap-3">
     <Button 
@@ -44,7 +42,7 @@ export const Default: Story = {
   render: () => {
     return (
       <div className="w-[400px] border rounded-xl overflow-hidden shadow-sm">
-        <RadioGroup defaultValue="rg" className="flex flex-col">
+        <ExpandableRadioGroup defaultValue="rg">
           <ExpandableRadioItem 
             value="cnh" 
             label="CNH" 
@@ -80,7 +78,7 @@ export const Default: Story = {
           >
             <DocumentActions />
           </ExpandableRadioItem>
-        </RadioGroup>
+        </ExpandableRadioGroup>
       </div>
     )
   },
@@ -90,7 +88,7 @@ export const WithoutBadge: Story = {
   render: () => {
     return (
       <div className="w-[400px] border rounded-xl overflow-hidden shadow-sm">
-        <RadioGroup defaultValue="option1" className="flex flex-col">
+        <ExpandableRadioGroup defaultValue="option1">
           <ExpandableRadioItem value="option1" label="Opção 1">
             <p className="text-sm text-muted-foreground">Conteúdo expandido da opção 1</p>
           </ExpandableRadioItem>
@@ -102,7 +100,36 @@ export const WithoutBadge: Story = {
           <ExpandableRadioItem value="option3" label="Opção 3">
             <p className="text-sm text-muted-foreground">Conteúdo expandido da opção 3</p>
           </ExpandableRadioItem>
-        </RadioGroup>
+        </ExpandableRadioGroup>
+      </div>
+    )
+  },
+}
+
+export const Controlled: Story = {
+  render: () => {
+    const [selected, setSelected] = React.useState("cnh")
+
+    return (
+      <div className="w-[400px] space-y-4">
+        <p className="text-sm text-muted-foreground">
+          Valor selecionado: <strong>{selected}</strong>
+        </p>
+        <div className="border rounded-xl overflow-hidden shadow-sm">
+          <ExpandableRadioGroup value={selected} onValueChange={setSelected}>
+            <ExpandableRadioItem value="cnh" label="CNH">
+              <p className="text-sm text-muted-foreground">Carteira Nacional de Habilitação</p>
+            </ExpandableRadioItem>
+
+            <ExpandableRadioItem value="rg" label="RG">
+              <p className="text-sm text-muted-foreground">Registro Geral</p>
+            </ExpandableRadioItem>
+
+            <ExpandableRadioItem value="passaporte" label="Passaporte">
+              <p className="text-sm text-muted-foreground">Documento de viagem internacional</p>
+            </ExpandableRadioItem>
+          </ExpandableRadioGroup>
+        </div>
       </div>
     )
   },

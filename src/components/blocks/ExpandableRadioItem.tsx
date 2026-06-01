@@ -5,6 +5,8 @@ import { cn } from "../../lib/utils"
 import { RadioGroupItem } from "../shadcn/RadioGroup"
 import { Label } from "../shadcn/Label"
 
+const ExpandableRadioContext = React.createContext<string | undefined>(undefined)
+
 export interface ExpandableRadioItemProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Valor do radio item submetido no RadioGroup pai */
   value: string
@@ -17,17 +19,20 @@ export interface ExpandableRadioItemProps extends React.HTMLAttributes<HTMLDivEl
 /**
  * @description
  * Um item de RadioGroup que expande um conteúdo extra quando selecionado.
- * Usa a prop `data-state` do Radix UI para detectar o estado checked.
+ * Deve ser usado como filho de um `<RadioGroup>`.
  * 
- * **Deve ser usado como filho direto ou indireto de um componente `<RadioGroup>`.**
+ * **REGRAS PARA A IA:**
+ * - Envolva em um `<RadioGroup>` com valor controlado ou defaultValue.
+ * - Cada item precisa de um `value` único.
+ * - Passe `children` para o conteúdo que expandirá.
  */
 export const ExpandableRadioItem = React.forwardRef<
   HTMLDivElement,
   ExpandableRadioItemProps
 >(({ className, value, id, label, badge, children, ...props }, ref) => {
   const radioId = id || `radio-${value}`
-  const [isChecked, setIsChecked] = React.useState(false)
-  const contentRef = React.useRef<HTMLDivElement>(null)
+  const selectedValue = React.useContext(ExpandableRadioContext)
+  const isChecked = selectedValue === value
 
   return (
     <div
@@ -39,15 +44,9 @@ export const ExpandableRadioItem = React.forwardRef<
       )}
       {...props}
     >
-      <div className="flex items-center justify-between p-4">
+      <div className={cn("flex items-center justify-between p-4", isChecked && "pb-2")}>
         <div className="flex items-center gap-3">
-          <RadioGroupItem 
-            value={value} 
-            id={radioId}
-            onCheckedChange={(checked) => {
-              setIsChecked(checked === true)
-            }}
-          />
+          <RadioGroupItem value={value} id={radioId} />
           <Label 
             htmlFor={radioId}
             className="cursor-pointer text-base font-medium"
@@ -71,7 +70,6 @@ export const ExpandableRadioItem = React.forwardRef<
 
       {children && (
         <div 
-          ref={contentRef}
           className={cn(
             "overflow-hidden transition-all duration-200 ease-in-out",
             isChecked ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
@@ -87,3 +85,43 @@ export const ExpandableRadioItem = React.forwardRef<
 })
 
 ExpandableRadioItem.displayName = "ExpandableRadioItem"
+
+export interface ExpandableRadioGroupProps extends Omit<React.ComponentPropsWithoutRef<typeof RadioGroupItem>, "children"> {
+  /** Lista de itens expansíveis */
+  children: React.ReactNode
+}
+
+/**
+ * Wrapper que conecta o contexto do RadioGroup com os ExpandableRadioItems.
+ * Use este componente no lugar de RadioGroup quando precisar de itens expansíveis.
+ */
+export const ExpandableRadioGroup = React.forwardRef<
+  HTMLDivElement,
+  ExpandableRadioGroupProps
+>(({ children, value, defaultValue, onValueChange, ...props }, ref) => {
+  const [internalValue, setInternalValue] = React.useState(defaultValue)
+  const currentValue = value !== undefined ? value : internalValue
+
+  const handleValueChange = (newValue: string) => {
+    setInternalValue(newValue)
+    if (onValueChange) {
+      onValueChange(newValue)
+    }
+  }
+
+  return (
+    <RadioGroup 
+      ref={ref}
+      value={currentValue} 
+      onValueChange={handleValueChange}
+      className="flex flex-col"
+      {...props}
+    >
+      <ExpandableRadioContext.Provider value={currentValue}>
+        {children}
+      </ExpandableRadioContext.Provider>
+    </RadioGroup>
+  )
+})
+
+ExpandableRadioGroup.displayName = "ExpandableRadioGroup"
